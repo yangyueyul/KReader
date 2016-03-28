@@ -172,7 +172,6 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
     private void copyFonts(String fontName) {
         File destFile = new File(getFilesDir(), fontName);
         if (destFile.exists()) {
-            System.out.println(destFile + "已存在");
             return;
         }
 
@@ -220,7 +219,6 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
         final String fileName = Paths.internalTempDirectoryValue(this) + "/" + epubName;
         File file = new File(fileName);
         if (file.exists()) {
-            System.out.println(fileName + "已存在");
             return;
         }
 
