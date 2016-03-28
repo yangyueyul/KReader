@@ -1,3 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.commit451\PhotoView\1.2.4\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="890be6e1e56a883c9b407a11e067a61886dec123">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\com.commit451-PhotoView-1.2.4_c67528c19d3d10407bcd117b30bfc4979a82a431.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.android.support\design\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\com.android.support-design-23.0.1_7edcb724061d78ed816b837c5df164efd4e5a200.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="57ae0d750ff83f0c738d21720224ac7ea866a094">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.1.0_8399dda42758dfdbf27461739f941e69ab64be8a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1_7fd8a85662294b8afcb669749e80b58e4a146cae.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\de.hdodenhof\circleimageview\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="ac6948cce36f694f3eb3d73a135e298dc4b3527a">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\de.hdodenhof-circleimageview-1.3.0_6f0c25b601a9ef2d9bf2c643278687d014c1bf29.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\com.android.support-cardview-v7-23.1.1_30442d8562833501be61a9961cd8dcf85fd62cb1.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-23.1.1_25290a137038d30c826b46de72c67eb2606998b2.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\libs\universal-image-loader-1.9.5.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.5_393997f164aa10d6a1fc106f4abb19f92ec8816c.jar" />
+    </item>
+    <item
+        jar="E:\Users\Administrator\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\support-annotations-23.1.1_dc014441fd0971e34d42022d9dbead6f455c207f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="C:\Users\Administrator\Desktop\KooReader\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.1.1_8871a237a8990e93dc14c3c6e4cd9794cfeecc17.jar" />
+    </item>
+
+</items>
