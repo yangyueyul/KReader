@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.koolearn.android.kooreader.library.LibraryActivity;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.kooreader.util.AndroidImageSynchronizer;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.android.util.OrientationUtil;
 import com.koolearn.klibrary.core.image.ZLImage;
 import com.koolearn.klibrary.core.image.ZLImageProxy;
@@ -51,7 +50,7 @@ import java.util.TimerTask;
  * ******************************************
  * 作    者 ：  杨越
  * 版    本 ：  1.0
- * 创建日期 ：  2016/2/23 ${time}
+ * 创建日期 ：  2016/2/23
  * 描    述 ：
  * 修订历史 ：
  * ******************************************
@@ -61,7 +60,6 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
-
 
     private Timer timer = null;
     private TimerTask timeTask = null;
@@ -121,23 +119,9 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
             }
         });
 
-        new Thread() {
-            @Override
-            public void run() {
-                copyFonts("hksv.ttf");
-                copyFonts("wryh.ttf");
-                copyEpub("harry.epub");
-                copyEpub("abeaver.epub");
-                copyEpub("silverchair.epub");
-
-                copyEpub("ExaminationCloze.doc");
-                copyEpub("function.doc");
-//                copyEpubToSdCard("TheSilverChair.epub");
-//                copyEpubToSdCard("ExaminationCloze.doc");
-//                copyEpubToSdCard("function.doc");
-            }
-        }.start();
+        copyBooks();
     }
+
 
     private void displayBook() {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
@@ -188,6 +172,7 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
     private void copyFonts(String fontName) {
         File destFile = new File(getFilesDir(), fontName);
         if (destFile.exists()) {
+            System.out.println(destFile + "已存在");
             return;
         }
 
@@ -209,6 +194,25 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
         }
     }
 
+    private void copyBooks() {
+        new Thread() {
+            @Override
+            public void run() {
+                copyFonts("hksv.ttf");
+                copyFonts("wryh.ttf");
+                copyEpub("harry.epub");
+                copyEpub("abeaver.epub");
+                copyEpub("silverchair.epub");
+
+                copyEpub("ExaminationCloze.doc");
+                copyEpub("function.doc");
+//                copyEpubToSdCard("TheSilverChair.epub");
+//                copyEpubToSdCard("ExaminationCloze.doc");
+//                copyEpubToSdCard("function.doc");
+            }
+        }.start();
+    }
+
     /**
      * epub拷贝
      */
@@ -216,6 +220,7 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
         final String fileName = Paths.internalTempDirectoryValue(this) + "/" + epubName;
         File file = new File(fileName);
         if (file.exists()) {
+            System.out.println(fileName + "已存在");
             return;
         }
 
@@ -243,7 +248,7 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
     private void copyEpubToSdCard(String epubName) {
         File destFile = new File(Environment.getExternalStorageDirectory(), epubName); // 与Path路径中的设置一致,可以读到数据库中
         if (destFile.exists()) {
-            return; // 不再执行
+            return;
         }
 
         FileOutputStream out = null;
@@ -271,7 +276,6 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
         myCollection.unbind();
     }
 
-
     private void getBooks() {
         myCollection.bindToService(this, new Runnable() {
             public void run() {
@@ -285,16 +289,12 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
                         e.printStackTrace();
                     }
                 }
-                initCover(); // 缓存书籍封面至本地
+                for (Book book : bookshelf) { // 缓存书籍封面至本地
+                    setCover(book);
+                }
                 displayBook();
             }
         });
-    }
-
-    private void initCover() {
-        for (Book book : bookshelf) {
-            setCover(book);
-        }
     }
 
     private void setCover(final Book book) {
