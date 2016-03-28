@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.koolearn.android.kooreader.SettingWindow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/setting_panel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:background="#DF111111"
+    android:focusable="false"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10.5dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_light_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/light_small"
+            android:textColor="@android:color/darker_gray" />
+
+        <SeekBar
+            android:id="@+id/light_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="55dp"
+            android:layout_marginRight="55dp"
+            android:scrollbarSize="100sp" />
+
+        <TextView
+            android:id="@+id/tv_light_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/lights"
+            android:textColor="@android:color/darker_gray" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_font_minus"
+            android:layout_width="45dp"
+            android:layout_height="36dp"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="A-"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_font_size"
+            android:layout_width="45dp"
+            android:layout_height="36dp"
+            android:layout_toRightOf="@id/tv_font_minus"
+            android:gravity="center"
+            android:text="36"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_font_add"
+            android:layout_width="45dp"
+            android:layout_height="36dp"
+            android:layout_toRightOf="@id/tv_font_size"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="A+"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tv_lineSpace_add"
+            android:layout_width="45dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="L+"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_lineSpace_size"
+            android:layout_width="45dp"
+            android:layout_height="36dp"
+            android:layout_toLeftOf="@id/tv_lineSpace_add"
+            android:gravity="center"
+            android:text="36"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_lineSpace_minus"
+            android:layout_width="45dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="30dp"
+            android:layout_toLeftOf="@+id/tv_lineSpace_size"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="L-"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_page_simulation"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="仿真"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_page_cover"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@+id/btn_page_simulation"
+            android:layout_weight="1"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="覆盖"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_page_slide"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@+id/btn_page_cover"
+            android:layout_weight="1"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="滑动"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_page_none"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/page_whiteline"
+            android:gravity="center"
+            android:text="无"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/bg_white"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/bg_grey"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_grey"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/bg_vine_grey"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_vine_grey"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/bg_vine_white"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_vine_white"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/bg_green"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_green"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/bg_night"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_night"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_align_left"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/er"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_align_right"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/btn_page_simulation"
+            android:background="@drawable/ep"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_align"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/en"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_align_center"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/btn_page_cover"
+            android:background="@drawable/ev"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_page_mode"
+            android:layout_width="42dp"
+            android:layout_height="41dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/page_whitelinedark"
+            android:gravity="center"
+            android:text="左右"
+            android:textColor="#DAc8c8c8"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_setting"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/setting"
+            android:gravity="center" />
+    </LinearLayout>
+</com.koolearn.android.kooreader.SettingWindow>

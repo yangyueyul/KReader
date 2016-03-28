@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_shelf"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#009688">
+
+        <TextView
+            android:id="@+id/shelf_image_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="本地书籍"
+            android:textColor="#F1FFFFFF"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rl_shelf"
+        android:background="@drawable/bookshelf_shadow" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_below="@id/rl_shelf"
+        android:layout_weight="1">
+        <!--注意ID规范。该ListView必须命名为@android:id/list，因为ListActivity需要找到一个具有此名称的ListView，而且不可以是@+id/list，因为一旦加了@+id/就表明是自己定义了新的资源ID -->
+    </ListView>
+
+
+</LinearLayout>

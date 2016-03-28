@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="primary" type="color">#F1111111</item>
+  <item name="primary_dark" type="color">#222222</item>
+  <!--SwipeRefreshLayout-->
+  <color name="progressBarBgGreen">#F6ffbb33</color>
+  <color name="progressBarBlue">#A5fff59d</color>
+  <color name="progressBarBgWhiteOrange">#F6fff59d</color>    <!-- 200 -->
+  <color name="progressBarBgOrange">#532d17</color>
+
+  <color name="fontColor">#532d17</color>
+
+
+  <color name="primarys">#009688</color>
+  <color name="primarys_dark">#00897b</color>
+  <color name="primary_light">#B2DFDB</color>
+  <color name="accent">#ffb74d</color>
+
+  <color name="primarys_darkb">#303f9f</color>
+  <color name="primarysb">#3f51b5</color>
+  <color name="primary_lightb">#c5cae9</color>
+  <color name="accentb">#ff80a8</color>
+
+
+  <color name="primary_text">#212121</color>
+  <color name="secondary_text">#727272</color>
+  <color name="icons">#FFFFFF</color>
+  <color name="divider">#B6B6B6</color>
+
+  <color name="window_background">#FFF5F5F5</color>
+  <color name="tab_bgcolor">#eeeeee</color>
+
+
+  <color name="status_blue">#2a36b1</color>        <!-- 900 -->
+  <color name="action_blue">#5677fc</color>        <!-- 500 -->
+  <color name="window_bg_blue">#91a7ff</color>     <!-- 300 -->
+  <color name="navigation_blue">#455ede</color>    <!-- 700 -->
+  <color name="bg_blue">#738ffe</color>    <!-- 400 -->
+  <color name="fg_blue">#e7e9fd</color>    <!-- 50 -->
+  <color name="control_normal_blue">#e7e9fd</color>    <!-- 50 -->
+  <color name="control_highlight_blue">#afbfff</color>    <!-- 200 -->
+  <color name="control_activated_blue">#4d69ff</color>    <!-- A700 -->
+  <color name="button_normal_blue">#738ffe</color> <!-- 400 -->
+</resources>

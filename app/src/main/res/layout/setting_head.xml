@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shelf_head"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rl_shelf"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#009688">
+
+        <ImageView
+            android:id="@+id/shelf_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/selection"
+            android:clickable="true"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/shelf_image_title"
+            android:layout_width="wrap_content"
+            android:text="阅读设置"
+            android:textSize="19sp"
+            android:textColor="#F1FFFFFF"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_shelf"
+        android:background="@drawable/bookshelf_shadow" />
+</RelativeLayout>

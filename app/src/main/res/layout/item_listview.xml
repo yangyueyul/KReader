@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <!--注意ID规范。该ListView必须命名为@android:id/list，因为ListActivity需要找到一个具有此名称的ListView，而且不可以是@+id/list，因为一旦加了@+id/就表明是自己定义了新的资源ID -->
+    </ListView>
+</LinearLayout>
