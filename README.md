@@ -5,9 +5,9 @@
 * Github地址：https://github.com/geometer/FBReaderJ
 
 # 项目展示
-![k 1](https://github.com/yangyueyul/YDCX/blob/master/k1.png)<br/>
+![k 1](https://github.com/ydcx/KooReader/blob/master/k1.png)<br/>
 
-![k 2](https://github.com/yangyueyul/YDCX/blob/master/k2.png)<br/>
+![k 2](https://github.com/ydcx/KooReader/blob/master/k2.png)<br/>
 
 # 代码框架
 ## Klibrary
@@ -53,4 +53,4 @@
 * 设备信息 横竖屏 Dialog显示
 
 # 翻页效果
-![f 1](https://github.com/yangyueyul/YDCX/blob/master/f1.jpg?raw=true)<br/>
+![f 1](https://github.com/ydcx/KooReader/blob/master/f1.jpg?raw=true)<br/>
