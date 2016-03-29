@@ -54,6 +54,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     private volatile Book myBook;
     private RelativeLayout myRootView;
     private ZLAndroidWidget myMainView;
+//    private ZLAndroidCurlWidget myCurlView;
     volatile boolean IsPaused = false;
     private volatile long myResumeTimestamp;
     private Intent myOpenBookIntent = null;
@@ -115,6 +116,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
 
         myRootView = (RelativeLayout) findViewById(R.id.root_view);
         myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
+//        myCurlView = (ZLAndroidCurlWidget) findViewById(R.id.curl_view);
 
         myKooReaderApp = (KooReaderApp) KooReaderApp.Instance();
         if (myKooReaderApp == null) {
@@ -271,10 +273,12 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return (myMainView != null && myMainView.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
+//        return (myCurlView != null && myCurlView.onKeyDown(keyCode, event)) || super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+//        return (myCurlView != null && myCurlView.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
         return (myMainView != null && myMainView.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
     }
 
@@ -367,6 +371,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     @Override
     public ZLViewWidget getViewWidget() {
         return myMainView;
+//        return myCurlView;
     }
 
     private final HashMap<MenuItem, String> myMenuItemMap = new HashMap<MenuItem, String>();

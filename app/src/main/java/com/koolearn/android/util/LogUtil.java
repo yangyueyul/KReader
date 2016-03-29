@@ -16,7 +16,7 @@ public class LogUtil {
     static boolean flag3 = false;
     static boolean flag5 = false;
     static boolean flag6 = false;
-    static boolean flag8 = false;
+    static boolean flag8 = true;
     static boolean flag9 = false;
     static boolean flag10 = false;
     static boolean flag11 = false;

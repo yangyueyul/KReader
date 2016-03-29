@@ -379,9 +379,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
             outlinedElementRegion.hull().draw(context, Hull.DrawMode.Outline);
         }
 
-        final PagePosition pagePosition = pagePosition();
-        final String time = buildTimeString();
-        final String position = buildPositionString(pagePosition);
+        PagePosition pagePosition = pagePosition();
+        String time = buildTimeString();
+        String position = buildPositionString(pagePosition);
         context.drawFooter(time, position);
     }
 

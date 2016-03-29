@@ -66,7 +66,7 @@ public final class SlideAnimationProvider extends SimpleAnimationProvider {
                 drawBitmapTo(canvas, 0, 0, myDarkPaint);
                 drawBitmapFrom(canvas, dX, 0, myPaint);
                 drawShadowVertical(canvas, 0, myHeight, dX); // 绘制阴影
-            } else if (dX > 0) {
+            } else {
                 setDarkFilter(dX - myWidth, myWidth);
                 drawBitmapFrom(canvas, 0, 0, myDarkPaint);
                 drawBitmapTo(canvas, dX - myWidth, 0, myPaint);
@@ -79,7 +79,7 @@ public final class SlideAnimationProvider extends SimpleAnimationProvider {
                 drawBitmapTo(canvas, 0, 0, myDarkPaint);
                 drawBitmapFrom(canvas, 0, dY, myPaint);
                 drawShadowHorizontal(canvas, 0, myWidth, dY);
-            } else if (dY > 0) {
+            } else {
                 setDarkFilter(dY - myHeight, myHeight);
                 drawBitmapFrom(canvas, 0, 0, myDarkPaint);
                 drawBitmapTo(canvas, 0, dY - myHeight, myPaint);
