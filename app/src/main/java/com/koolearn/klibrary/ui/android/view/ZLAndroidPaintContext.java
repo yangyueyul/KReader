@@ -297,7 +297,6 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
                 }
             }
         } else {
-            LogUtil.i9("clear");
             clear(new ZLColor(128, 128, 128));
         }
     }
@@ -570,7 +569,6 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 
         String value = myReader.ViewOptions.ColorProfileName.getValue();
         if (value.equals("defaultDark")) {
-            LogUtil.i16("value");
             myFooterPaint.setARGB(255, 192, 192, 192);
             myTopPaint.setARGB(255, 192, 192, 192);
         } else {

@@ -71,45 +71,37 @@ public final class CurlAnimationProvider extends AnimationProvider {
     }
 
     private void drawInternalNoHack(Canvas canvas) {
-        // 1.先在底部绘制出下一页
-        drawBitmapTo(canvas, 0, 0, myPaint);
-
-        /**
-         * 左上 cornerX = 0         cornerY = 0
-         * 左下 cornerX = 0         cornerY = myHeight
-         * 右上 cornerX = myWidth   cornerY = 0
-         * 右下 cornerX = myWidth   cornerY = myHeight
-         */
-        final int cornerX = myStartX > myWidth / 2 ? myWidth : 0; // 判断左边还是右边
-        final int cornerY = myStartY > myHeight / 2 ? myHeight : 0; // 判断手在上部还是下部
-
-        /**
-         * 左上 oppositeX = myWidth  oppositeY = myHeight
-         * 左下 oppositeX = myWidth  oppositeY = 0
-         * 右上 oppositeX = 0        oppositeY = myHeight
-         * 右下 oppositeX = 0        oppositeY = 0
-         */
-        final int oppositeX = Math.abs(myWidth - cornerX);
-        final int oppositeY = Math.abs(myHeight - cornerY);
-        final int x, y;
-
-        /**
-         *
-         * 右下翻页：
-         右下 cornerX = 屏幕宽   cornerY = 屏幕高
-         右下 oppositeX = 0        oppositeY = 0
-         x = endX
-         A1
-         dX = 屏幕宽 - X
-         dY = 屏幕高 - Y
-         x1  =  屏幕宽- (dY * dY / dX + dX) / 2
-         y1  =  屏幕高- (dX * dX / dY + dY) / 2;
-         */
-
-        /**
-         * 根据横竖翻页 来限制X和Y的坐标
-         */
         if (myDirection.IsHorizontal) {
+            drawHorizontal(canvas);
+        } else {
+            drawVertical(canvas);
+        }
+    }
+
+    private void drawHorizontal(Canvas canvas) {
+        final int dx = myEndX - myStartX;
+        if (dx < 0) {
+            myStartX = myWidth;
+            // 1.先在底部绘制出下一页
+            drawBitmapTo(canvas, 0, 0, myPaint);
+            /**
+             * 左上 cornerX = 0         cornerY = 0
+             * 左下 cornerX = 0         cornerY = myHeight
+             * 右上 cornerX = myWidth   cornerY = 0
+             * 右下 cornerX = myWidth   cornerY = myHeight
+             */
+            final int cornerX = myStartX > myWidth / 2 ? myWidth : 0; // 判断左边还是右边
+            final int cornerY = myStartY > myHeight / 2 ? myHeight : 0; // 判断手在上部还是下部
+            /**
+             * 左上 oppositeX = myWidth  oppositeY = myHeight
+             * 左下 oppositeX = myWidth  oppositeY = 0
+             * 右上 oppositeX = 0        oppositeY = myHeight
+             * 右下 oppositeX = 0        oppositeY = 0
+             */
+            final int oppositeX = Math.abs(myWidth - cornerX);
+            final int oppositeY = Math.abs(myHeight - cornerY);
+            final int x, y;
+
             x = myEndX; // 横屏,x不作限制
             if (getMode().Auto) { // 松手后变为true
                 y = myEndY;
@@ -128,18 +120,188 @@ public final class CurlAnimationProvider extends AnimationProvider {
                     y = Math.max(myHeight / 2, Math.min(myHeight - 1, myEndY));
                 }
             }
-        } else {
-            y = myEndY;
-            if (getMode().Auto) {
-                x = myEndX;
-            } else {
+
+            final int dX = Math.max(1, Math.abs(x - cornerX));
+            final int dY = Math.max(1, Math.abs(y - cornerY));
+
+            final int x1 = cornerX == 0
+                    ? (dY * dY / dX + dX) / 2
+                    : cornerX - (dY * dY / dX + dX) / 2;
+            final int y1 = cornerY == 0
+                    ? (dX * dX / dY + dY) / 2
+                    : cornerY - (dX * dX / dY + dY) / 2;
+            float sX, sY;
+            {
+                float d1 = x - x1;
+                float d2 = y - cornerY;
+                sX = (float) (Math.sqrt(d1 * d1 + d2 * d2) / 2);
                 if (cornerX == 0) {
-                    x = Math.max(1, Math.min(myWidth / 2, myEndX));
-                } else {
-                    x = Math.max(myWidth / 2, Math.min(myWidth - 1, myEndX));
+                    sX = -sX;
                 }
             }
+            {
+                float d1 = x - cornerX;
+                float d2 = y - y1;
+                sY = (float) (Math.sqrt(d1 * d1 + d2 * d2) / 2);
+                if (cornerY == 0) {
+                    sY = -sY;
+                }
+            }
+
+            /**
+             * 裁出当前页剩余部分
+             */
+            myFgPath.rewind(); // 清除掉path里的线条和曲线,但是会保留内部的数据结构以便重用
+            myFgPath.moveTo(x, y); // 不绘制,只用于移动画笔
+            myFgPath.lineTo((x + cornerX) / 2, (y + y1) / 2); // 直线绘制 B4
+            // mPath.quadTo(x1, y1, x2, y2) (x1,y1) 为控制点，(x2,y2)为结束点
+            myFgPath.quadTo(cornerX, y1, cornerX, y1 - sY); // 绘制贝塞尔曲线 B5 B6
+
+            if (Math.abs(y1 - sY - cornerY) < myHeight) {
+                myFgPath.lineTo(cornerX, oppositeY); // 屏幕宽,0
+            }
+            myFgPath.lineTo(oppositeX, oppositeY); // 0,0
+            if (Math.abs(x1 - sX - cornerX) < myWidth) {
+                myFgPath.lineTo(oppositeX, cornerY); // 0,屏幕高
+            }
+            myFgPath.lineTo(x1 - sX, cornerY); // B1
+            myFgPath.quadTo(x1, cornerY, (x + x1) / 2, (y + cornerY) / 2); // B2 B3
+
+            // 2.两边阴影的绘制 myQuadPath
+            /**
+             * 贝赛尔曲线的起始点
+             * path.moveTo(startX, startY);
+             * 设置贝赛尔曲线的操作点以及终止点
+             * path.quadTo(controlX, controlY, endX, endY);
+             */
+            myQuadPath.moveTo(x1 - sX, cornerY); // 起点B1
+            myQuadPath.quadTo(x1, cornerY, (x + x1) / 2, (y + cornerY) / 2); // 控制点B2 终点B3
+            canvas.drawPath(myQuadPath, myEdgePaint);
+            myQuadPath.rewind();
+
+            myQuadPath.moveTo((x + cornerX) / 2, (y + y1) / 2); // B4
+            myQuadPath.quadTo(cornerX, y1, cornerX, y1 - sY); // B5 B6
+            canvas.drawPath(myQuadPath, myEdgePaint);
+            myQuadPath.rewind();
+
+            // 3.绘制当前页剩余的部分
+            canvas.save();
+            canvas.clipPath(myFgPath);
+            drawBitmapFrom(canvas, 0, 0, myPaint);
+            canvas.restore();
+
+            // 4.最后绘制翻起页背面+周围的三角形阴影
+            myEdgePaint.setColor(ZLAndroidColorUtil.rgb(ZLAndroidColorUtil.getAverageColor(getBitmapFrom())));
+
+            myEdgePath.rewind();
+            myEdgePath.moveTo(x, y); // A1
+            myEdgePath.lineTo((x + cornerX) / 2, (y + y1) / 2); // B4
+            myEdgePath.quadTo(
+                    (x + 3 * cornerX) / 4, // c1
+                    (y + 3 * y1) / 4,
+                    (x + 7 * cornerX) / 8, // c2
+                    (y + 7 * y1 - 2 * sY) / 8
+            );
+
+            myEdgePath.lineTo(
+                    (x + 7 * x1 - 2 * sX) / 8, // c3
+                    (y + 7 * cornerY) / 8
+            );
+            myEdgePath.quadTo(
+                    (x + 3 * x1) / 4, // c4
+                    (y + 3 * cornerY) / 4,
+                    (x + x1) / 2, // B3
+                    (y + cornerY) / 2
+            );
+            canvas.drawPath(myEdgePath, myEdgePaint);
+
+            // 在背面上覆盖文字
+            canvas.save();
+            canvas.clipPath(myEdgePath);
+            final Matrix matrix = new Matrix();
+
+            cm.set(array);
+            ColorMatrixColorFilter mColorMatrixFilter = new ColorMatrixColorFilter(cm);
+            myBackPaint.setColorFilter(mColorMatrixFilter);
+            myBackPaint.setAlpha(255);
+
+            matrix.postScale(1, -1); // 缩放比例,x不变,y变负,界面变镜像
+            matrix.postTranslate(x - cornerX, y + cornerY); // 平移
+
+            final float angle;
+            if (cornerY == 0) { // 计算旋转角度
+                angle = -180 / 3.1416f * (float) Math.atan2(x - cornerX, y - y1);
+            } else {
+                angle = 180 - 180 / 3.1416f * (float) Math.atan2(x - cornerX, y - y1);
+            }
+            matrix.postRotate(angle, x, y); // 按角度进行进行旋转
+            canvas.drawBitmap(getBitmapFrom(), matrix, myBackPaint);
+            canvas.restore();
+        } else if (dx > 0) { // 向右滑
+            myStartX = 0;
+            drawBitmapFrom(canvas, 0, 0, myPaint);
+            /**
+             * 裁出当前页剩余部分
+             */
+            myFgPath.rewind(); // 清除掉path里的线条和曲线,但是会保留内部的数据结构以便重用
+            myFgPath.moveTo(myEndX, myEndY); // 不绘制,只用于移动画笔
+            myFgPath.lineTo(myEndX, 0); // 不绘制,只用于移动画笔
+            myFgPath.lineTo(0, 0); // 直线绘制 B4
+            myFgPath.lineTo(0, myHeight); // 直线绘制 B4
+            myFgPath.lineTo(myEndX, myHeight); // 直线绘制 B4
+            // 1.绘制当前页剩余的部分
+            canvas.save();
+            canvas.clipPath(myFgPath);
+            drawBitmapTo(canvas, 0, 0, myPaint);
+            canvas.restore();
+
+            // 2.最后绘制翻起页背面+周围的三角形阴影
+            myEdgePaint.setColor(ZLAndroidColorUtil.rgb(ZLAndroidColorUtil.getAverageColor(getBitmapFrom())));
+
+            myEdgePath.rewind();
+            myFgPath.moveTo(myEndX, 0); // 不绘制,只用于移动画笔
+            float v = myEndX + (float) (myWidth - myEndX) / 2;
+            myEdgePath.lineTo(v, 0);
+            myEdgePath.lineTo(v, myHeight);
+            myEdgePath.lineTo(myEndX, myHeight);
+            myEdgePath.lineTo(myEndX, 0);
+            canvas.drawPath(myEdgePath, myEdgePaint);
+
+            // 3.在背面上覆盖文字
+            canvas.save();
+            canvas.clipPath(myEdgePath);
+            final Matrix matrix = new Matrix();
+            cm.set(array);
+            ColorMatrixColorFilter mColorMatrixFilter = new ColorMatrixColorFilter(cm);
+            myBackPaint.setColorFilter(mColorMatrixFilter);
+            myBackPaint.setAlpha(255);
+            matrix.postScale(1, -1); // 缩放比例,x不变,y变负,界面变镜像
+            matrix.postTranslate(myEndX - myWidth, myHeight * 2); // 平移
+            matrix.postRotate(180, myEndX, myHeight); // 按角度进行进行旋转
+            canvas.drawBitmap(getBitmapTo(), matrix, myBackPaint);
+            canvas.restore();
         }
+    }
+
+    private void drawVertical(Canvas canvas) {
+        // 1.先在底部绘制出下一页
+        drawBitmapTo(canvas, 0, 0, myPaint);
+        final int cornerX = myStartX > myWidth / 2 ? myWidth : 0; // 判断左边还是右边
+        final int cornerY = myStartY > myHeight / 2 ? myHeight : 0; // 判断手在上部还是下部
+        final int oppositeX = Math.abs(myWidth - cornerX);
+        final int oppositeY = Math.abs(myHeight - cornerY);
+        final int x, y;
+        y = myEndY;
+        if (getMode().Auto) {
+            x = myEndX;
+        } else {
+            if (cornerX == 0) {
+                x = Math.max(1, Math.min(myWidth / 2, myEndX));
+            } else {
+                x = Math.max(myWidth / 2, Math.min(myWidth - 1, myEndX));
+            }
+        }
+
 
         final int dX = Math.max(1, Math.abs(x - cornerX));
         final int dY = Math.max(1, Math.abs(y - cornerY));
@@ -147,11 +309,9 @@ public final class CurlAnimationProvider extends AnimationProvider {
         final int x1 = cornerX == 0
                 ? (dY * dY / dX + dX) / 2
                 : cornerX - (dY * dY / dX + dX) / 2;
-//        LogUtil.i20("准备x1:" + (x + (-dY * dY / dX + dX) / 2));
         final int y1 = cornerY == 0
                 ? (dX * dX / dY + dY) / 2
                 : cornerY - (dX * dX / dY + dY) / 2;
-
         float sX, sY;
         {
             float d1 = x - x1;
@@ -249,6 +409,7 @@ public final class CurlAnimationProvider extends AnimationProvider {
 
         matrix.postScale(1, -1); // 缩放比例,x不变,y变负,界面变镜像
         matrix.postTranslate(x - cornerX, y + cornerY); // 平移
+
         final float angle;
         if (cornerY == 0) { // 计算旋转角度
             angle = -180 / 3.1416f * (float) Math.atan2(x - cornerX, y - y1);

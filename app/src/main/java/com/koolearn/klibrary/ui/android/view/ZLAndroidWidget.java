@@ -65,7 +65,6 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
         // after any dialog was closed
         setFocusableInTouchMode(true);
         setDrawingCacheEnabled(false);
-
     }
 
     @Override
