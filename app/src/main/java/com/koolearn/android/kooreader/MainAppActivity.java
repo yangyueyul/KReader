@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.koolearn.android.kooreader.library.LibraryActivity;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
+import com.koolearn.android.kooreader.netbook.NetBookMainActivity;
 import com.koolearn.android.kooreader.util.AndroidImageSynchronizer;
 import com.koolearn.android.util.OrientationUtil;
 import com.koolearn.klibrary.core.image.ZLImage;
@@ -376,6 +377,7 @@ public class MainAppActivity extends AppCompatActivity implements SwipeRefreshLa
                     case R.id.navigation_local_book:
                         break;
                     case R.id.navigation_net_book:
+                        startActivity(new Intent(MainAppActivity.this, NetBookMainActivity.class));
                         break;
                     case R.id.navigation_bookmark:
                         break;
