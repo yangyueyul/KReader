@@ -54,3 +54,6 @@
 
 # 翻页效果
 ![f 1](https://github.com/ydcx/KooReader/blob/master/f1.jpg?raw=true)<br/>
+
+# More
+* 更多解析可以关注我们的微信公众号 按空格
