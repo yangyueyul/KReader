@@ -20,6 +20,12 @@ public abstract class KooReaderMainActivity extends Activity {
 	}
 
 	@Override
+	protected void onStart(){
+		super.onStart();
+
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			default:
