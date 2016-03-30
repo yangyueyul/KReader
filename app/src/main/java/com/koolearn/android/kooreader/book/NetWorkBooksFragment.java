@@ -5,11 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,14 +38,23 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetWorkBooksFragment extends Fragment {
+public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener  {
 
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFabSearch;
+    private SwipeRefreshLayout refreshLayout;
 
     private static final int ANIM_DURATION_FAB = 400;
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            refreshLayout.setRefreshing(false);
+        }
+    };
 
     @Nullable
     @Override
@@ -50,6 +62,10 @@ public class NetWorkBooksFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_network_books, null);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        refreshLayout.setOnRefreshListener(this);
+        refreshLayout.setColorSchemeResources(R.color.progressBarBlue, R.color.progressBarBgWhiteOrange);
+        refreshLayout.setProgressBackgroundColor(R.color.progressBarBgGreen);
 
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -130,6 +146,12 @@ public class NetWorkBooksFragment extends Fragment {
             ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
         }
     };
+
+
+    @Override
+    public void onRefresh() {
+        handler.sendEmptyMessageDelayed(1, 2000);
+    }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private final int mBackground;

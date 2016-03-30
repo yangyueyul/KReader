@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/card_margin"
+    android:layout_marginTop="@dimen/card_margin"
     android:layout_marginLeft="@dimen/card_margin"
     android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginBottom="2dp"
     android:clickable="true"
     app:cardCornerRadius="10dp"
     app:cardElevation="10dp">
@@ -41,7 +42,7 @@
                 android:id="@+id/tvDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/book_description_1"
                 android:textColor="@color/secondary_text" />
         </LinearLayout>
