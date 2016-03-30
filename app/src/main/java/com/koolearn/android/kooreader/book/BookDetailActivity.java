@@ -13,10 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.dd.processbutton.iml.SubmitProcessButton;
 import com.koolearn.android.kooreader.fragment.DetailFragment;
+import com.koolearn.android.kooreader.view.DownloadProcessButton;
 import com.koolearn.klibrary.ui.android.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,7 +27,7 @@ import java.util.Random;
 public class BookDetailActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Book mBook;
-    private SubmitProcessButton mBtnDownload;
+    private DownloadProcessButton mBtnDownload;
     private int mProgress;
     private Random random = new Random();
 
@@ -37,7 +36,7 @@ public class BookDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appbar_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mBtnDownload = (SubmitProcessButton) findViewById(R.id.btn_download);
+        mBtnDownload = (DownloadProcessButton) findViewById(R.id.btn_download);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -84,7 +83,7 @@ public class BookDetailActivity extends AppCompatActivity {
                         if (mProgress < 100) {
                             handler.postDelayed(this, random.nextInt(1000));
                         } else {
-                            Toast.makeText(BookDetailActivity.this, "放入成功", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(BookDetailActivity.this, "放入成功", Toast.LENGTH_LONG).show();
                         }
                     }
                 }, random.nextInt(1000));
