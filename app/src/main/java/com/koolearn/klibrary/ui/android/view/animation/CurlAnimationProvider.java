@@ -241,7 +241,7 @@ public final class CurlAnimationProvider extends AnimationProvider {
             myStartX = 0;
             drawBitmapFrom(canvas, 0, 0, myPaint);
             /**
-             * 裁出当前页剩余部分
+             * 裁出下一页出现部分
              */
             myFgPath.rewind(); // 清除掉path里的线条和曲线,但是会保留内部的数据结构以便重用
             myFgPath.moveTo(myEndX, myEndY); // 不绘制,只用于移动画笔
@@ -255,7 +255,7 @@ public final class CurlAnimationProvider extends AnimationProvider {
             drawBitmapTo(canvas, 0, 0, myPaint);
             canvas.restore();
 
-            // 2.最后绘制翻起页背面+周围的三角形阴影
+            // 2.绘制翻起页背面
             myEdgePaint.setColor(ZLAndroidColorUtil.rgb(ZLAndroidColorUtil.getAverageColor(getBitmapFrom())));
 
             myEdgePath.rewind();

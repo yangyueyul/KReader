@@ -2,6 +2,19 @@
 <resources>
     <string name="app_name">掌读</string>
     <string name="empty_string"></string>
+    <string name="local_book">本地图书</string>
+    <string name="network_book">在线图书</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
+    <string name="book_title_1">失控</string>
+    <string name="book_description_1">作者: [美] 凯文·凯利 \n副标题: 全人类的最终命运和结局 \n出版年: 2010-12 \n页数: 707 \n定价: 88.00元 </string>
+
+    <string name="search">搜索</string>
+    <string name="input_hint">请输入关键字</string>
+    <string name="input_prefill"></string>
+    <string name="default_search_keyword">哈利</string>
+
+    <string name="Done">打开</string>
+    <string name="Upload">下载中...</string>
 </resources>

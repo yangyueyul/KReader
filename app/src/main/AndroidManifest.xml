@@ -37,11 +37,11 @@
 
         <activity
             android:name="com.koolearn.android.kooreader.KooReader"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseAppThemeBlues">
             <intent-filter>
                 <action android:name="android.kooreader.action.VIEW" />
@@ -71,15 +71,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.koolearn.android.kooreader.library.BookInfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":library"
-            android:theme="@style/KooReader.Activity">
-            <intent-filter>
-                <action android:name="android.kooreader.action.BOOK_INFO" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:name="com.koolearn.android.kooreader.book.BookDetailActivity"
+            android:theme="@style/DrawerLayoutTheme"/>
         <activity
             android:name="com.koolearn.android.kooreader.TOCActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
