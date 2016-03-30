@@ -8,10 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -24,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.MyBookAdapter;
+import com.koolearn.android.kooreader.animation.SlideInLeftAnimator;
 import com.koolearn.android.kooreader.library.LibraryActivity;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.kooreader.util.AndroidImageSynchronizer;
@@ -44,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * ******************************************
@@ -69,6 +68,7 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             refreshLayout.setRefreshing(false);
+            updateUI();
         }
     };
     private View view;
@@ -90,6 +90,12 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
 
         setUpFAB(view);
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getBooks();
     }
 
     private void getBooks() {
@@ -116,7 +122,12 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
     private void displayBook() {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        recyclerView.setItemAnimator(new SlideInLeftAnimator());
+        recyclerView.getItemAnimator().setAddDuration(1000);
+        recyclerView.getItemAnimator().setRemoveDuration(1000);
+        recyclerView.getItemAnimator().setMoveDuration(1000);
+        recyclerView.getItemAnimator().setChangeDuration(1000);
 
         recyclerView.setAdapter(mBookAdapter);
         mBookAdapter = new MyBookAdapter(getActivity(), bookshelf);
@@ -174,10 +185,8 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
             e.printStackTrace();
         }
         mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-
+        updateUI();
 //        mBookAdapter.notifyDataSetChanged();
-//        setFragmentsList();
-
         try {
             fOut.flush();
         } catch (IOException e) {
@@ -188,23 +197,6 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getBooks();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        myCollection.unbind();
-    }
-
-    @Override
-    public void onRefresh() {
-        handler.sendEmptyMessageDelayed(1, 2000);
     }
 
     @Override
@@ -224,6 +216,7 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
             }
         });
     }
+
     private void startFABAnimation() {
         mFabSearch.animate()
                 .translationY(0)
@@ -233,12 +226,18 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
                 .start();
     }
 
-    public void setFragmentsList() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.remove(this);
-        ft.commit();
-        ft = null;
-        fm.executePendingTransactions();
+    private void updateUI(){
+        mBookAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        myCollection.unbind();
+    }
+
+    @Override
+    public void onRefresh() {
+        handler.sendEmptyMessageDelayed(1, 2000);
     }
 }

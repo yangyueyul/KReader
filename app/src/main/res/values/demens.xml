@@ -5,5 +5,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="card_margin">5dp</dimen>
     <dimen name="btn_fab_size">56dp</dimen>
-    <dimen name="btn_fab_margins">10dp</dimen>>
+    <dimen name="btn_fab_margins">10dp</dimen>
+
+    <dimen name="corner_radius">2dp</dimen>
+    <dimen name="layer_padding">3dp</dimen>
 </resources>

@@ -61,12 +61,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/sliding_tabs" />
 
-        <com.dd.processbutton.iml.SubmitProcessButton
+        <com.koolearn.android.kooreader.view.DownloadProcessButton
             android:id="@+id/btn_download"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="加入书架"
+            android:text="放入书架"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </RelativeLayout>

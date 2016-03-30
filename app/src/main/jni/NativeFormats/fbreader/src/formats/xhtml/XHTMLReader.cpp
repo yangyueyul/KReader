@@ -629,7 +629,7 @@ void XHTMLReader::fillTagTable() {
 		addAction("style", new XHTMLTagStyleAction());
 
 		addAction("p", new XHTMLTagParagraphAction(XHTML_TAG_P));
-		addAction("h1", new XHTMLTagParagraphWithControXHTMLTagActionlAction(H1));
+		addAction("h1", new XHTMLTagParagraphWithControlAction(H1));
 		addAction("h2", new XHTMLTagParagraphWithControlAction(H2));
 		addAction("h3", new XHTMLTagParagraphWithControlAction(H3));
 		addAction("h4", new XHTMLTagParagraphWithControlAction(H4));

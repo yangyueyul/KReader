@@ -72,7 +72,7 @@
         </activity>
         <activity
             android:name="com.koolearn.android.kooreader.book.BookDetailActivity"
-            android:theme="@style/DrawerLayoutTheme"/>
+            android:theme="@style/DrawerLayoutTheme" />
         <activity
             android:name="com.koolearn.android.kooreader.TOCActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

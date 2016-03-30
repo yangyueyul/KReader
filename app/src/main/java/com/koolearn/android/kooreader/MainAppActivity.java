@@ -13,7 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.koolearn.android.kooreader.book.NetWorkBooksFragment;
+import com.koolearn.android.kooreader.fragment.BookMarkFragment;
+import com.koolearn.android.kooreader.fragment.BookNoteFragment;
+import com.koolearn.android.kooreader.fragment.NetWorkBooksFragment;
 import com.koolearn.android.kooreader.fragment.LocalBooksFragment;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.Paths;
@@ -34,7 +36,8 @@ import java.util.TimerTask;
  * 修订历史 ：
  * ******************************************
  */
-public class MainAppActivity extends AppCompatActivity{
+
+public class MainAppActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
@@ -69,7 +72,6 @@ public class MainAppActivity extends AppCompatActivity{
         switchToLocalBook();
     }
 
-
     private void switchToLocalBook() {
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new LocalBooksFragment()).commit();
         mToolbar.setTitle(R.string.local_book);
@@ -78,6 +80,16 @@ public class MainAppActivity extends AppCompatActivity{
     private void switchNetWorkBook() {
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new NetWorkBooksFragment()).commit();
         mToolbar.setTitle(R.string.network_book);
+    }
+
+    private void switchToBookNote() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new BookNoteFragment()).commit();
+        mToolbar.setTitle(R.string.book_note);
+    }
+
+    private void switchToBookMark() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new BookMarkFragment()).commit();
+        mToolbar.setTitle(R.string.book_mark);
     }
 
     @Override
@@ -226,9 +238,11 @@ public class MainAppActivity extends AppCompatActivity{
                     case R.id.navigation_net_book:
                         switchNetWorkBook();
                         break;
-                    case R.id.navigation_bookmark:
+                    case R.id.navigation_book_note:
+                        switchToBookNote();
                         break;
-                    case R.id.navigation_share_book:
+                    case R.id.navigation_bookmark:
+                        switchToBookMark();
                         break;
                 }
                 menuItem.setChecked(true);

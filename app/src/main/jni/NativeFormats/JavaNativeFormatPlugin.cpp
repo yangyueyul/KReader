@@ -284,7 +284,7 @@ JNIEXPORT jint JNICALL Java_com_koolearn_kooreader_formats_NativeFormatPlugin_re
 	jobject javaBook = AndroidUtil::Field_BookModel_Book->value(javaModel);
 
 	shared_ptr<Book> book = Book::loadFromJavaBook(env, javaBook);
-	shared_ptr<BookModel> model = new BookModel(booreadModelk, javaModel, cacheDir);
+	shared_ptr<BookModel> model = new BookModel(book, javaModel, cacheDir);
 	if (!plugin->readModel(*model)) { // 根据插件不同调用不同的 readMdel
 		return 2;
 	}
