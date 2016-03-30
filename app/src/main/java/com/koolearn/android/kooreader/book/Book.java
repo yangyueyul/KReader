@@ -10,13 +10,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
 public class Book implements Serializable {
 
     private String subtitle;
-    private String[] author;
+    private String author;
     private String pubdate;
     private String origin_title;
     private String image;
@@ -30,8 +32,9 @@ public class Book implements Serializable {
     private String summary;
     private String price;
     private String pages;
-    private Images images;
-
+    private String small;
+    private String medium;
+    private String large;
 
     public String getSubtitle() {
         return subtitle;
@@ -41,11 +44,11 @@ public class Book implements Serializable {
         this.subtitle = subtitle;
     }
 
-    public String[] getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String[] author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
@@ -149,53 +152,39 @@ public class Book implements Serializable {
         return pages;
     }
 
+    public String getSmall() {
+        return small;
+    }
+
+    public void setSmall(String small) {
+        this.small = small;
+    }
+
+    public String getMedium() {
+        return medium;
+    }
+
+    public void setMedium(String medium) {
+        this.medium = medium;
+    }
+
+    public String getLarge() {
+        return large;
+    }
+
+    public void setLarge(String large) {
+        this.large = large;
+    }
+
     public void setPages(String pages) {
         this.pages = pages;
-    }
-
-    public Images getImages() {
-        return images;
-    }
-
-    public void setImages(Images images) {
-        this.images = images;
-    }
-
-    public class Images implements Serializable {
-        private String small;
-        private String large;
-        private String medium;
-
-        public String getSmall() {
-            return small;
-        }
-
-        public void setSmall(String small) {
-            this.small = small;
-        }
-
-        public String getLarge() {
-            return large;
-        }
-
-        public void setLarge(String large) {
-            this.large = large;
-        }
-
-        public String getMedium() {
-            return medium;
-        }
-
-        public void setMedium(String medium) {
-            this.medium = medium;
-        }
     }
 
     @Override
     public String toString() {
         return "Book{" +
                 "subtitle='" + subtitle + '\'' +
-                ", author=" + Arrays.toString(author) +
+                ", author=" +  author +
                 ", pubdate='" + pubdate + '\'' +
                 ", origin_title='" + origin_title + '\'' +
                 ", image='" + image + '\'' +
@@ -213,7 +202,7 @@ public class Book implements Serializable {
 
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
-    private static final String BASE_URL = "https://api.douban.com/v2/";
+    private static final String BASE_URL = "http://192.168.102.84:8080/VYReader/api/";
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
@@ -226,10 +215,18 @@ public class Book implements Serializable {
 
     public static void searchBooks(String name, final IBookResponse<List<Book>> response) {
         RequestParams params = new RequestParams();
-        params.put("q", name);
-        params.put("start", 0);
-        params.put("end", 50);
-        client.get(getAbsoluteUrl("book/search"), params, new AsyncHttpResponseHandler() {
+        params.put("page", 1);
+        params.put("pageSize", 30);
+//        String keyword = "中国";
+//        try{
+//            keyword = URLEncoder.encode(keyword, "UTF-8");
+//            keyword = URLEncoder.encode(keyword, "UTF-8");
+//            params.put("keyword","中国")
+//        }catch(UnsupportedEncodingException e){
+//            e.printStackTrace();
+//        }
+
+        client.get(getAbsoluteUrl("getBook"), params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onFailure(int i, org.apache.http.Header[] headers, byte[] bytes, Throwable throwable) {
@@ -241,7 +238,7 @@ public class Book implements Serializable {
                 try {
                     Gson gson = new Gson();
                     JSONObject json = new JSONObject(new String(responseBody));
-                    JSONArray jaBooks = json.optJSONArray("books");
+                    JSONArray jaBooks = json.optJSONArray("data");
                     List<Book> books = gson.fromJson(jaBooks.toString(), new TypeToken<List<Book>>() {}.getType());
                     response.onData(books);
 
@@ -251,4 +248,6 @@ public class Book implements Serializable {
             }
         });
     }
+
+
 }

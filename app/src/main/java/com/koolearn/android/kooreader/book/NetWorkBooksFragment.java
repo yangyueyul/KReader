@@ -233,7 +233,7 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
             runEnterAnimation(holder.itemView, position);
             Book book = mBooks.get(position);
             holder.tvTitle.setText(book.getTitle());
-            String desc = "作者: " + book.getAuthor()[0]
+            String desc = "作者: " + book.getAuthor()
                     + "\n出版年: " + book.getPubdate() + "\n页数: " + book.getPages() + "\n定价:" + book.getPrice();
             holder.tvDesc.setText(desc);
             DisplayImageOptions options = new DisplayImageOptions.Builder()

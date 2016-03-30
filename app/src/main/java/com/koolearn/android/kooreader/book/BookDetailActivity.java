@@ -59,7 +59,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        ImageLoader.getInstance().displayImage(mBook.getImages().getLarge(), ivImage, options);
+        ImageLoader.getInstance().displayImage(mBook.getLarge(), ivImage, options);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(mViewPager);
