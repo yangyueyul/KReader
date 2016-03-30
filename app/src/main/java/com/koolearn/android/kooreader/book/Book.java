@@ -244,7 +244,6 @@ public class Book implements Serializable {
                     JSONArray jaBooks = json.optJSONArray("books");
                     List<Book> books = gson.fromJson(jaBooks.toString(), new TypeToken<List<Book>>() {}.getType());
                     response.onData(books);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

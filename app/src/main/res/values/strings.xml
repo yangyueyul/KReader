@@ -2,8 +2,11 @@
 <resources>
     <string name="app_name">掌读</string>
     <string name="empty_string"></string>
+
     <string name="local_book">本地图书</string>
     <string name="network_book">在线图书</string>
+    <string name="book_note">我的笔记</string>
+    <string name="book_mark">我的书签</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
@@ -14,7 +17,4 @@
     <string name="input_hint">请输入关键字</string>
     <string name="input_prefill"></string>
     <string name="default_search_keyword">哈利</string>
-
-    <string name="Done">打开</string>
-    <string name="Upload">下载中...</string>
 </resources>

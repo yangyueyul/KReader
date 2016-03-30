@@ -1,4 +1,4 @@
-package com.koolearn.android.kooreader.book;
+package com.koolearn.android.kooreader.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +30,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.koolearn.android.kooreader.RecyclerItemClickListener;
+import com.koolearn.android.kooreader.book.Book;
+import com.koolearn.android.kooreader.book.BookDetailActivity;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.klibrary.ui.android.library.ZLAndroidLibrary;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -120,7 +122,6 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
             }
         });
     }
-
 
     private void startFABAnimation() {
         mFabSearch.animate()

@@ -30,16 +30,18 @@ public class BookDetailActivity extends AppCompatActivity {
     private DownloadProcessButton mBtnDownload;
     private int mProgress;
     private Random random = new Random();
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appbar_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mBtnDownload = (DownloadProcessButton) findViewById(R.id.btn_download);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -62,13 +64,12 @@ public class BookDetailActivity extends AppCompatActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(mViewPager);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.addTab(tabLayout.newTab().setText("内容简介"));
         tabLayout.addTab(tabLayout.newTab().setText("作者简介"));
         tabLayout.addTab(tabLayout.newTab().setText("目录"));
         tabLayout.setupWithViewPager(mViewPager);
-
+//        mBtnDownload.setProgress(100);
         mBtnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

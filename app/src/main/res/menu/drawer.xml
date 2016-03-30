@@ -5,20 +5,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_local_book"
-            android:icon="@drawable/ic_favorite"
+            android:icon="@drawable/ic_local_book"
             android:title="本地图书" />
         <item
             android:id="@+id/navigation_net_book"
-            android:icon="@drawable/ic_favorite"
+            android:icon="@drawable/ic_net_book"
             android:title="在线图书" />
         <item
-            android:id="@+id/navigation_bookmark"
-            android:icon="@drawable/ic_favorite"
-            android:title="我的书签" />
-
+            android:id="@+id/navigation_book_note"
+            android:icon="@drawable/ic_booknote"
+            android:title="我的笔记" />
         <item
-            android:id="@+id/navigation_share_book"
-            android:icon="@drawable/ic_favorite"
-            android:title="共享书籍" />
+            android:id="@+id/navigation_bookmark"
+            android:icon="@drawable/ic_bookmark"
+            android:title="我的书签" />
     </group>
 </menu>
