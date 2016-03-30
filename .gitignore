@@ -31,3 +31,4 @@ intro/
 
 # Windows VIM
 *.swp
+/app/build.gradle
