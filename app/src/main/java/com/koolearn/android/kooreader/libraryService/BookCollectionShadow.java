@@ -41,7 +41,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 
 	private final BroadcastReceiver myReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			LogUtil.i18("BC onReceive:"+intent.getAction());
 			if (!hasListeners()) {
 				return;
 			}
@@ -121,8 +120,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized int size() {
-		LogInfo.I("");
-
 		if (myInterface == null) {
 			return 0;
 		}
@@ -155,8 +152,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized boolean hasBooks(Filter filter) {
-		LogInfo.I("");
-
 		if (myInterface == null) {
 			return false;
 		}
@@ -203,8 +198,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized Book getBookByFile(String path) {
-		LogInfo.I("");
-
 		if (myInterface == null) {
 			return null;
 		}
@@ -265,8 +258,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public List<Author> authors() {
-		LogInfo.I("");
-
 		return listCall(new ListCallable<Author>() {
 			public List<Author> call() throws RemoteException {
 				final List<String> strings = myInterface.authors();
@@ -358,7 +349,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized void addToRecentlyOpened(Book book) {
-		LogUtil.i18("BC");
 		if (myInterface != null) {
 			try {
 				myInterface.addToRecentlyOpened(SerializerUtil.serialize(book));
@@ -660,11 +650,11 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 
 	// method from ServiceConnection interface
 	public synchronized void onServiceDisconnected(ComponentName name) {
-		LogUtil.i18("onServiceDisconnected");
+
 	}
 
 	public Book createBook(long id, String url, String title, String encoding, String language) {
-		LogUtil.i18("BC"+url.substring("file://".length()));
+//		LogUtil.i8("createBook:" + url.substring("file://".length()));
 		return new Book(id, url.substring("file://".length()), title, encoding, language);
 	}
 }

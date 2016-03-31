@@ -69,7 +69,7 @@ public class MainAppActivity extends AppCompatActivity {
 
         timer = new Timer();
         copyBooks();
-        switchToLocalBook();
+        switchNetWorkBook();
     }
 
     private void switchToLocalBook() {
@@ -143,12 +143,12 @@ public class MainAppActivity extends AppCompatActivity {
             public void run() {
                 copyFonts("hksv.ttf");
                 copyFonts("wryh.ttf");
-                copyEpub("harry.epub");
-                copyEpub("abeaver.epub");
-                copyEpub("silverchair.epub");
+//                copyEpub("harry.epub");
+//                copyEpub("abeaver.epub");
+//                copyEpub("silverchair.epub");
 
-                copyEpub("ExaminationCloze.doc");
-                copyEpub("function.doc");
+//                copyEpub("ExaminationCloze.doc");
+//                copyEpub("function.doc");
 //                copyEpubToSdCard("TheSilverChair.epub");
 //                copyEpubToSdCard("ExaminationCloze.doc");
 //                copyEpubToSdCard("function.doc");
