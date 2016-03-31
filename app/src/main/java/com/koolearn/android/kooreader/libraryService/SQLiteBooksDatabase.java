@@ -173,6 +173,11 @@ final class SQLiteBooksDatabase extends BooksDatabase {
     }
 
     @Override
+    protected void addAuthor(DbBook book, Author author) {
+        super.addAuthor(book, author);
+    }
+
+    @Override
     protected String getOptionValue(String name) {
         final Cursor cursor = myDatabase.rawQuery(
                 "SELECT value FROM Options WHERE name=?", new String[]{name}
@@ -1876,14 +1881,14 @@ final class SQLiteBooksDatabase extends BooksDatabase {
         myDatabase.execSQL("DROP TABLE IF EXISTS BookLabel_Obsolete");
 
         myDatabase.execSQL("CREATE TABLE IF NOT EXISTS DeletedBookLabelIds(uid TEXT(36) PRIMARY KEY)");
-        /**
-         * 用于首次运行展示默认书籍
-         */
-        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (5,1458283555211,1)");
-        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (4,1458284555211,1)");
-        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (3,1458285555211,1)");
-        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (2,1458286555211,1)");
-        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (1,1458287221193,1)");
+//        /**
+//         * 用于首次运行展示默认书籍
+//         */
+//        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (5,1458283555211,1)");
+//        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (4,1458284555211,1)");
+//        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (3,1458285555211,1)");
+//        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (2,1458286555211,1)");
+//        myDatabase.execSQL("INSERT INTO BookHistory (book_id,timestamp,event) values (1,1458287221193,1)");
     }
 
     private SQLiteStatement get(String sql) {

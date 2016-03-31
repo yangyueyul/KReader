@@ -63,7 +63,6 @@ public class LibraryService extends Service {
 
         @Override
         public void onEvent(int event, String path) {
-            LogInfo.I("");
             event = event & ALL_EVENTS;
             System.err.println("Event " + event + " on " + path);
             switch (event) {

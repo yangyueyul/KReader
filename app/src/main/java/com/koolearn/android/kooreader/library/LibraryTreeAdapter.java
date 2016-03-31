@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.koolearn.android.kooreader.covers.CoverManager;
 import com.koolearn.android.kooreader.tree.TreeActivity;
 import com.koolearn.android.kooreader.tree.TreeAdapter;
-import com.koolearn.android.util.LogInfo;
 import com.koolearn.android.util.ViewUtil;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.ui.android.R;
@@ -119,7 +118,6 @@ class LibraryTreeAdapter extends TreeAdapter {
 //			return R.drawable.ic_list_library_tags;
 //		}
 		else if (tree instanceof FileFirstLevelTree) {
-			LogInfo.I("LibraryActivity");
 			return R.drawable.ic_list_library_folder;
 		}
 //		else if (tree instanceof SearchResultsTree) {
@@ -127,16 +125,12 @@ class LibraryTreeAdapter extends TreeAdapter {
 //			return R.drawable.ic_list_library_search;
 //		}
 		else if (tree instanceof FileTree) {
-			LogInfo.I("LibraryActivity FileTree");
 			final ZLFile file = ((FileTree)tree).getFile();
 			if (file.isArchive()) {
-				LogInfo.I("LibraryActivity isArchive");
 				return R.drawable.ic_list_library_zip;
 			} else if (file.isDirectory() && file.isReadable()) {
-				LogInfo.I("LibraryActivity isDirectory");
 				return R.drawable.ic_list_library_folder;
 			} else {
-				LogInfo.I("LibraryActivity jiami");
 				return R.drawable.ic_list_library_permission_denied;
 			}
 		}

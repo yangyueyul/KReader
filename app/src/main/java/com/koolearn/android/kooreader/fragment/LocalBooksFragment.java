@@ -1,19 +1,20 @@
 package com.koolearn.android.kooreader.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,22 +27,11 @@ import com.koolearn.android.kooreader.MyBookAdapter;
 import com.koolearn.android.kooreader.animation.SlideInLeftAnimator;
 import com.koolearn.android.kooreader.library.LibraryActivity;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
-import com.koolearn.android.kooreader.util.AndroidImageSynchronizer;
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.android.util.OrientationUtil;
-import com.koolearn.klibrary.core.image.ZLImage;
-import com.koolearn.klibrary.core.image.ZLImageProxy;
 import com.koolearn.klibrary.ui.android.R;
-import com.koolearn.klibrary.ui.android.image.ZLAndroidImageData;
-import com.koolearn.klibrary.ui.android.image.ZLAndroidImageManager;
-import com.koolearn.kooreader.Paths;
 import com.koolearn.kooreader.book.Book;
-import com.koolearn.kooreader.book.CoverUtil;
-import com.koolearn.kooreader.formats.PluginCollection;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +60,6 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             refreshLayout.setRefreshing(false);
-            updateUI();
         }
     };
     private View view;
@@ -105,17 +94,14 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
             public void run() {
                 bookshelf.clear();
                 bookshelf = myCollection.recentlyOpenedBooks(9);
-                while (bookshelf.size() < 2) {
-                    try {
-                        Thread.sleep(1000);
-                        bookshelf = myCollection.recentlyOpenedBooks(9);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                for (Book book : bookshelf) { // 缓存书籍封面至本地
-                    setCover(book);
-                }
+//                while (bookshelf.size() < 2) {
+//                    try {
+//                        Thread.sleep(1000);
+//                        bookshelf = myCollection.recentlyOpenedBooks(9);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 displayBook();
             }
         });
@@ -133,72 +119,33 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
 
         recyclerView.setAdapter(mBookAdapter);
         mBookAdapter = new MyBookAdapter(getActivity(), bookshelf);
-        mBookAdapter.setOnItemClickListener(new MyBookAdapter.OnRecyclerViewItemClickListener() {
+        mBookAdapter.setOnItemClickListener(new MyBookAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, Book data) {
                 KooReader.openBookActivity(getActivity(), data, null);
                 getActivity().overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
             }
+
+            @Override
+            public void onItemLongClick(final View view, final Book data, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("删除书籍?").setNegativeButton("取消", null);
+                LogUtil.i8("position:" + position);
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //                notifyItemInserted(position)与notifyItemRemoved(position)
+                        myCollection.removeBook(data, true);
+                        int position = bookshelf.indexOf(data);
+                        bookshelf.remove(position);
+                        recyclerView.removeViewAt(position);
+                        mBookAdapter.notifyItemRemoved(position);
+//                        mBookAdapter.notifyItemRemoved(0);
+                        Snackbar.make(view, "删除成功", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+                builder.show();
+            }
         });
-    }
-
-    private void setCover(final Book book) {
-        final String fileName = Paths.internalTempDirectoryValue(getActivity()) + "/" + book.getSortKey() + ".png";
-        File file = new File(fileName);
-        if (file.exists()) {
-            book.setMyCoverPath(fileName);
-            return; // 不再执行
-        }
-        AndroidImageSynchronizer myImageSynchronizer = new AndroidImageSynchronizer(getActivity());
-        PluginCollection pluginCollection = PluginCollection.Instance(Paths.systemInfo(getActivity()));
-        final ZLImage image = CoverUtil.getCover(book, pluginCollection);
-        if (image instanceof ZLImageProxy) {
-            ((ZLImageProxy) image).startSynchronization(myImageSynchronizer, new Runnable() {
-                public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            final ZLAndroidImageData data = ((ZLAndroidImageManager) ZLAndroidImageManager.Instance()).getImageData(image);
-                            if (data != null) {
-                                final DisplayMetrics metrics = new DisplayMetrics();
-                                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                                final int maxHeight = metrics.heightPixels * 2 / 3;
-                                final int maxWidth = maxHeight * 2 / 3;
-                                final Bitmap coverBitmap = data.getBitmap(2 * maxWidth, 2 * maxHeight);
-                                try {
-                                    book.setMyCoverPath(fileName);
-                                    saveMyBitmap(fileName, coverBitmap);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    }
-
-    public void saveMyBitmap(String fileName, Bitmap mBitmap) throws IOException {
-        File file = new File(fileName);
-        FileOutputStream fOut = null;
-        try {
-            fOut = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-        updateUI();
-//        mBookAdapter.notifyDataSetChanged();
-        try {
-            fOut.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -226,10 +173,6 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
                 .setStartDelay(500)
                 .setDuration(400)
                 .start();
-    }
-
-    private void updateUI(){
-        mBookAdapter.notifyDataSetChanged();
     }
 
     @Override

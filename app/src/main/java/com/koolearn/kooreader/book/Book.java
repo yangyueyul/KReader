@@ -19,15 +19,13 @@
 
 package com.koolearn.kooreader.book;
 
-import com.koolearn.android.util.LogInfo;
-
 public final class Book extends AbstractBook {
 	private final String myPath;
 	private String myCoverPath;
 
 	public Book(long id, String path, String title, String encoding, String language) {
 		super(id, title, encoding, language);
-		LogInfo.i("booka"+path+":"+title+":"+encoding+":"+language);
+//		LogUtil.i8("books:" + path + ":" + title + ":" + encoding + ":" + language);
 		if (path == null) {
 			throw new IllegalArgumentException("Creating book with no file");
 		}

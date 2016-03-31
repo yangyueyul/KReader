@@ -10,9 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.List;
 
 public class Book implements Serializable {
@@ -202,7 +199,7 @@ public class Book implements Serializable {
 
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
 
-    private static final String BASE_URL = "http://192.168.102.84:8080/VYReader/api/";
+    private static final String BASE_URL = "http://115.28.224.54:8080/VYReader/api/";
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

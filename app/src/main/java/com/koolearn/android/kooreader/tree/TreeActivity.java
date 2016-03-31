@@ -199,7 +199,6 @@ public abstract class TreeActivity<T extends KooTree> extends ListActivity {
     }
 
     private void openTreeInternal(KooTree tree, KooTree treeToSelect, boolean storeInHistory) {
-        LogInfo.I1("");
         switch (tree.getOpeningStatus()) {
             case READY_TO_OPEN:
             case ALWAYS_RELOAD_BEFORE_OPENING:

@@ -3,7 +3,6 @@ package com.koolearn.android.kooreader.book;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.fragment.DetailFragment;
@@ -30,19 +30,18 @@ import org.apache.http.Header;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class BookDetailActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Book mBook;
     private DownloadProcessButton mBtnDownload;
-    private int mProgress;
-    private Random random = new Random();
     private Toolbar mToolbar;
 
     private final BookCollectionShadow myCollection = new BookCollectionShadow();
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
-    String filePath = "";
+    private static final String BOOK_PATH = "/mnt/sdcard/KooBook/";
+    private String filePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        ImageLoader.getInstance().displayImage(mBook.getLarge(), ivImage, options);
+        ImageLoader.getInstance().displayImage(mBook.getImage(), ivImage, options);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(mViewPager);
@@ -81,26 +80,22 @@ public class BookDetailActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("作者简介"));
         tabLayout.addTab(tabLayout.newTab().setText("目录"));
         tabLayout.setupWithViewPager(mViewPager);
-//        mBtnDownload.setProgress(100);
+
+        filePath = BOOK_PATH + mBook.getTitle() + ".epub";
+        File fileDir = new File(filePath);
+        if (fileDir.exists()) {
+            mBtnDownload.setProgress(100);
+        }
+
         mBtnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBtnDownload.setEnabled(false);
-                File file = new File(filePath);
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mProgress += 10;
-//                        mBtnDownload.setProgress(mProgress);
-//                        if (mProgress < 100) {
-//                            handler.postDelayed(this, random.nextInt(1000));
-//                        } else {
-////                            Toast.makeText(BookDetailActivity.this, "放入成功", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                }, random.nextInt(1000));
-
+                if (mBtnDownload.getProgress() == 100) {
+                    startOpenBookByPath(filePath);
+                } else {
+                    mBtnDownload.setEnabled(false);
+                    downloadBook();
+                }
             }
         });
     }
@@ -142,38 +137,39 @@ public class BookDetailActivity extends AppCompatActivity {
             return mFragmentTitles.get(position);
         }
     }
-
-
-    private void downloadBook(Book book){
-
-        startOpenBookByPath("/storage/emulated/0/Tencent/QQfile_recv/1984.epub");
-        // 路径最后统一配置
-
+    private void downloadBook() {
         File fileDir = new File(filePath);
-        if(!fileDir.getParentFile().exists()){
+        if (!fileDir.getParentFile().exists()) {
             fileDir.getParentFile().mkdirs();
         }
-        client.get("", null, new FileAsyncHttpResponseHandler(fileDir) {
+
+        // http://45.78.20.53:8080/read.epub
+
+        client.get("http://file.bmob.cn/" + mBook.getUrl(), null, new FileAsyncHttpResponseHandler(fileDir) {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-
+                Toast.makeText(BookDetailActivity.this, "下载失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, File file) {
+                mBtnDownload.setProgress(100);
+                mBtnDownload.setEnabled(true);
+                Toast.makeText(BookDetailActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
                 startOpenBookByPath(file.getPath());
             }
 
             @Override
             public void onProgress(long bytesWritten, long totalSize) {
-                super.onProgress(bytesWritten, totalSize);
-
+                mBtnDownload.setProgress((int) ((bytesWritten * 1.0 / totalSize) * 100));
+//                super.onProgress(bytesWritten, totalSize);
             }
         });
     }
 
     /**
      * 通过已经下载好的路径打开书
+     *
      * @param bookPath
      */
     private void startOpenBookByPath(final String bookPath) {
@@ -185,8 +181,9 @@ public class BookDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void openBook(com.koolearn.kooreader.book.Book data){
+    private void openBook(com.koolearn.kooreader.book.Book data) {
         KooReader.openBookActivity(this, data, null);
         overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
     }
+
 }
