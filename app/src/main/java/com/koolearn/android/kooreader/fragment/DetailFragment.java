@@ -27,12 +27,6 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, null);
         TextView tvInfo = (TextView) view.findViewById(R.id.tvInfo);
         tvInfo.setText(getArguments().getString("info"));
-//        tvInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Snackbar.make(v,"hello",Snackbar.LENGTH_SHORT).show();
-//            }
-//        });
         return view;
     }
 }

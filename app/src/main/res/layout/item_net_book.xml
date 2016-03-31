@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/card_margin"
+    android:layout_marginBottom="2dp"
     android:layout_marginLeft="@dimen/card_margin"
     android:layout_marginRight="@dimen/card_margin"
-    android:layout_marginBottom="2dp"
+    android:layout_marginTop="@dimen/card_margin"
     android:clickable="true"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="10dp">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="5dp">
 
     <LinearLayout
         style="@style/CardView.Content"
@@ -19,10 +19,10 @@
 
         <ImageView
             android:id="@+id/ivBook"
-            android:transitionName="@string/transition_book_img"
             android:layout_width="109dp"
             android:layout_height="135dp"
-            android:src="@drawable/ic_list_library_book" />
+            android:src="@drawable/ic_list_library_book"
+            android:transitionName="@string/transition_book_img" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/book_title_1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/primary_text" />
+                android:textColor="#532d17" />
 
             <TextView
                 android:id="@+id/tvDesc"

@@ -207,8 +207,6 @@ public final class KooReaderApp extends ZLApplication {
         }
         try {
             Model = BookModel.createModel(book, plugin); // NativeFormatPlugin [ePub] 慢慢加载
-
-
             Collection.saveBook(book); // 保存书籍
             BookTextView.setModel(Model.getTextModel()); // 给KooView传入TextModel 操作-UI在这里分界
             Collection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库

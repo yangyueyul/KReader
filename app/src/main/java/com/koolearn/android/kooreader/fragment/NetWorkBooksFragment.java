@@ -1,9 +1,7 @@
 package com.koolearn.android.kooreader.fragment;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,33 +15,26 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.koolearn.android.kooreader.RecyclerItemClickListener;
 import com.koolearn.android.kooreader.book.Book;
 import com.koolearn.android.kooreader.book.BookDetailActivity;
 import com.koolearn.klibrary.ui.android.R;
-import com.koolearn.klibrary.ui.android.library.ZLAndroidLibrary;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener  {
+public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
-    private MyAdapter mAdapter;
+    private NetBookAdapter mNetBookAdapter;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFabSearch;
     private SwipeRefreshLayout refreshLayout;
@@ -70,12 +61,12 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
         refreshLayout.setProgressBackgroundColor(R.color.progressBarBgGreen);
 
         mRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), onItemClickListener));
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), mRecyclerView, onItemClickListener));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new MyAdapter(getActivity());
-        mRecyclerView.setAdapter(mAdapter);
+        mNetBookAdapter = new NetBookAdapter(getActivity());
+        mRecyclerView.setAdapter(mNetBookAdapter);
 
         setUpFAB(view);
         return view;
@@ -90,13 +81,13 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
 
     private void doSearch(String keyword) {
         mProgressBar.setVisibility(View.VISIBLE);
-        mAdapter.clearItems();
+        mNetBookAdapter.clearItems();
         Book.searchBooks(keyword, new Book.IBookResponse<List<Book>>() {
             @Override
             public void onData(List<Book> books) {
                 startFABAnimation();
                 mProgressBar.setVisibility(View.GONE);
-                mAdapter.updateItems(books, true);
+                mNetBookAdapter.updateItems(books, true);
             }
         });
     }
@@ -136,15 +127,18 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
     private RecyclerItemClickListener.OnItemClickListener onItemClickListener = new RecyclerItemClickListener.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            Book book = mAdapter.getBook(position);
+            Book book = mNetBookAdapter.getBook(position);
             Intent intent = new Intent(getActivity(), BookDetailActivity.class);
             intent.putExtra("book", book);
-
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                             view.findViewById(R.id.ivBook), getString(R.string.transition_book_img));
 
             ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        }
+        @Override
+        public void onItemLongClick(View view, int position) {
+
         }
     };
 
@@ -152,110 +146,5 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
         handler.sendEmptyMessageDelayed(1, 2000);
-    }
-
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private final int mBackground;
-        private List<Book> mBooks = new ArrayList<Book>();
-        private final TypedValue mTypedValue = new TypedValue();
-
-        private static final int ANIMATED_ITEMS_COUNT = 4;
-
-        private boolean animateItems = false;
-        private int lastAnimatedPosition = -1;
-
-        // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(Context context) {
-            context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
-            mBackground = mTypedValue.resourceId;
-        }
-
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            // each data item is just a string in this case
-            public ImageView ivBook;
-            public TextView tvTitle;
-            public TextView tvDesc;
-
-            public int position;
-
-            public ViewHolder(View v) {
-                super(v);
-                ivBook = (ImageView) v.findViewById(R.id.ivBook);
-                tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-                tvDesc = (TextView) v.findViewById(R.id.tvDesc);
-            }
-        }
-
-
-        private void runEnterAnimation(View view, int position) {
-            if (!animateItems || position >= ANIMATED_ITEMS_COUNT - 1) {
-                return;
-            }
-
-            if (position > lastAnimatedPosition) {
-                lastAnimatedPosition = position;
-                view.setTranslationY(ZLAndroidLibrary.Instance().getScreenHeight());
-                view.animate()
-                        .translationY(0)
-                        .setStartDelay(100 * position)
-                        .setInterpolator(new DecelerateInterpolator(3.f))
-                        .setDuration(700)
-                        .start();
-            }
-        }
-
-
-        public void updateItems(List<Book> books, boolean animated) {
-            animateItems = animated;
-            lastAnimatedPosition = -1;
-            mBooks.addAll(books);
-            notifyDataSetChanged();
-        }
-
-        public void clearItems() {
-            mBooks.clear();
-            notifyDataSetChanged();
-        }
-
-
-        @Override
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            // create a new view
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_item, parent, false);
-            //v.setBackgroundResource(mBackground);
-            // set the view's size, margins, paddings and layout parameters
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            runEnterAnimation(holder.itemView, position);
-            Book book = mBooks.get(position);
-            holder.tvTitle.setText(book.getTitle());
-            String desc = "作者: " + book.getAuthor()
-                    + "\n出版年: " + book.getPubdate() + "\n页数: " + book.getPages() + "\n定价:" + book.getPrice();
-            holder.tvDesc.setText(desc);
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.mipmap.book_cover)
-                    .showImageOnFail(R.mipmap.book_cover)
-                    .cacheInMemory(true)
-                    .cacheOnDisk(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565)
-                    .build();
-            ImageLoader.getInstance().displayImage(book.getImage(), holder.ivBook, options);
-        }
-
-        // Return the size of your dataset (invoked by the layout manager)
-        @Override
-        public int getItemCount() {
-            return mBooks.size();
-        }
-
-
-        public Book getBook(int pos) {
-            return mBooks.get(pos);
-        }
     }
 }

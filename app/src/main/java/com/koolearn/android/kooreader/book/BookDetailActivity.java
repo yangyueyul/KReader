@@ -63,8 +63,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
         ImageView ivImage = (ImageView) findViewById(R.id.ivImage);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.book_cover)
-                .showImageOnFail(R.mipmap.book_cover)
+                .showImageOnLoading(R.drawable.book_cover)
+                .showImageOnFail(R.drawable.book_cover)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
@@ -104,7 +104,7 @@ public class BookDetailActivity extends AppCompatActivity {
         adapter.addFragment(DetailFragment.newInstance(mBook.getAuthor_intro()), "作者简介");
         adapter.addFragment(DetailFragment.newInstance(mBook.getCatalog()), "目录");
         mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(1, true);
+        mViewPager.setCurrentItem(0, true);
     }
 
     static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -176,6 +176,9 @@ public class BookDetailActivity extends AppCompatActivity {
             public void run() {
                 com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
                 openBook(book);
+//                Collection.saveBook(book); // 保存书籍
+//                BookTextView.setModel(Model.getTextModel()); // 给KooView传入TextModel 操作-UI在这里分界
+//                Collection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
             }
         });
     }
