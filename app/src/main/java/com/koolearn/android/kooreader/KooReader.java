@@ -79,6 +79,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
                 UIMessageUtil.showErrorMessage(this, "fileNotFound", file.getPath());
                 myBook = null;
             } else {
+
             }
         }
         Config.Instance().runOnConnect(new Runnable() {

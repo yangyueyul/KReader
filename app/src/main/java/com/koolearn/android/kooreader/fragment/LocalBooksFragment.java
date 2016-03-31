@@ -3,6 +3,7 @@ package com.koolearn.android.kooreader.fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.MyBookAdapter;
@@ -87,7 +89,7 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.progressBarBlue, R.color.progressBarBgWhiteOrange);
         refreshLayout.setProgressBackgroundColor(R.color.progressBarBgGreen);
-
+        Toast.makeText(getActivity(), Environment.getExternalStorageDirectory()+"",Toast.LENGTH_LONG).show();
         setUpFAB(view);
         return view;
     }
