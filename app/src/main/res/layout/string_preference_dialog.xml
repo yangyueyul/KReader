@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:paddingTop="16dip"
-		android:hint="ahahhahhahah"
+		android:hint="10pt"
 		android:paddingLeft="8dip"
 		android:paddingRight="8dip"
 	/>

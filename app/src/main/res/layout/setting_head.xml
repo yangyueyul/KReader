@@ -8,7 +8,7 @@
         android:id="@+id/rl_shelf"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#009688">
+        android:background="@color/primarys">
 
         <ImageView
             android:id="@+id/shelf_menu"

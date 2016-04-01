@@ -1,16 +1,16 @@
 <resources>
 
-    <style name="KooReader.Activity" parent="android:Theme"></style>
+    <!--<style name="KooReader.Activity" parent="android:Theme"></style>-->
 
-    <style name="KooReader.Activity.NoActionBar" parent="android:Theme"></style>
+    <!--<style name="KooReader.Activity.NoActionBar" parent="android:Theme"></style>-->
 
-    <style name="KooReader.Dialog" parent="android:Theme.Dialog"></style>
+    <!--<style name="KooReader.Dialog" parent="android:Theme.Dialog"></style>-->
 
-    <color name="transparent">#FFFFFF</color>
+    <!--<color name="transparent">#FFFFFF</color>-->
 
-    <style name="KooReader.Transparent" parent="android:Theme.Translucent.NoTitleBar">
-        <item name="android:windowBackground">@color/window_background</item>
-    </style>
+    <!--<style name="KooReader.Transparent" parent="android:Theme.Translucent.NoTitleBar">-->
+        <!--<item name="android:windowBackground">@color/window_background</item>-->
+    <!--</style>-->
 
     <!-- Base application theme. -->
     <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,26 +20,6 @@
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowBackground">@color/window_background</item>
     </style>
-
-    <style name="BaseAppThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primarysb</item>
-        <item name="colorPrimaryDark">@color/primarys_darkb</item>
-        <item name="colorAccent">@color/accentb</item>
-        <item name="android:windowBackground">@color/window_background</item>
-    </style>
-
-    <style name="BaseAppThemeBlues" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primarys</item>
-        <item name="colorPrimaryDark">@color/primarys_dark</item>
-        <item name="colorAccent">@android:color/darker_gray</item>
-        <item name="android:windowBackground">@color/window_background</item>
-    </style>
-    <style name="KooAppTheme" parent="BaseAppTheme" />
-
-    <style name="AppTheme" parent="BaseAppTheme" />
-    <style name="DrawerLayoutTheme" parent="AppTheme"></style>
 
     <style name="CardView.Content" parent="android:Widget">
         <item name="android:paddingLeft">16dp</item>

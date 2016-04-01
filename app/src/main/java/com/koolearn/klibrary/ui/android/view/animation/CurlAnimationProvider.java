@@ -101,25 +101,44 @@ public final class CurlAnimationProvider extends AnimationProvider {
             final int oppositeX = Math.abs(myWidth - cornerX);
             final int oppositeY = Math.abs(myHeight - cornerY);
             final int x, y;
+//            if (cornerX == 0) {
+//                x = Math.max(1, Math.min(myWidth / 2, myEndX));
+//            } else {
+//                x = Math.max(myWidth / 2, Math.min(myWidth - 1, myEndX));
+//            }
+            x = myEndX;
+//            if (getMode().Auto) { // 松手后变为true
+//                if (cornerY == 0) { // 左上 右上
+//                    /**
+//                     * 在最边时Y最小,最小设为为1,防止出现bug
+//                     * Y最大值为 屏幕高度 / 2
+//                     */
+//                    y = Math.max(1, Math.min(myHeight / 4, myEndY));
+//                } else { // 左下 右下
+//                    /**
+//                     * 在最下面时Y最大,最大设为屏幕高度-1,防止出现bug
+//                     * Y最大值为 屏幕高度 / 2
+//                     */
+//                    y = (int) Math.max(0.75 * myHeight, Math.min(myHeight - 1, myEndY));
+//                }
+//            } else {
+            if (cornerY == 0) { // 左上 右上
+                /**
+                 * 在最边时Y最小,最小设为为1,防止出现bug
+                 * Y最大值为 屏幕高度 / 2
+                 */
+                y = Math.max(1, Math.min(myHeight / 4, myEndY));
+            } else { // 左下 右下
+                /**
+                 * 在最下面时Y最大,最大设为屏幕高度-1,防止出现bug
+                 * Y最大值为 屏幕高度 / 2
+                 */
+                y = (int) Math.max(0.75 * myHeight, Math.min(myHeight - 1, myEndY));
+                if (x * x + y * y >= myWidth * myWidth / 4) {
 
-            x = myEndX; // 横屏,x不作限制
-            if (getMode().Auto) { // 松手后变为true
-                y = myEndY;
-            } else {
-                if (cornerY == 0) { // 左上 右上
-                    /**
-                     * 在最边时Y最小,最小设为为1,防止出现bug
-                     * Y最大值为 屏幕高度 / 2
-                     */
-                    y = Math.max(1, Math.min(myHeight / 2, myEndY));
-                } else { // 左下 右下
-                    /**
-                     * 在最下面时Y最大,最大设为屏幕高度-1,防止出现bug
-                     * Y最大值为 屏幕高度 / 2
-                     */
-                    y = Math.max(myHeight / 2, Math.min(myHeight - 1, myEndY));
                 }
             }
+//            }
 
             final int dX = Math.max(1, Math.abs(x - cornerX));
             final int dY = Math.max(1, Math.abs(y - cornerY));
@@ -147,7 +166,6 @@ public final class CurlAnimationProvider extends AnimationProvider {
                     sY = -sY;
                 }
             }
-
             /**
              * 裁出当前页剩余部分
              */
@@ -174,6 +192,7 @@ public final class CurlAnimationProvider extends AnimationProvider {
              * 设置贝赛尔曲线的操作点以及终止点
              * path.quadTo(controlX, controlY, endX, endY);
              */
+            LogUtil.i8("cornerY:" + cornerY);
             myQuadPath.moveTo(x1 - sX, cornerY); // 起点B1
             myQuadPath.quadTo(x1, cornerY, (x + x1) / 2, (y + cornerY) / 2); // 控制点B2 终点B3
             canvas.drawPath(myQuadPath, myEdgePaint);

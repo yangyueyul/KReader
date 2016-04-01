@@ -26,6 +26,7 @@ import com.koolearn.kooreader.formats.PluginCollection;
 import com.koolearn.kooreader.kooreader.options.ImageOptions;
 import com.koolearn.kooreader.kooreader.options.PageTurningOptions;
 import com.koolearn.kooreader.kooreader.options.ViewOptions;
+import com.koolearn.kooreader.network.sync.SyncData;
 import com.koolearn.kooreader.util.AutoTextSnippet;
 
 import java.util.Collections;
@@ -46,6 +47,7 @@ public final class KooReaderApp extends ZLApplication {
     private ZLTextPosition myJumpEndPosition;
     private Date myJumpTimeStamp;
     public final IBookCollection<Book> Collection;
+    private final SyncData mySyncData = new SyncData();
 
     public KooReaderApp(com.koolearn.klibrary.core.util.SystemInfo systemInfo, final IBookCollection<Book> collection) {
         super(systemInfo);
@@ -209,6 +211,8 @@ public final class KooReaderApp extends ZLApplication {
             Model = BookModel.createModel(book, plugin); // NativeFormatPlugin [ePub] 慢慢加载
             Collection.saveBook(book); // 保存书籍
             BookTextView.setModel(Model.getTextModel()); // 给KooView传入TextModel 操作-UI在这里分界
+            gotoStoredPosition();
+
             Collection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
         } catch (BookReadingException e) {
             processException(e);
@@ -296,21 +300,18 @@ public final class KooReaderApp extends ZLApplication {
     private volatile ZLTextPosition myStoredPosition;
     private volatile Book myStoredPositionBook;
 
-    public void storePosition() { // 进度保存
-        final Book bk = Model != null ? Model.Book : null;
-        if (bk != null && bk == myStoredPositionBook && myStoredPosition != null && BookTextView != null) {
-            final ZLTextPosition position = new ZLTextFixedPosition(BookTextView.getStartCursor());
-            if (!myStoredPosition.equals(position)) {
-                myStoredPosition = position;
-                savePosition();
-            }
-        }
-    }
-
-
     private ZLTextFixedPosition getStoredPosition(Book book) {
-        final ZLTextFixedPosition.WithTimestamp local = Collection.getStoredPosition(book.getId());
-        return local;
+        final ZLTextFixedPosition.WithTimestamp fromServer =
+                mySyncData.getAndCleanPosition(Collection.getHash(book, true));
+        final ZLTextFixedPosition.WithTimestamp local =
+                Collection.getStoredPosition(book.getId());
+        if (local == null) {
+            return fromServer != null ? fromServer : new ZLTextFixedPosition(0, 0, 0);
+        } else if (fromServer == null) {
+            return local;
+        } else {
+            return fromServer.Timestamp >= local.Timestamp ? fromServer : local;
+        }
     }
 
     private void gotoStoredPosition() {
@@ -323,9 +324,26 @@ public final class KooReaderApp extends ZLApplication {
         savePosition();
     }
 
+    public void storePosition() { // 进度保存
+        final Book bk = Model != null ? Model.Book : null;
+        LogUtil.i8("storePosition0" + bk);
+        LogUtil.i8("storePosition1" + myStoredPositionBook);
+        LogUtil.i8("storePosition2" + myStoredPosition);
+        LogUtil.i8("storePosition3" + BookTextView);
+
+        if (bk != null && bk == myStoredPositionBook && myStoredPosition != null && BookTextView != null) {
+            final ZLTextPosition position = new ZLTextFixedPosition(BookTextView.getStartCursor());
+            if (!myStoredPosition.equals(position)) {
+                myStoredPosition = position;
+                LogUtil.i8("storePosition" + bk);
+
+                savePosition();
+            }
+        }
+    }
+
     private void savePosition() { // 保存进度
         final RationalNumber progress = BookTextView.getProgress();
-        LogUtil.i9("savePosition");
         synchronized (mySaverThread) {
             if (!mySaverThread.isAlive()) {
                 mySaverThread.start();

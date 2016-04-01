@@ -69,8 +69,8 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(R.color.progressBarBlue, R.color.progressBarBgWhiteOrange);
-        refreshLayout.setProgressBackgroundColor(R.color.progressBarBgGreen);
+        refreshLayout.setColorSchemeResources(R.color.progressBara, R.color.progressBarb);
+        refreshLayout.setProgressBackgroundColor(R.color.accent);
         setUpFAB(view);
 
         mRecyclerView.setHasFixedSize(true);
@@ -149,7 +149,7 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         @Override
         public void onItemLongClick(final View view, final int position) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setIcon(R.drawable.ic_error_outline_red_18pt_2x).setTitle("删除书籍?").setNeutralButton("稍后", null).setNegativeButton("取消", null);
+            builder.setIcon(R.drawable.ic_error_outline_black).setTitle("删除书籍?").setNeutralButton("稍后", null).setNegativeButton("取消", null);
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     myCollection.removeBook(mLocalBookAdapter.getBook(position), true);

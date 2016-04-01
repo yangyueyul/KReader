@@ -1,13 +1,9 @@
 package com.koolearn.android.kooreader;
 
-import android.content.Intent;
-
 import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.text.view.ZLTextHyperlink;
 import com.koolearn.klibrary.text.view.ZLTextHyperlinkRegionSoul;
-import com.koolearn.klibrary.text.view.ZLTextImageRegionSoul;
 import com.koolearn.klibrary.text.view.ZLTextRegion;
-import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.bookmodel.FBHyperlinkType;
 import com.koolearn.kooreader.kooreader.KooReaderApp;
 import com.koolearn.kooreader.util.AutoTextSnippet;
@@ -47,29 +43,30 @@ class ProcessHyperlinkAction extends KooAndroidAction {
                     break;
                 }
             }
-        } else if (soul instanceof ZLTextImageRegionSoul) {
-
-            Reader.getTextView().hideOutline();
-            Reader.getViewWidget().repaint();
-            final String url = ((ZLTextImageRegionSoul) soul).ImageElement.URL;
-            if (url != null) {
-                try {
-                    final Intent intent = new Intent();
-                    intent.setClass(BaseActivity, PhotoViewActivity.class);
-                    LogUtil.i5("url:" + url);
-                    intent.putExtra(PhotoViewActivity.URL_KEY, url);
-//                    intent.putExtra(
-//                            PhotoViewActivity.BACKGROUND_COLOR_KEY,
-//                            Reader.ImageOptions.ImageViewBackground.getValue().intValue()
-//                    );
-                    BaseActivity.startActivity(intent);
-                    BaseActivity.overridePendingTransition(R.anim.tran_fade_in_long, R.anim.tran_fade_out_long);
-//                    BaseActivity.overridePendingTransition(R.anim.tran_fade_in_long, R.anim.tran_fade_out_long);
-//                    BaseActivity.overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
+//        else if (soul instanceof ZLTextImageRegionSoul) {
+//
+//            Reader.getTextView().hideOutline();
+//            Reader.getViewWidget().repaint();
+//            final String url = ((ZLTextImageRegionSoul) soul).ImageElement.URL;
+//            if (url != null) {
+//                try {
+//                    final Intent intent = new Intent();
+//                    intent.setClass(BaseActivity, PhotoViewActivity.class);
+//                    LogUtil.i5("url:" + url);
+//                    intent.putExtra(PhotoViewActivity.URL_KEY, url);
+////                    intent.putExtra(
+////                            PhotoViewActivity.BACKGROUND_COLOR_KEY,
+////                            Reader.ImageOptions.ImageViewBackground.getValue().intValue()
+////                    );
+//                    BaseActivity.startActivity(intent);
+//                    BaseActivity.overridePendingTransition(R.anim.tran_fade_in_long, R.anim.tran_fade_out_long);
+////                    BaseActivity.overridePendingTransition(R.anim.tran_fade_in_long, R.anim.tran_fade_out_long);
+////                    BaseActivity.overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 }

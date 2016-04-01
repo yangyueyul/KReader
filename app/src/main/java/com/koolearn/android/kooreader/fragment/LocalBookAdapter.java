@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koolearn.android.kooreader.util.AndroidImageSynchronizer;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.image.ZLImage;
 import com.koolearn.klibrary.core.image.ZLImageProxy;
 import com.koolearn.klibrary.ui.android.R;
@@ -220,7 +219,6 @@ public class LocalBookAdapter extends RecyclerView.Adapter<LocalBookAdapter.View
         }
         mBitmap.compress(Bitmap.CompressFormat.PNG, 50, fOut);
         notifyDataSetChanged();
-        LogUtil.i8("fileNameyyyyyyyyyyy:" + file.getPath());
         try {
             fOut.flush();
         } catch (IOException e) {

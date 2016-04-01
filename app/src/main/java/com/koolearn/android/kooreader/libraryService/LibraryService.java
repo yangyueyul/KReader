@@ -58,7 +58,6 @@ public class LibraryService extends Service {
             super(path, MASK);
             myPrefix = path + '/';
             myCollection = collection;
-            LogInfo.I("");
         }
 
         @Override

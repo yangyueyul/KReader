@@ -79,7 +79,7 @@ public class FlatButton extends Button {
                 (GradientDrawable) drawableNormal.getDrawable(0).mutate();
         drawableTop.setCornerRadius(getCornerRadius());
 
-        int blueDark = getColor(R.color.blue_pressed);
+        int blueDark = getColor(R.color.button_press);
         int colorPressed = attr.getColor(R.styleable.FlatButton_pb_colorPressed, blueDark);
         drawableTop.setColor(colorPressed);
 
@@ -87,7 +87,7 @@ public class FlatButton extends Button {
                 (GradientDrawable) drawableNormal.getDrawable(1).mutate();
         drawableBottom.setCornerRadius(getCornerRadius());
 
-        int blueNormal = getColor(R.color.blue_normal);
+        int blueNormal = getColor(R.color.button_normal);
         int colorNormal = attr.getColor(R.styleable.FlatButton_pb_colorNormal, blueNormal);
         drawableBottom.setColor(colorNormal);
         return drawableNormal;
@@ -98,7 +98,7 @@ public class FlatButton extends Button {
                 (GradientDrawable) getDrawable(R.drawable.rect_pressed).mutate();
         drawablePressed.setCornerRadius(getCornerRadius());
 
-        int blueDark = getColor(R.color.blue_pressed);
+        int blueDark = getColor(R.color.button_press);
         int colorPressed = attr.getColor(R.styleable.FlatButton_pb_colorPressed, blueDark);
         drawablePressed.setColor(colorPressed);
 

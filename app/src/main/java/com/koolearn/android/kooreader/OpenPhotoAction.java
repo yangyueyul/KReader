@@ -41,20 +41,20 @@ public class OpenPhotoAction extends KooAndroidAction {
             int mWidth = right - left;
             int mHeight = bottom - top;
 //            float mScale = (float) screenWidth / mWidth;
-            final float mScaleD = (float) mWidth / (float)screenWidth;
+            final float mScaleD = (float) mWidth / (float) screenWidth;
 //            float mTop = (screenHeight - mHeight * mScale) / 2;
             final float mTop = screenHeight / 2 - (float) mHeight / 2 - (float) top;
 
             final String prefix = ZLFileImage.SCHEME + "://";
             if (url != null && url.startsWith(prefix)) {
-                final ZLFileImage image = ZLFileImage.byUrlPath(url.substring(prefix.length()));
+                ZLFileImage image = ZLFileImage.byUrlPath(url.substring(prefix.length()));
                 if (image == null) {
                     // TODO: error message (?)
                     return;
                 }
                 try {
-                    final ZLImageData imageData = ZLImageManager.Instance().getImageData(image); // InputStreamImageData
-                    Bitmap myBitmap = ((ZLAndroidImageData) imageData).getFullSizeBitmap();
+                    ZLImageData imageData = ZLImageManager.Instance().getImageData(image); // InputStreamImageData
+                    Bitmap myBitmap = ((ZLAndroidImageData) imageData).getBitmap(mWidth, mHeight);
 
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     relativeLayout = new RelativeLayout(myActivity);

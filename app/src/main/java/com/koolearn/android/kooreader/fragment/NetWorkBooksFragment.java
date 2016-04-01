@@ -57,8 +57,8 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(R.color.progressBarBlue, R.color.progressBarBgWhiteOrange);
-        refreshLayout.setProgressBackgroundColor(R.color.progressBarBgGreen);
+        refreshLayout.setColorSchemeResources(R.color.progressBara, R.color.progressBarb);
+        refreshLayout.setProgressBackgroundColor(R.color.accent);
 
         mRecyclerView.setHasFixedSize(true);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);

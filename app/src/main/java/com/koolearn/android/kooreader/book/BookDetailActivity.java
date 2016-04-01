@@ -3,6 +3,8 @@ package com.koolearn.android.kooreader.book;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,12 +42,13 @@ public class BookDetailActivity extends AppCompatActivity {
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
     private static final String BOOK_PATH = "/mnt/sdcard/KooBook/";
     private String filePath;
+    private CoordinatorLayout mCooLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appbar_detail);
-
+        mCooLayout = (CoordinatorLayout) findViewById(R.id.cl);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mBtnDownload = (DownloadProcessButton) findViewById(R.id.btn_download);
         setSupportActionBar(mToolbar);
@@ -91,6 +94,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 if (mBtnDownload.getProgress() == 100) {
                     startOpenBookByPath(filePath);
                 } else {
+                    mBtnDownload.setProgress(1);
                     mBtnDownload.setEnabled(false);
                     downloadBook();
                 }
@@ -154,14 +158,31 @@ public class BookDetailActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, File file) {
                 mBtnDownload.setProgress(100);
                 mBtnDownload.setEnabled(true);
-                Toast.makeText(BookDetailActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
-                startOpenBookByPath(file.getPath());
+//                startOpenBookByPath(file.getPath());
+                addBookShelf(file.getPath());
             }
 
             @Override
             public void onProgress(long bytesWritten, long totalSize) {
                 mBtnDownload.setProgress((int) ((bytesWritten * 1.0 / totalSize) * 100));
 //                super.onProgress(bytesWritten, totalSize);
+            }
+        });
+    }
+
+    /**
+     * 放入书架
+     *
+     * @param bookPath
+     */
+    private void addBookShelf(final String bookPath) {
+        myCollection.bindToService(this, new Runnable() {
+            public void run() {
+                com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
+                myCollection.saveBook(book); // 保存书籍
+                myCollection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
+                Snackbar.make(mCooLayout, "加入成功", Snackbar.LENGTH_SHORT).show();
+//                Toast.makeText(BookDetailActivity.this, "放入成功", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -176,9 +197,6 @@ public class BookDetailActivity extends AppCompatActivity {
             public void run() {
                 com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
                 openBook(book);
-//                Collection.saveBook(book); // 保存书籍
-//                BookTextView.setModel(Model.getTextModel()); // 给KooView传入TextModel 操作-UI在这里分界
-//                Collection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
             }
         });
     }

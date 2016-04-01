@@ -1,8 +1,8 @@
 <resources>
-  <style name="KooReader.Activity" parent="android:Theme.DeviceDefault">
-	</style>
-  <style name="KooReader.Activity.NoActionBar" parent="android:Theme.DeviceDefault.NoActionBar">
-	</style>
-  <style name="KooReader.Dialog" parent="android:Theme.DeviceDefault.Dialog">
-	</style>
+  <!--<style name="KooReader.Activity" parent="android:Theme.DeviceDefault">-->
+	<!--</style>-->
+  <!--<style name="KooReader.Activity.NoActionBar" parent="android:Theme.DeviceDefault.NoActionBar">-->
+	<!--</style>-->
+  <!--<style name="KooReader.Dialog" parent="android:Theme.DeviceDefault.Dialog">-->
+	<!--</style>-->
 </resources>
