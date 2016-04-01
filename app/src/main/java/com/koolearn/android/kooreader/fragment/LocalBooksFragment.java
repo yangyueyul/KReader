@@ -11,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -23,6 +22,7 @@ import android.widget.ProgressBar;
 
 import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.RecyclerItemClickListener;
+import com.koolearn.android.kooreader.animation.FlipInLeftYAnimator;
 import com.koolearn.android.kooreader.library.LibraryActivity;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.util.OrientationUtil;
@@ -77,7 +77,9 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), mRecyclerView, onItemClickListener));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new FlipInLeftYAnimator());
+
         mLocalBookAdapter = new LocalBookAdapter(getActivity());
         mRecyclerView.setAdapter(mLocalBookAdapter);
         return view;

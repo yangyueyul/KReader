@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.fragment.DetailFragment;
+import com.koolearn.android.kooreader.fragment.TOCDetailFragment;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.kooreader.view.DownloadProcessButton;
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.ui.android.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
@@ -40,7 +42,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private final BookCollectionShadow myCollection = new BookCollectionShadow();
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
-    private static final String BOOK_PATH = "/mnt/sdcard/KooBook/";
     private String filePath;
     private CoordinatorLayout mCooLayout;
 
@@ -82,7 +83,8 @@ public class BookDetailActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("目录"));
         tabLayout.setupWithViewPager(mViewPager);
 
-        filePath = BOOK_PATH + mBook.getTitle() + ".epub";
+        filePath = getExternalCacheDirPath() + "/" + mBook.getTitle() + ".epub";
+        LogUtil.i8("filePath:"+filePath);
         File fileDir = new File(filePath);
         if (fileDir.exists()) {
             mBtnDownload.setProgress(100);
@@ -106,7 +108,7 @@ public class BookDetailActivity extends AppCompatActivity {
         MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(DetailFragment.newInstance(mBook.getSummary()), "内容简介");
         adapter.addFragment(DetailFragment.newInstance(mBook.getAuthor_intro()), "作者简介");
-        adapter.addFragment(DetailFragment.newInstance(mBook.getCatalog()), "目录");
+        adapter.addFragment(TOCDetailFragment.newInstance(mBook.getCatalog()), "目录");
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(0, true);
     }
@@ -142,9 +144,9 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void downloadBook() {
         File fileDir = new File(filePath);
-        if (!fileDir.getParentFile().exists()) {
-            fileDir.getParentFile().mkdirs();
-        }
+//        if (!fileDir.getParentFile().exists()) {
+//            fileDir.getParentFile().mkdirs();
+//        }
 
         // http://45.78.20.53:8080/read.epub
 
@@ -181,7 +183,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
                 myCollection.saveBook(book); // 保存书籍
                 myCollection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
-                Snackbar.make(mCooLayout, "加入成功", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mCooLayout, "已放入书架", Snackbar.LENGTH_SHORT).show();
 //                Toast.makeText(BookDetailActivity.this, "放入成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -204,6 +206,18 @@ public class BookDetailActivity extends AppCompatActivity {
     private void openBook(com.koolearn.kooreader.book.Book data) {
         KooReader.openBookActivity(this, data, null);
         overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
+    }
+
+
+    private String getExternalCacheDirPath() {
+        File d = getExternalCacheDir();
+        if (d != null) {
+            d.mkdirs();
+            if (d.exists() && d.isDirectory()) {
+                return d.getPath();
+            }
+        }
+        return null;
     }
 
 }

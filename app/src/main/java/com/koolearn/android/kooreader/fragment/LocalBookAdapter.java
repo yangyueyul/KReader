@@ -102,7 +102,7 @@ public class LocalBookAdapter extends RecyclerView.Adapter<LocalBookAdapter.View
 
     public void removeItems(int position) {
         mBooks.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
     }
 
     @Override

@@ -100,7 +100,8 @@ public final class CurlAnimationProvider extends AnimationProvider {
              */
             final int oppositeX = Math.abs(myWidth - cornerX);
             final int oppositeY = Math.abs(myHeight - cornerY);
-            final int x, y;
+            int x;
+            final int y;
 //            if (cornerX == 0) {
 //                x = Math.max(1, Math.min(myWidth / 2, myEndX));
 //            } else {
@@ -134,9 +135,6 @@ public final class CurlAnimationProvider extends AnimationProvider {
                  * Y最大值为 屏幕高度 / 2
                  */
                 y = (int) Math.max(0.75 * myHeight, Math.min(myHeight - 1, myEndY));
-                if (x * x + y * y >= myWidth * myWidth / 4) {
-
-                }
             }
 //            }
 

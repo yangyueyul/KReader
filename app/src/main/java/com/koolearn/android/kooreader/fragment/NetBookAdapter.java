@@ -39,7 +39,6 @@ public class NetBookAdapter extends RecyclerView.Adapter<NetBookAdapter.ViewHold
     private boolean animateItems = false;
     private int lastAnimatedPosition = -1;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public NetBookAdapter(Context context) {
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
         mBackground = mTypedValue.resourceId;
@@ -120,12 +119,10 @@ public class NetBookAdapter extends RecyclerView.Adapter<NetBookAdapter.ViewHold
         ImageLoader.getInstance().displayImage(book.getImage(), holder.ivBook, options);
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mBooks.size();
     }
-
 
     public Book getBook(int pos) {
         return mBooks.get(pos);

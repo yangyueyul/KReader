@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.image.ZLFileImage;
 import com.koolearn.klibrary.core.image.ZLImageData;
 import com.koolearn.klibrary.core.image.ZLImageManager;
@@ -26,6 +27,7 @@ public class OpenPhotoAction extends KooAndroidAction {
     public static boolean isOpen = false;
     private static PhotoView photoView;
     private static RelativeLayout relativeLayout;
+    private static float mScaleD;
 
     OpenPhotoAction(KooReader baseActivity, KooReaderApp kooreader, ViewGroup container) {
         super(baseActivity, kooreader);
@@ -36,12 +38,18 @@ public class OpenPhotoAction extends KooAndroidAction {
     public static void openImage(String url, int left, int top, int right, int bottom) {
         isOpen = true;
         if (isOpen) {
-            final int screenWidth = ZLAndroidLibrary.Instance().getScreenWidth();
+            final float screenWidth = ZLAndroidLibrary.Instance().getScreenWidth();
             final float screenHeight = ZLAndroidLibrary.Instance().getScreenHeight();
             int mWidth = right - left;
             int mHeight = bottom - top;
 //            float mScale = (float) screenWidth / mWidth;
-            final float mScaleD = (float) mWidth / (float) screenWidth;
+            int orientation = myActivity.getResources().getConfiguration().orientation;
+            LogUtil.i8("orientationOption:" + orientation);
+            if (orientation == 1) {
+                mScaleD = (float) mWidth / screenWidth;
+            } else {
+                mScaleD = (float) mHeight / screenHeight;
+            }
 //            float mTop = (screenHeight - mHeight * mScale) / 2;
             final float mTop = screenHeight / 2 - (float) mHeight / 2 - (float) top;
 
