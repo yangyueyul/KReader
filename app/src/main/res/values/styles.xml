@@ -1,25 +1,20 @@
 <resources>
 
-    <!--<style name="KooReader.Activity" parent="android:Theme"></style>-->
-
-    <!--<style name="KooReader.Activity.NoActionBar" parent="android:Theme"></style>-->
-
-    <!--<style name="KooReader.Dialog" parent="android:Theme.Dialog"></style>-->
-
-    <!--<color name="transparent">#FFFFFF</color>-->
-
-    <!--<style name="KooReader.Transparent" parent="android:Theme.Translucent.NoTitleBar">-->
-        <!--<item name="android:windowBackground">@color/window_background</item>-->
-    <!--</style>-->
-
-    <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primarys</item>
-        <item name="colorPrimaryDark">@color/primarys_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@color/window_background</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="CardView.Content" parent="android:Widget">
         <item name="android:paddingLeft">16dp</item>
@@ -43,4 +38,16 @@
         <attr name="pb_colorNormal" format="color" />
         <attr name="pb_cornerRadius" format="dimension" />
     </declare-styleable>
+    <!--<style name="KooReader.Activity" parent="android:Theme"></style>-->
+
+    <!--<style name="KooReader.Activity.NoActionBar" parent="android:Theme"></style>-->
+
+    <!--<style name="KooReader.Dialog" parent="android:Theme.Dialog"></style>-->
+
+    <!--<color name="transparent">#FFFFFF</color>-->
+
+    <!--<style name="KooReader.Transparent" parent="android:Theme.Translucent.NoTitleBar">-->
+    <!--<item name="android:windowBackground">@color/window_background</item>-->
+    <!--</style>-->
+
 </resources>

@@ -32,7 +32,6 @@ import com.koolearn.kooreader.book.Book;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * ******************************************
  * 作    者 ：  杨越
@@ -70,7 +69,7 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.progressBara, R.color.progressBarb);
-        refreshLayout.setProgressBackgroundColor(R.color.accent);
+        refreshLayout.setProgressBackgroundColor(R.color.progressBarBg);
         setUpFAB(view);
 
         mRecyclerView.setHasFixedSize(true);
@@ -156,7 +155,8 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
                 public void onClick(DialogInterface dialog, int which) {
                     myCollection.removeBook(mLocalBookAdapter.getBook(position), true);
                     mLocalBookAdapter.removeItems(position);
-                    Snackbar.make(view, "删除成功", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mFabSearch, "删除成功", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
             });
             builder.show();

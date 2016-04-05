@@ -37,7 +37,7 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
     private NetBookAdapter mNetBookAdapter;
     private ProgressBar mProgressBar;
     private FloatingActionButton mFabSearch;
-    private SwipeRefreshLayout refreshLayout;
+    private SwipeRefreshLayout mRefreshLayout;
 
     private static final int ANIM_DURATION_FAB = 400;
 
@@ -45,7 +45,7 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            refreshLayout.setRefreshing(false);
+            mRefreshLayout.setRefreshing(false);
         }
     };
 
@@ -55,11 +55,10 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
         View view = inflater.inflate(R.layout.fragment_network_books, null);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(R.color.progressBara, R.color.progressBarb);
-        refreshLayout.setProgressBackgroundColor(R.color.accent);
-
+        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        mRefreshLayout.setColorSchemeResources(R.color.progressBara, R.color.progressBarb);
+        mRefreshLayout.setProgressBackgroundColor(R.color.progressBarBg);
+        mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setHasFixedSize(true);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -76,13 +75,13 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mFabSearch.setTranslationY(2 * getResources().getDimensionPixelOffset(R.dimen.btn_fab_size));
-        doSearch("哈利");
+        doSearch(1, 30);
     }
 
-    private void doSearch(String keyword) {
+    private void doSearch(int page, int pageSize) {
         mProgressBar.setVisibility(View.VISIBLE);
         mNetBookAdapter.clearItems();
-        Book.searchBooks(keyword, new Book.IBookResponse<List<Book>>() {
+        Book.searchBooks(page, pageSize, new Book.IBookResponse<List<Book>>() {
             @Override
             public void onData(List<Book> books) {
                 startFABAnimation();
@@ -93,7 +92,7 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
     }
 
     private void setUpFAB(View view) {
-        mFabSearch = (FloatingActionButton) view.findViewById(R.id.fab_normal);
+        mFabSearch = (FloatingActionButton) view.findViewById(R.id.fab_net_search);
         mFabSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +104,7 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
                     public void onClick(DialogInterface dialog, int which) {
                         String input = inputServer.getText().toString();
                         if (!TextUtils.isEmpty(input)) {
-                            doSearch(input.toString());
+                            doSearch(1, 30);
                         }
                     }
                 });
@@ -123,7 +122,6 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
                 .start();
     }
 
-
     private RecyclerItemClickListener.OnItemClickListener onItemClickListener = new RecyclerItemClickListener.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
@@ -133,15 +131,14 @@ public class NetWorkBooksFragment extends Fragment implements SwipeRefreshLayout
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),
                             view.findViewById(R.id.ivBook), getString(R.string.transition_book_img));
-
             ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
         }
+
         @Override
         public void onItemLongClick(View view, int position) {
 
         }
     };
-
 
     @Override
     public void onRefresh() {

@@ -13,11 +13,13 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/BaseAppTheme"
-        android:logo="@mipmap/ic_launcher">
+        android:logo="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.koolearn.android.kooreader.MainAppActivity">
+            android:name="com.koolearn.android.kooreader.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -57,11 +59,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.koolearn.android.kooreader.book.BookDetailActivity" />
+        <activity android:name="com.koolearn.android.kooreader.book.BookDetailActivity" />
         <activity
             android:name="com.koolearn.android.kooreader.TOCActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="com.koolearn.android.kooreader.preferences.PreferenceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -92,6 +93,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.koolearn.android.kooreader.libraryService.LibraryService"
             android:launchMode="singleTask"

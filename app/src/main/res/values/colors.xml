@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="fontColor">#532d17</color>
-
-  <!--蓝色主题-->
-  <color name="primarys">#3f51b5</color>
-  <color name="primarys_dark">#303f9f</color>
-  <color name="primary_light">#c5cae9</color>
-  <color name="accent">#ff80a8</color>
+  <!--紫粉-->
+  <color name="colorPrimary">#3F51B5</color>
+  <color name="colorPrimaryDark">#303F9F</color>
+  <color name="colorAccent">#FF4081</color>
+  <color name="colorPrimaryLight">#c5cae9</color>
   <!--SwipeRefreshLayout-->
-  <color name="progressBara">#F1FFFFFF</color>
-  <color name="progressBarb">#F5F5F5</color>
+  <color name="progressBarBg">#FFFFFF</color>
+  <color name="progressBara">#3F51B5</color>
+  <color name="progressBarb">#303F9F</color>
   <!--button-->
   <color name="button_compelete">#3f51b5</color> <!-- 400 -->
   <color name="button_progress">#3f51b5</color> <!-- 400 -->
@@ -17,11 +16,13 @@
   <color name="button_press">#5677fc</color>
   <color name="button_error">#ff80a8</color>
 
-  <!--绿色主题-->
+  <!--绿色-->
   <color name="primarys1">#009688</color>
   <color name="primarys_dark1">#00897b</color>
   <color name="primary_light1">#B2DFDB</color>
   <color name="accent1">#ffb74d</color>
+
+  <color name="fontColor">#532d17</color>
 
   <color name="primary_text">#212121</color>
   <color name="secondary_text">#727272</color>

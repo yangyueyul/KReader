@@ -181,7 +181,7 @@ public class Book implements Serializable {
     public String toString() {
         return "Book{" +
                 "subtitle='" + subtitle + '\'' +
-                ", author=" +  author +
+                ", author=" + author +
                 ", pubdate='" + pubdate + '\'' +
                 ", origin_title='" + origin_title + '\'' +
                 ", image='" + image + '\'' +
@@ -210,10 +210,10 @@ public class Book implements Serializable {
         void onData(T data);
     }
 
-    public static void searchBooks(String name, final IBookResponse<List<Book>> response) {
+    public static void searchBooks(int page, int pageSize, final IBookResponse<List<Book>> response) {
         RequestParams params = new RequestParams();
-        params.put("page", 1);
-        params.put("pageSize", 30);
+        params.put("page", page);
+        params.put("pageSize", pageSize);
 //        String keyword = "中国";
 //        try{
 //            keyword = URLEncoder.encode(keyword, "UTF-8");
@@ -236,7 +236,8 @@ public class Book implements Serializable {
                     Gson gson = new Gson();
                     JSONObject json = new JSONObject(new String(responseBody));
                     JSONArray jaBooks = json.optJSONArray("data");
-                    List<Book> books = gson.fromJson(jaBooks.toString(), new TypeToken<List<Book>>() {}.getType());
+                    List<Book> books = gson.fromJson(jaBooks.toString(), new TypeToken<List<Book>>() {
+                    }.getType());
                     response.onData(books);
                 } catch (Exception e) {
                     e.printStackTrace();

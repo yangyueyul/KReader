@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,15 +38,12 @@ import java.util.TimerTask;
  * ******************************************
  */
 
-public class MainAppActivity extends AppCompatActivity {
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private Toolbar mToolbar;
-    private NavigationView mNavigationView;
-
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Timer timer = null;
     private TimerTask timeTask = null;
     private boolean isExit = false;
+    private Toolbar mToolbar;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +57,13 @@ public class MainAppActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
-        mDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-        setupDrawerContent(mNavigationView);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         setUpProfileImage();
 
@@ -94,6 +94,17 @@ public class MainAppActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            doubleExit();
+        }
+    }
+
+    /**
+     * DoubleExit
+     */
+    private void doubleExit() {
         if (isExit) {
             finish();
         } else {
@@ -214,50 +225,26 @@ public class MainAppActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
         if (id == R.id.action_settings) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
-    }
 
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_local_book:
-                        switchToLocalBook();
-                        break;
-                    case R.id.navigation_net_book:
-                        switchNetWorkBook();
-                        break;
-                    case R.id.navigation_book_note:
-                        switchToBookNote();
-                        break;
-                    case R.id.navigation_bookmark:
-                        switchToBookMark();
-                        break;
-                }
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                return true;
-            }
-        });
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpProfileImage() {
         findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawerLayout.closeDrawers();
-                mNavigationView.getMenu().getItem(0).setChecked(true);
+
             }
         });
     }
@@ -269,5 +256,26 @@ public class MainAppActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(0, 0);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.navigation_local_book) {
+            switchToLocalBook();
+
+        } else if (id == R.id.navigation_net_book) {
+            switchNetWorkBook();
+
+        } else if (id == R.id.navigation_book_note) {
+            switchToBookNote();
+
+        } else if (id == R.id.navigation_bookmark) {
+            switchToBookMark();
+        }
+
+        mDrawerLayout.closeDrawers();
+        return true;
     }
 }
