@@ -130,8 +130,8 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         myCollection.unbind();
+        super.onDestroy();
     }
 
     @Override

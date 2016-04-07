@@ -37,13 +37,13 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 	private static final String OPTIONS = "Options";
 
 	public final ZLBooleanOption UseCSSTextAlignmentOption =
-		new ZLBooleanOption("Style", "css:textAlignment", true); // css
+		new ZLBooleanOption("Style", "css:textAlignment", false); // css
 	public final ZLBooleanOption UseCSSMarginsOption =
-		new ZLBooleanOption("Style", "css:margins", true);
+		new ZLBooleanOption("Style", "css:margins", false);
 	public final ZLBooleanOption UseCSSFontSizeOption =
-		new ZLBooleanOption("Style", "css:fontSize", true);
+		new ZLBooleanOption("Style", "css:fontSize", false);
 	public final ZLBooleanOption UseCSSFontFamilyOption =
-		new ZLBooleanOption("Style", "css:fontFamily", true); // 使用CSS定义的字体
+		new ZLBooleanOption("Style", "css:fontFamily", false); // 使用CSS定义的字体
 
 	public final ZLBooleanOption AutoHyphenationOption =
 		new ZLBooleanOption(OPTIONS, "AutoHyphenation", true); // 自动断字,对英文的展示更好

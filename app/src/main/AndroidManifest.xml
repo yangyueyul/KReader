@@ -50,6 +50,13 @@
                 <action android:name="android.kooreader.action.PLUGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.kooreader.action.CLOSE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -90,6 +97,24 @@
             android:process=":library">
             <intent-filter>
                 <action android:name="android.kooreader.action.LIBRARY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.koolearn.android.kooreader.bookmark.EditBookmarkActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/KooReader.Dialog">
+            <intent-filter>
+                <action android:name="android.fbreader.action.EDIT_BOOKMARK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.koolearn.android.kooreader.bookmark.EditStyleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/KooReader.Dialog">
+            <intent-filter>
+                <action android:name="android.fbreader.action.EDIT_STYLES" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

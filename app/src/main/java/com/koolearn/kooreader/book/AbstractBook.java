@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public abstract class AbstractBook extends TitledEntity<AbstractBook> {
+	public static final String READ_LABEL = "read";
+
 	protected volatile long myId;
 
 	protected volatile String myEncoding;

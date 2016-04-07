@@ -42,7 +42,7 @@
 
     <!--<style name="KooReader.Activity.NoActionBar" parent="android:Theme"></style>-->
 
-    <!--<style name="KooReader.Dialog" parent="android:Theme.Dialog"></style>-->
+    <style name="KooReader.Dialog" parent="Theme.AppCompat.Light.Dialog"></style>
 
     <!--<color name="transparent">#FFFFFF</color>-->
 

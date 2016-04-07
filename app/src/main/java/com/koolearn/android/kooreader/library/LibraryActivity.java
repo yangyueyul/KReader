@@ -8,7 +8,6 @@ import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.api.KooReaderIntents;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.kooreader.tree.TreeActivity;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.Paths;
 import com.koolearn.kooreader.book.Book;
@@ -84,7 +83,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements IBookC
 
     @Override
     protected void onListItemClick(ListView listView, View view, int position, long rowId) {
-        LogUtil.i20("position:" + position);
         final LibraryTree tree = (LibraryTree) getTreeAdapter().getItem(position);
         final Book book = tree.getBook();
         if (book != null) {

@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.koolearn.android.kooreader.fragment.BookMarkFragment;
+import com.koolearn.android.kooreader.fragment.BookMarksFragment;
 import com.koolearn.android.kooreader.fragment.BookNoteFragment;
-import com.koolearn.android.kooreader.fragment.NetWorkBooksFragment;
 import com.koolearn.android.kooreader.fragment.LocalBooksFragment;
+import com.koolearn.android.kooreader.fragment.NetWorkBooksFragment;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.Paths;
 
@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void switchToBookNote() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new BookNoteFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new BookMarksFragment()).commit();
         mToolbar.setTitle(R.string.book_note);
     }
 
     private void switchToBookMark() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new BookMarkFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new BookNoteFragment()).commit();
         mToolbar.setTitle(R.string.book_mark);
     }
 

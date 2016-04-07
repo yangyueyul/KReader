@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.koolearn.android.util.LogUtil;
-import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.core.util.SystemInfo;
 import com.koolearn.klibrary.core.view.ZLView;
-import com.koolearn.klibrary.ui.android.library.ZLAndroidLibrary;
 import com.koolearn.klibrary.ui.android.view.animation.BitmapManager;
 import com.koolearn.kooreader.Paths;
 
@@ -62,32 +59,31 @@ public final class BitmapManagerImpl implements BitmapManager {
             }
         }
         // 在Bitmap上绘制,传入一张空白的bitmap,和当前的index
-//        myWidget.drawOnBitmap(myBitmaps[iIndex], index);
-
-        /**
-         * 这个view是自定义类型的KooView
-         */
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
-                mySystemInfo,
-                new Canvas(myBitmaps[iIndex]),
-                new ZLAndroidPaintContext.Geometry(
-                        ZLAndroidLibrary.Instance().getScreenWidth(),
-                        ZLAndroidLibrary.Instance().getScreenHeight(),
-                        ZLAndroidLibrary.Instance().getScreenWidth(),
-                        ZLAndroidLibrary.Instance().getScreenHeight(),
-                        0,
-                        0
-                ), 0);
-        /**
-         * 把ZLAndroidWigetPaintContext与Bitmap进行绑定
-         * 向myBitmaps[index]上画bitmap
-         * 在ZLAndroidWidget绘制文字等信息
-         */
-        view.paint(context, index);
-        /**
-         * 将绘制好的Bitmap返回
-         */
+        myWidget.drawOnBitmap(myBitmaps[iIndex], index);
+//        /**
+//         * 这个view是自定义类型的KooView
+//         */
+//        final ZLView view = ZLApplication.Instance().getCurrentView();
+//        final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+//                mySystemInfo,
+//                new Canvas(myBitmaps[iIndex]),
+//                new ZLAndroidPaintContext.Geometry(
+//                        ZLAndroidLibrary.Instance().getScreenWidth(),
+//                        ZLAndroidLibrary.Instance().getScreenHeight(),
+//                        ZLAndroidLibrary.Instance().getScreenWidth(),
+//                        ZLAndroidLibrary.Instance().getScreenHeight(),
+//                        0,
+//                        0
+//                ), 0);
+//        /**
+//         * 把ZLAndroidWigetPaintContext与Bitmap进行绑定
+//         * 向myBitmaps[index]上画bitmap
+//         * 在ZLAndroidWidget绘制文字等信息
+//         */
+//        view.paint(context, index);
+//        /**
+//         * 将绘制好的Bitmap返回
+//         */
         return myBitmaps[iIndex];
     }
 
@@ -116,8 +112,6 @@ public final class BitmapManagerImpl implements BitmapManager {
     }
 
     public void shift(boolean forward) {
-        LogUtil.i13("getPrevious" + forward);
-
         for (int i = 0; i < SIZE; ++i) {
             if (myIndexes[i] == null) {
                 continue;

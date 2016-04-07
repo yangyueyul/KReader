@@ -1,6 +1,7 @@
 package com.koolearn.klibrary.ui.android.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -26,12 +27,11 @@ import com.koolearn.kooreader.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ZLAndroidWidget extends View implements ZLViewWidget {
-    public static ZLAndroidWidget Instance() {
-        return ourImplementation;
-    }
-
-    private static ZLAndroidWidget ourImplementation;
+public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongClickListener {
+    //    public static ZLAndroidWidget Instance() {
+//        return ourImplementation;
+//    }
+//    private static ZLAndroidWidget ourImplementation;
     protected Integer myColorLevel;
 
     public final ExecutorService PrepareService = Executors.newSingleThreadExecutor();
@@ -60,11 +60,12 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
     }
 
     private void init() {
-        ourImplementation = this;
+//        ourImplementation = this;
         // next line prevent ignoring first onKeyDown DPad event
         // after any dialog was closed
         setFocusableInTouchMode(true);
         setDrawingCacheEnabled(false);
+        setOnLongClickListener(this);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
         // 新打开时调用
         getAnimationProvider().terminate();
         if (myScreenIsTouched) {
-            // 暂未遇到
+            // 手指触摸屏幕,并旋转手机
             final ZLView view = ZLApplication.Instance().getCurrentView();
             myScreenIsTouched = false;
             view.onScrollingFinished(ZLView.PageIndex.current);
@@ -126,6 +127,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
 
     private void onDrawInScrolling(Canvas canvas) {
         final ZLView view = ZLApplication.Instance().getCurrentView();
+
         final AnimationProvider animator = getAnimationProvider();
         final AnimationProvider.Mode oldMode = animator.getMode();
         animator.doStep();
@@ -134,6 +136,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
             if (animator.getMode().Auto) { // 松手后完成后续绘制
                 postInvalidate();
             }
+            drawFooter(canvas, animator);
         } else {                     // 动画结束后执行, 无动画情况只会调用这个
             switch (oldMode) {
                 case AnimatedScrollingForward: { // 当翻到 下一页/上一页 时调用
@@ -224,13 +227,72 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
         postInvalidate(); // 更新视图
     }
 
+    void drawOnBitmap(Bitmap bitmap, ZLView.PageIndex index) {
+        final ZLView view = ZLApplication.Instance().getCurrentView();
+        if (view == null) {
+            return;
+        }
+
+        final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+                mySystemInfo,
+                new Canvas(bitmap),
+                new ZLAndroidPaintContext.Geometry(
+                        getWidth(),
+                        getHeight(),
+                        getWidth(),
+                        getHeight(),
+                        0,
+                        0
+                ), 0);
+        view.paint(context, index);
+    }
+
+    private void drawFooter(Canvas canvas, AnimationProvider animator) {
+//        final ZLView view = ZLApplication.Instance().getCurrentView();
+//        final ZLView.FooterArea footer = view.getFooterArea();
+//
+//        if (footer == null) {
+//            myFooterBitmap = null;
+//            return;
+//        }
+
+//        if (myFooterBitmap != null &&
+//                (myFooterBitmap.getWidth() != getWidth() ||
+//                        myFooterBitmap.getHeight() != footer.getHeight())) {
+//            myFooterBitmap = null;
+//        }
+//        if (myFooterBitmap == null) {
+//            myFooterBitmap = Bitmap.createBitmap(getWidth(), footer.getHeight(), Bitmap.Config.RGB_565);
+//        }
+//        final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+//                mySystemInfo,
+//                new Canvas(),
+//                new ZLAndroidPaintContext.Geometry(
+//                        getWidth(),
+//                        getHeight(),
+//                        getWidth(),
+//                        footer.getHeight(),
+//                        0,
+//                        getMainAreaHeight()
+//                ),
+//                view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
+//        );
+//        footer.paint(context);
+//        final int voffset = getHeight() - footer.getHeight();
+//        if (animator != null) {
+//            animator.drawFooterBitmap(canvas, myFooterBitmap, voffset);
+//        } else {
+//            canvas.drawBitmap(myFooterBitmap, 0, voffset, myPaint);
+//        }
+    }
+
     private void onDrawStatic(final Canvas canvas) {  // 滑动完后调用静态时不停调用
         /**
          * 从myBitmapManager获取一张Bitmap,画到画布上
          * myBitmapManager.getBitmap(ZLView.PageIndex.current)是自己创建的canvas,将该view的canva和其连起来才可以显示在view上
          */
         canvas.drawBitmap(myBitmapManager.getBitmap(ZLView.PageIndex.current), 0, 0, myPaint);
-
+        drawFooter(canvas, null);
         post(new Runnable() { // 将runnable放到消息队列中
             public void run() {
                 PrepareService.execute(new Runnable() {
@@ -256,9 +318,41 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
         return true;
     }
 
-//    private volatile boolean myLongClickPerformed;
+    private class LongClickRunnable implements Runnable {
+        @Override
+        public void run() {
+            if (performLongClick()) {
+                myLongClickPerformed = true;
+            }
+        }
+    }
+
+    private volatile LongClickRunnable myPendingLongClickRunnable;
+    private volatile boolean myLongClickPerformed;
+
+    private void postLongClickRunnable() {
+        myLongClickPerformed = false;
+        myPendingPress = false;
+        if (myPendingLongClickRunnable == null) {
+            myPendingLongClickRunnable = new LongClickRunnable();
+        }
+        postDelayed(myPendingLongClickRunnable, 2 * ViewConfiguration.getLongPressTimeout());
+    }
+
+    private class ShortClickRunnable implements Runnable {
+        @Override
+        public void run() {
+            final ZLView view = ZLApplication.Instance().getCurrentView();
+            view.onFingerSingleTap(myPressedX, myPressedY);
+            myPendingPress = false;
+            myPendingShortClickRunnable = null;
+        }
+    }
+
+    private volatile ShortClickRunnable myPendingShortClickRunnable;
 
     private volatile boolean myPendingPress;
+    private volatile boolean myPendingDoubleTap;
     private int myPressedX, myPressedY;
     private boolean myScreenIsTouched;
 
@@ -269,41 +363,98 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
 
         final ZLView view = ZLApplication.Instance().getCurrentView();
         switch (event.getAction()) {
+            case MotionEvent.ACTION_CANCEL:
+                myPendingDoubleTap = false;
+                myPendingPress = false;
+                myScreenIsTouched = false;
+                myLongClickPerformed = false;
+                if (myPendingShortClickRunnable != null) {
+                    removeCallbacks(myPendingShortClickRunnable);
+                    myPendingShortClickRunnable = null;
+                }
+                if (myPendingLongClickRunnable != null) {
+                    removeCallbacks(myPendingLongClickRunnable);
+                    myPendingLongClickRunnable = null;
+                }
+                view.onFingerEventCancelled();
+                break;
+            case MotionEvent.ACTION_UP:
+                if (myPendingDoubleTap) {
+                    view.onFingerDoubleTap(x, y);
+                } else if (myLongClickPerformed) {
+                    view.onFingerReleaseAfterLongPress(x, y);
+                } else {
+                    if (myPendingLongClickRunnable != null) {
+                        removeCallbacks(myPendingLongClickRunnable);
+                        myPendingLongClickRunnable = null;
+                    }
+                    if (myPendingPress) {
+                        if (view.isDoubleTapSupported()) {
+                            if (myPendingShortClickRunnable == null) {
+                                myPendingShortClickRunnable = new ShortClickRunnable();
+                            }
+                            postDelayed(myPendingShortClickRunnable, ViewConfiguration.getDoubleTapTimeout());
+                        } else {
+                            view.onFingerSingleTap(x, y);
+                        }
+                    } else {
+                        view.onFingerRelease(x, y);
+                    }
+                }
+                myPendingDoubleTap = false;
+                myPendingPress = false;
+                myScreenIsTouched = false;
+                break;
             case MotionEvent.ACTION_DOWN:
-                myPendingPress = true;
+                if (myPendingShortClickRunnable != null) {
+                    removeCallbacks(myPendingShortClickRunnable);
+                    myPendingShortClickRunnable = null;
+                    myPendingDoubleTap = true;
+                } else {
+                    postLongClickRunnable();
+                    myPendingPress = true;
+                }
                 myScreenIsTouched = true;
                 myPressedX = x;
                 myPressedY = y;
                 break;
-            case MotionEvent.ACTION_UP:
-                if (myPendingPress) {
-                    view.onFingerSingleTap(x, y);
-                } else {
-                    view.onFingerRelease(x, y);
-                }
-                myPendingPress = false;
-                myScreenIsTouched = false;
-                break;
             case MotionEvent.ACTION_MOVE: {
                 final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-                final boolean isAMove = Math.abs(myPressedX - x) > slop || Math.abs(myPressedY - y) > slop; // 判断是否在移动
-                if (myPendingPress) {
-                    if (isAMove) {
-                        view.onFingerPress(myPressedX, myPressedY); // 滑动过程 调用一次
-                        myPendingPress = false;
-                    }
+                final boolean isAMove =
+                        Math.abs(myPressedX - x) > slop || Math.abs(myPressedY - y) > slop;
+                if (isAMove) {
+                    myPendingDoubleTap = false;
                 }
-                if (!myPendingPress) {
-                    view.onFingerMove(x, y); // 滑动过程 一直调用
+                if (myLongClickPerformed) {
+                    view.onFingerMoveAfterLongPress(x, y);
+                } else {
+                    if (myPendingPress) {
+                        if (isAMove) {
+                            if (myPendingShortClickRunnable != null) {
+                                removeCallbacks(myPendingShortClickRunnable);
+                                myPendingShortClickRunnable = null;
+                            }
+                            if (myPendingLongClickRunnable != null) {
+                                removeCallbacks(myPendingLongClickRunnable);
+                            }
+                            view.onFingerPress(myPressedX, myPressedY);
+                            myPendingPress = false;
+                        }
+                    }
+                    if (!myPendingPress) {
+                        view.onFingerMove(x, y);
+                    }
                 }
                 break;
             }
-            case MotionEvent.ACTION_CANCEL:
-                myPendingPress = false;
-                myScreenIsTouched = false;
-                break;
         }
         return true;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        final ZLView view = ZLApplication.Instance().getCurrentView();
+        return view.onFingerLongPress(myPressedX, myPressedY);
     }
 
     private int myKeyUnderTracking = -1;

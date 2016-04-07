@@ -7,7 +7,6 @@ public abstract class OrientationUtil {
 	private static final String KEY = "kooreader.orientation";
 
 	public static void startActivity(Activity current, Intent intent) {
-		LogUtil.i3("ShowLibrary");
 		current.startActivity(intent.putExtra(KEY, current.getRequestedOrientation()));
 	}
 

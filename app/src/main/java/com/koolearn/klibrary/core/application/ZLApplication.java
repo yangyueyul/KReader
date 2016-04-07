@@ -144,7 +144,6 @@ public abstract class ZLApplication {
     }
 
     public final void addAction(String actionId, ZLAction action) {
-        LogUtil.i2("actionId:" + actionId);
         myIdToActionMap.put(actionId, action);
     }
 
@@ -153,7 +152,6 @@ public abstract class ZLApplication {
     }
 
     public final boolean isActionVisible(String actionId) {
-        LogUtil.i2("actionIdVisible:" + actionId);
         final ZLAction action = myIdToActionMap.get(actionId);
         return action != null && action.isVisible();
     }
@@ -169,7 +167,6 @@ public abstract class ZLApplication {
     }
 
     public final void runAction(String actionId, Object... params) {
-        LogInfo.i("actionIdRun" + params.toString());
         final ZLAction action = myIdToActionMap.get(actionId);
         if (action != null) {
             action.checkAndRun(params); //y 检查是否可用后运行
@@ -216,7 +213,6 @@ public abstract class ZLApplication {
 
         //y 功能运行
         public final boolean checkAndRun(Object... params) {
-            LogUtil.i20("actions" + params.getClass().getName());
             if (isEnabled()) {
                 run(params);
                 return true;
@@ -322,8 +318,6 @@ public abstract class ZLApplication {
     }
 
     public final void removeTimerTask(Runnable runnable) {
-        LogInfo.i("application");
-
         synchronized (myTimerLock) {
             TimerTask task = myTimerTasks.get(runnable);
             if (task != null) {

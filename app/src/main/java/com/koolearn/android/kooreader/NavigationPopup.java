@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.koolearn.android.kooreader.api.KooReaderIntents;
 import com.koolearn.android.util.OrientationUtil;
 import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.text.view.ZLTextView;
@@ -95,6 +96,7 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
         } else {
             view.gotoPage(page);
         }
+//        myKooReader.clearTextCaches();
         myKooReader.getViewWidget().reset();
         myKooReader.getViewWidget().repaint();
     }
@@ -119,10 +121,12 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
         toc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrientationUtil.startActivity(myActivity, new Intent(myActivity.getApplicationContext(), TOCActivity.class));
-//                KooReader.slidingMenu.setMenu();
                 Application.hideActivePopup();
-//                KooReader.slidingMenu.showMenu();
+                final Intent intent =
+                        new Intent(myActivity.getApplicationContext(), TOCActivity.class);
+                KooReaderIntents.putBookExtra(intent, myKooReader.getCurrentBook());
+                KooReaderIntents.putBookmarkExtra(intent, myKooReader.createBookmark(80, true));
+                OrientationUtil.startActivity(myActivity, intent);
             }
         });
 
@@ -160,7 +164,6 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
             @Override
             public void onClick(View v) {
                 gotoPage(pagePosition.Current - 30);
-
             }
         });
 
@@ -192,13 +195,14 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 myIsInProgress = false;
                 //y 松手直接进行跳转
-                final ZLTextWordCursor position = myStartPosition; // 返回到起始位置
+//                final ZLTextWordCursor position = myStartPosition; // 返回到起始位置
                 if (myStartPosition != null &&
                         !myStartPosition.equals(myKooReader.getTextView().getStartCursor())) {
                     myKooReader.addInvisibleBookmark(myStartPosition);
                     myKooReader.storePosition();
                 }
                 myStartPosition = null;
+                myKooReader.clearTextCaches();
                 myKooReader.getViewWidget().reset();
                 myKooReader.getViewWidget().repaint();
             }

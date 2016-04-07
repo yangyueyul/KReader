@@ -208,7 +208,6 @@ public class BookDetailActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
     }
 
-
     private String getExternalCacheDirPath() {
         File d = getExternalCacheDir();
         if (d != null) {
@@ -220,4 +219,9 @@ public class BookDetailActivity extends AppCompatActivity {
         return null;
     }
 
+    @Override
+    protected void onDestroy() {
+        myCollection.unbind();
+        super.onDestroy();
+    }
 }
