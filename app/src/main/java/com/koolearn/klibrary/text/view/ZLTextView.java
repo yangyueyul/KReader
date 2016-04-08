@@ -538,10 +538,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
         drawSelectionCursor(context, page, SelectionCursor.Which.Left);
         drawSelectionCursor(context, page, SelectionCursor.Which.Right);
 
-        String time = buildTimeString();
+        context.drawFooter(buildTimeString(), pagePositionPec());
 //        PagePosition pagePosition = pagePosition();
 //        String position = buildPositionString(pagePosition);
-        context.drawFooter(time, pagePositionPec());
     }
 
     protected String buildTimeString() {

@@ -28,10 +28,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongClickListener {
-    //    public static ZLAndroidWidget Instance() {
-//        return ourImplementation;
-//    }
-//    private static ZLAndroidWidget ourImplementation;
     protected Integer myColorLevel;
 
     public final ExecutorService PrepareService = Executors.newSingleThreadExecutor();
@@ -60,7 +56,6 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
     }
 
     private void init() {
-//        ourImplementation = this;
         // next line prevent ignoring first onKeyDown DPad event
         // after any dialog was closed
         setFocusableInTouchMode(true);
@@ -136,7 +131,6 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
             if (animator.getMode().Auto) { // 松手后完成后续绘制
                 postInvalidate();
             }
-            drawFooter(canvas, animator);
         } else {                     // 动画结束后执行, 无动画情况只会调用这个
             switch (oldMode) {
                 case AnimatedScrollingForward: { // 当翻到 下一页/上一页 时调用
@@ -247,52 +241,13 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
         view.paint(context, index);
     }
 
-    private void drawFooter(Canvas canvas, AnimationProvider animator) {
-//        final ZLView view = ZLApplication.Instance().getCurrentView();
-//        final ZLView.FooterArea footer = view.getFooterArea();
-//
-//        if (footer == null) {
-//            myFooterBitmap = null;
-//            return;
-//        }
 
-//        if (myFooterBitmap != null &&
-//                (myFooterBitmap.getWidth() != getWidth() ||
-//                        myFooterBitmap.getHeight() != footer.getHeight())) {
-//            myFooterBitmap = null;
-//        }
-//        if (myFooterBitmap == null) {
-//            myFooterBitmap = Bitmap.createBitmap(getWidth(), footer.getHeight(), Bitmap.Config.RGB_565);
-//        }
-//        final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
-//                mySystemInfo,
-//                new Canvas(),
-//                new ZLAndroidPaintContext.Geometry(
-//                        getWidth(),
-//                        getHeight(),
-//                        getWidth(),
-//                        footer.getHeight(),
-//                        0,
-//                        getMainAreaHeight()
-//                ),
-//                view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
-//        );
-//        footer.paint(context);
-//        final int voffset = getHeight() - footer.getHeight();
-//        if (animator != null) {
-//            animator.drawFooterBitmap(canvas, myFooterBitmap, voffset);
-//        } else {
-//            canvas.drawBitmap(myFooterBitmap, 0, voffset, myPaint);
-//        }
-    }
-
-    private void onDrawStatic(final Canvas canvas) {  // 滑动完后调用静态时不停调用
+    private void onDrawStatic(final Canvas canvas) {  // 滑动完后调用静态时调用
         /**
          * 从myBitmapManager获取一张Bitmap,画到画布上
          * myBitmapManager.getBitmap(ZLView.PageIndex.current)是自己创建的canvas,将该view的canva和其连起来才可以显示在view上
          */
         canvas.drawBitmap(myBitmapManager.getBitmap(ZLView.PageIndex.current), 0, 0, myPaint);
-        drawFooter(canvas, null);
         post(new Runnable() { // 将runnable放到消息队列中
             public void run() {
                 PrepareService.execute(new Runnable() {
