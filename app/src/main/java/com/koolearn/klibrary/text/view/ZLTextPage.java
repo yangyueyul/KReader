@@ -75,8 +75,20 @@ final class ZLTextPage {
         LineInfos.clear();
         PaintState = PaintStateEnum.START_IS_KNOWN;
     }
+//
+//    void moveStartCursor(float percent) { // 章节
+//        if (StartCursor.isNull()) {
+//            StartCursor.setCursor(EndCursor);
+//        }
+//        StartCursor.moveToParagraph(paragraphIndex);
+//        StartCursor.moveTo(wordIndex, charIndex);
+//        EndCursor.reset();
+//        LineInfos.clear();
+//        PaintState = PaintStateEnum.START_IS_KNOWN;
+//    }
 
     void moveEndCursor(int paragraphIndex, int wordIndex, int charIndex) {
+
         if (EndCursor.isNull()) {
             EndCursor.setCursor(StartCursor);
         }

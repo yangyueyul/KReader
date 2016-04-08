@@ -10,7 +10,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.koolearn.android.kooreader.api.KooReaderIntents;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.android.util.OrientationUtil;
 import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.text.view.ZLTextView;
@@ -188,7 +187,6 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
             }
 
             private void gotoPagePer(int page) {
-                LogUtil.i24("page:" + page);
                 final ZLTextView view = myKooReader.getTextView();
 //                if (page == 0) {
 //                    view.gotoHome();

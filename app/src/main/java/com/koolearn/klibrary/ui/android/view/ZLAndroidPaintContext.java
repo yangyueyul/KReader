@@ -530,12 +530,8 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
     }
 
     private String getCurrentTOC() {
-        final StringBuilder builder = new StringBuilder();
         final TOCTree tocElement = myReader.getCurrentTOCElement();
-        if (tocElement != null) {
-            builder.append(tocElement.getText());
-        }
-        return builder.toString();
+        return tocElement == null ? "" : tocElement.getText();
     }
 
     @Override

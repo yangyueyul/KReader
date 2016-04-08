@@ -265,7 +265,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
                     Application.getViewWidget().reset();
                 }
 
-                Application.getViewWidget().reset(); // Fix Bugs
+//                Application.getViewWidget().reset(); // Fix Bugs
                 break;
             }
             case next: { // 动画结束时翻页   P C N
@@ -286,7 +286,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
                         break;
                 }
 
-                Application.getViewWidget().reset();
+//                Application.getViewWidget().reset();
                 break;
             }
         }
@@ -413,7 +413,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
         }
     }
 
-
     @Override
     public synchronized void preparePage(ZLPaintContext context, ZLViewEnums.PageIndex pageIndex) {
         setContext(context); // 设置带有属性的画布,原先是个"假"画布
@@ -538,7 +537,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
         drawSelectionCursor(context, page, SelectionCursor.Which.Left);
         drawSelectionCursor(context, page, SelectionCursor.Which.Right);
 
-        context.drawFooter(buildTimeString(), pagePositionPec());
+        context.drawFooter(buildTimeString(), pagePositionPecReal(page));
 //        PagePosition pagePosition = pagePosition();
 //        String position = buildPositionString(pagePosition);
     }
@@ -608,6 +607,22 @@ public abstract class ZLTextView extends ZLTextViewBase {
             return 0;
         }
         final ZLTextPage page = getPage(pageIndex);
+        preparePaintInfo(page);
+        if (startNotEndOfPage) {
+            return Math.max(0, sizeOfTextBeforeCursor(page.StartCursor));
+        } else {
+            int end = sizeOfTextBeforeCursor(page.EndCursor);
+            if (end == -1) {
+                end = myModel.getTextLength(myModel.getParagraphsNumber() - 1) - 1;
+            }
+            return Math.max(1, end);
+        }
+    }
+
+    private final synchronized int getCurrentNumber(ZLTextPage page, boolean startNotEndOfPage) {
+        if (myModel == null || myModel.getParagraphsNumber() == 0) {
+            return 0;
+        }
         preparePaintInfo(page);
         if (startNotEndOfPage) {
             return Math.max(0, sizeOfTextBeforeCursor(page.StartCursor));
@@ -808,6 +823,24 @@ public abstract class ZLTextView extends ZLTextViewBase {
             total = myModel.getParagraphsNumber() - 1;
         }
 
+        final StringBuilder info = new StringBuilder();
+        float size = (float) current * 100 / total;
+        DecimalFormat df = new DecimalFormat("0.00");
+        info.append(df.format(size));
+        info.append("%");
+        return info.toString();
+    }
+
+    public final synchronized String pagePositionPecReal(ZLTextPage page) {
+        int current = getCurrentNumber(page, false); // 传入要绘制的page
+        int total = sizeOfFullText();
+        if (getCurrentCharNumber(ZLViewEnums.PageIndex.current, true) == 0) {
+            return "0.00%";
+        }
+        if (computeTextPageNumber(total) <= 3) {
+            current = page.EndCursor.getParagraphIndex();
+            total = myModel.getParagraphsNumber() - 1;
+        }
         final StringBuilder info = new StringBuilder();
         float size = (float) current * 100 / total;
         DecimalFormat df = new DecimalFormat("0.00");
