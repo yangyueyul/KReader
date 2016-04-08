@@ -19,7 +19,10 @@ public abstract interface PageProvider
 
     public abstract boolean hasPreviousPage();
 
-    public abstract void shift(boolean paramBoolean);
+    // CURL_LEFT = 1;
+//     CURL_NONE = 0;
+//     CURL_RIGHT = 2;
+    public abstract void shift(int param);
 
     public abstract void updatePage(CurlPage paramhz, int paramInt1, int paramInt2, ZLView.PageIndex paramPageIndex);
 }

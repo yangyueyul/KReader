@@ -2,20 +2,26 @@ package com.koolearn.klibrary.ui.android.view.animation;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.widget.RelativeLayout;
 
 import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.core.view.ZLView;
 import com.koolearn.klibrary.core.view.ZLViewEnums;
 import com.koolearn.klibrary.ui.android.curl.CurlPage;
 import com.koolearn.klibrary.ui.android.curl.CurlView;
+import com.koolearn.klibrary.ui.android.view.BitmapManagerCurlImpl;
+import com.koolearn.klibrary.ui.android.view.ZLAndroidCurlWidget;
 
-public class CurlPageProviderImpl extends AnimationProvider implements PageProvider {
+public class CurlPageProviderImpl extends AnimationProvider implements PageProvider{
 
     private CurlView curlView;
-    private Bitmap myBitmap;
 
     public CurlPageProviderImpl(BitmapManager bitmapManager) {
         super(bitmapManager);
+        curlView = ZLAndroidCurlWidget.Instance();
+        curlView.setPageProvider(this);
+        curlView.setViewMode(CurlView.SHOW_ONE_PAGE);
     }
 
     @Override
@@ -85,61 +91,46 @@ public class CurlPageProviderImpl extends AnimationProvider implements PageProvi
     protected void setFilter() {
     }
 
-
     @Override
     public boolean hasNextPage() {
-        if (ZLApplication.Instance() != null && ZLApplication.Instance().getCurrentView() != null)
+        if(ZLApplication.Instance()!=null && ZLApplication.Instance().getCurrentView()!=null){
             return ZLApplication.Instance().getCurrentView().canScroll(ZLView.PageIndex.next);
-        return false;
+        }else{
+            return false;
+        }
     }
 
     @Override
     public boolean hasPreviousPage() {
-        if (ZLApplication.Instance() != null && ZLApplication.Instance().getCurrentView() != null)
+        if(ZLApplication.Instance()!=null && ZLApplication.Instance().getCurrentView()!=null){
             return ZLApplication.Instance().getCurrentView().canScroll(ZLView.PageIndex.previous);
-        return false;
+        }else{
+            return false;
+        }
     }
 
     @Override
-    public void shift(boolean i) {
-//        ZLView localZLView = ZLApplication.Instance().getCurrentView();
-//        switch (CurlPageProviderImpl.1.$SwitchMap$com$unicom$zworeader$readercore$view$core$AnimationProvider$Mode[a().ordinal()])
-//        {
-//            default:
-//            case leftToRight:
-//            case rightToLeft:
-//        }
-//        while (true)
-//        {
-//            b();
-//            return;
-//            ZLView.PageIndex localPageIndex = g();
-//            hs localhs = this.a;
-//            if (localPageIndex == ZLView.PageIndex.next);
-//            for (boolean bool = true; ; bool = false)
-//            {
-//                localhs.a(bool);
-//                localZLView.a(localPageIndex);
-//                ZLApplication.p().v();
-//                com.unicom.zworeader.framework.util.BookUtil.d = true;
-//                com.unicom.zworeader.framework.util.BookUtil.c = true;
-//                com.unicom.zworeader.framework.util.BookUtil.e = true;
-//                break;
-//            }
-//            localZLView.a(ZLView.PageIndex.current);
-//        }
+    public void shift(int paramBoolean) {
+        switch (paramBoolean){
+            case CurlView.CURL_RIGHT:
+                forwardShift(true);
+                ZLApplication.Instance().getCurrentView().onScrollingFinished(ZLView.PageIndex.next);
+                break;
+            case CurlView.CURL_LEFT:
+                forwardShift(false);
+                ZLApplication.Instance().getCurrentView().onScrollingFinished(ZLView.PageIndex.previous);
+                break;
+            case CurlView.CURL_NONE:
+                ZLApplication.Instance().getCurrentView().onScrollingFinished(ZLView.PageIndex.current);
+                break;
+        }
+
     }
 
     @Override
-    public void updatePage(CurlPage page, int width, int height, ZLView.PageIndex index) {
-//        if (width == 0 || height == 0) {
-//            myBitmap
-//
-//        }
-//        while (bitmap == null) {
-//
-//        }
-//        page.setTexture(myBuffer, CurlPage.SIDE_BOTH);
-//        page.setColor(Color.argb(127, 255, 255, 255), CurlPage.SIDE_BACK);
+    public void updatePage(CurlPage page, int paramInt1, int paramInt2, ZLView.PageIndex paramPageIndex) {
+        page.setTexture(getBitmapByPageIndex(paramPageIndex), CurlPage.SIDE_BOTH);
+//        myColorLevel
+        page.setColor(Color.argb(127, 255, 255, 255), CurlPage.SIDE_BACK);
     }
 }

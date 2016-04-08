@@ -13,13 +13,14 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical" />
 
-    <!--<com.koolearn.klibrary.ui.android.view.ZLAndroidCurlWidget-->
-        <!--android:id="@+id/curl_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fadeScrollbars="false"-->
-        <!--android:focusable="true"-->
-        <!--android:scrollbarAlwaysDrawVerticalTrack="true"-->
-        <!--android:scrollbars="vertical" />-->
+    <com.koolearn.klibrary.ui.android.view.ZLAndroidCurlWidget
+        android:id="@+id/curl_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fadeScrollbars="false"
+        android:focusable="true"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbars="none"
+        android:visibility="gone"/>
 
 </RelativeLayout>

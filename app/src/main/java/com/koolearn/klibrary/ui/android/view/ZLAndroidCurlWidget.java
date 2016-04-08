@@ -19,6 +19,7 @@ import com.koolearn.klibrary.core.view.ZLViewWidget;
 import com.koolearn.klibrary.ui.android.curl.CurlView;
 import com.koolearn.klibrary.ui.android.view.animation.AnimationProvider;
 import com.koolearn.klibrary.ui.android.view.animation.CurlAnimationProvider;
+import com.koolearn.klibrary.ui.android.view.animation.CurlPageProviderImpl;
 import com.koolearn.klibrary.ui.android.view.animation.NoneAnimationProvider;
 import com.koolearn.klibrary.ui.android.view.animation.ShiftAnimationProvider;
 import com.koolearn.klibrary.ui.android.view.animation.SlideAnimationProvider;
@@ -27,19 +28,12 @@ import com.koolearn.kooreader.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ZLAndroidCurlWidget extends CurlView implements ZLViewWidget {
+public class ZLAndroidCurlWidget extends CurlView {
     public static ZLAndroidCurlWidget Instance() {
         return ourImplementation;
     }
 
     private static ZLAndroidCurlWidget ourImplementation;
-    protected Integer myColorLevel;
-
-    public final ExecutorService PrepareService = Executors.newSingleThreadExecutor();
-
-    private final Paint myPaint = new Paint();
-
-    private final BitmapManagerCurlImpl myBitmapManager = new BitmapManagerCurlImpl(this, getContext());
     private final SystemInfo mySystemInfo;
 
     public ZLAndroidCurlWidget(Context context, AttributeSet attrs, int defStyle) {
@@ -72,41 +66,18 @@ public class ZLAndroidCurlWidget extends CurlView implements ZLViewWidget {
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // 新打开时调用
-        getAnimationProvider().terminate();
-        if (myScreenIsTouched) {
-            // 暂未遇到
-            final ZLView view = ZLApplication.Instance().getCurrentView();
-            myScreenIsTouched = false;
-            view.onScrollingFinished(ZLView.PageIndex.current);
-        }
+//        getAnimationProvider().terminate();
+//        if (myScreenIsTouched) {
+//            // 暂未遇到
+//            final ZLView view = ZLApplication.Instance().getCurrentView();
+//            myScreenIsTouched = false;
+//            view.onScrollingFinished(ZLView.PageIndex.current);
+//        }
     }
 
     @Override
     public void onDrawFrame() {
-        drawB(new Canvas());
         super.onDrawFrame();
-    }
-
-    public void drawB(final Canvas canvas) {
-        final Context context = getContext();
-        if (context instanceof KooReader) {
-            ((KooReader) context).createWakeLock();
-        } else {
-            System.err.println("A surprise: view's context is not an KooReader");
-        }
-
-        myBitmapManager.setSize(getWidth(), getHeight());
-
-        if (getAnimationProvider().inProgress()) {
-            LogUtil.i8("drawP");
-
-            onDrawInScrolling(canvas); // 翻页过程中调用
-        } else {
-            LogUtil.i8("drawB");
-
-            onDrawStatic(canvas); // 首次/页面跳转时调用,防止黑屏
-            ZLApplication.Instance().onRepaintFinished();
-        }
     }
 
     private AnimationProvider myAnimationProvider;
@@ -117,341 +88,22 @@ public class ZLAndroidCurlWidget extends CurlView implements ZLViewWidget {
         if (myAnimationProvider == null || myAnimationType != type) {
             myAnimationType = type;
             switch (type) {
-                case none:
-                    myAnimationProvider = new NoneAnimationProvider(myBitmapManager);
-                    break;
-                case curl:
-                    myAnimationProvider = new CurlAnimationProvider(myBitmapManager);
-                    break;
-                case slide:
-                    myAnimationProvider = new SlideAnimationProvider(myBitmapManager);
-                    break;
-                case shift:
-                    myAnimationProvider = new ShiftAnimationProvider(myBitmapManager);
-                    break;
+//                case none:
+//                    myAnimationProvider = new NoneAnimationProvider(myBitmapManager);
+//                    break;
+//                case curl:
+//                    myAnimationProvider = new CurlPageProviderImpl(myBitmapManager);
+//                    break;
+//                case slide:
+//                    myAnimationProvider = new SlideAnimationProvider(myBitmapManager);
+//                    break;
+//                case shift:
+//                    myAnimationProvider = new ShiftAnimationProvider(myBitmapManager);
             }
         }
         return myAnimationProvider;
     }
 
-    private void onDrawInScrolling(Canvas canvas) {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        final AnimationProvider animator = getAnimationProvider();
-        final AnimationProvider.Mode oldMode = animator.getMode();
-        animator.doStep();
-        if (animator.inProgress()) { // 动画过程中执行
-            animator.draw(canvas); // 动画绘制
-            if (animator.getMode().Auto) { // 松手后完成后续绘制
-                postInvalidate();
-            }
-        } else {                     // 动画结束后执行, 无动画情况只会调用这个
-            switch (oldMode) {
-                case AnimatedScrollingForward: { // 当翻到 下一页/上一页 时调用
-                    final ZLView.PageIndex index = animator.getPageToScrollTo(); // 得到翻页后的KooView 向左翻->next 向右翻->previous
-                    // 若为next     -> next->current,current->previous
-                    // 若为previous -> current->next,previous->current
-                    myBitmapManager.shift(index == ZLView.PageIndex.next);
-                    view.onScrollingFinished(index);
-                    ZLApplication.Instance().onRepaintFinished();
-                    break;
-                }
-                case AnimatedScrollingBackward: // 没有翻到 下一页/上一页 则还在当前页
-                    view.onScrollingFinished(ZLView.PageIndex.current);
-                    break;
-            }
-            onDrawStatic(canvas);
-        }
-    }
 
-    @Override
-    public void reset() {
-        myBitmapManager.reset();
-    }
 
-    @Override
-    public void repaint() {
-        postInvalidate();
-    }
-
-    // onFingerPress
-    // 是否支持拖动翻页
-    // 开始翻页
-    @Override
-    public void startManualScrolling(int x, int y, ZLView.Direction direction) {
-        final AnimationProvider animator = getAnimationProvider();
-        animator.setup(direction, getWidth(), getHeight(), myColorLevel);
-        animator.startManualScrolling(x, y); // PreManualScrolling 先pre 然后判断是ManualScrolling还是NoScrolling
-    }
-
-    // onFingerMove
-    @Override
-    public void scrollManuallyTo(int x, int y) {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        final AnimationProvider animator = getAnimationProvider();
-        if (view.canScroll(animator.getPageToScrollTo(x, y))) { // 判断是否可以翻(是否有上/下一页)
-            animator.scrollTo(x, y); // 一直在改变Mode的状态
-            postInvalidate();
-        }
-    }
-
-    @Override
-    public void startAnimatedScrolling(ZLView.PageIndex pageIndex, int x, int y, ZLView.Direction direction, int speed) {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        if (pageIndex == ZLView.PageIndex.current || !view.canScroll(pageIndex)) {
-            return;
-        }
-        final AnimationProvider animator = getAnimationProvider();
-        animator.setup(direction, getWidth(), getHeight(), myColorLevel);
-        animator.startAnimatedScrolling(pageIndex, x, y, speed);
-        if (animator.getMode().Auto) {
-            postInvalidate();
-        }
-    }
-
-    @Override
-    public void startAnimatedScrolling(ZLView.PageIndex pageIndex, ZLView.Direction direction, int speed) {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        if (pageIndex == ZLView.PageIndex.current || !view.canScroll(pageIndex)) {
-            return;
-        }
-        final AnimationProvider animator = getAnimationProvider();
-        animator.setup(direction, getWidth(), getHeight(), myColorLevel);
-        animator.startAnimatedScrolling(pageIndex, null, null, speed);
-        if (animator.getMode().Auto) {
-            postInvalidate();
-        }
-    }
-
-    @Override
-    public void startAnimatedScrolling(int x, int y, int speed) { // 翻页滑动
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        final AnimationProvider animator = getAnimationProvider();
-        if (!view.canScroll(animator.getPageToScrollTo(x, y))) {
-            animator.terminate();
-            return;
-        }
-        animator.startAnimatedScrolling(x, y, speed);
-        postInvalidate(); // 更新视图
-    }
-
-    private void onDrawStatic(final Canvas canvas) {  // 滑动完后调用静态时不停调用
-        /**
-         * 从myBitmapManager获取一张Bitmap,画到画布上
-         * myBitmapManager.getBitmap(ZLView.PageIndex.current)是自己创建的canvas,将该view的canva和其连起来才可以显示在view上
-         */
-        canvas.drawBitmap(myBitmapManager.getBitmap(ZLView.PageIndex.current), 0, 0, myPaint);
-        post(new Runnable() { // 将runnable放到消息队列中
-            public void run() {
-                PrepareService.execute(new Runnable() {
-                    public void run() {
-                        final ZLView view = ZLApplication.Instance().getCurrentView(); // 得到当前view
-                        final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
-                                mySystemInfo, canvas,
-                                new ZLAndroidPaintContext.Geometry(getWidth(), getHeight(), getWidth(), getHeight(), 0, 0), 0);
-                        view.preparePage(context, ZLView.PageIndex.next); // 准备下一页
-                    }
-                });
-            }
-        });
-    }
-
-    @Override
-    public boolean onTrackballEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null);
-        } else {
-            ZLApplication.Instance().getCurrentView().onTrackballRotated((int) (10 * event.getX()), (int) (10 * event.getY()));
-        }
-        return true;
-    }
-
-//    private volatile boolean myLongClickPerformed;
-
-    private volatile boolean myPendingPress;
-    private int myPressedX, myPressedY;
-    private boolean myScreenIsTouched;
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                myPendingPress = true;
-                myScreenIsTouched = true;
-                myPressedX = x;
-                myPressedY = y;
-                break;
-            case MotionEvent.ACTION_UP:
-                if (myPendingPress) {
-                    view.onFingerSingleTap(x, y);
-                } else {
-                    view.onFingerRelease(x, y);
-                }
-                myPendingPress = false;
-                myScreenIsTouched = false;
-                break;
-            case MotionEvent.ACTION_MOVE: {
-                final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-                final boolean isAMove = Math.abs(myPressedX - x) > slop || Math.abs(myPressedY - y) > slop; // 判断是否在移动
-                if (myPendingPress) {
-                    if (isAMove) {
-                        view.onFingerPress(myPressedX, myPressedY); // 滑动过程 调用一次
-                        myPendingPress = false;
-                    }
-                }
-                if (!myPendingPress) {
-                    view.onFingerMove(x, y); // 滑动过程 一直调用
-                }
-                break;
-            }
-            case MotionEvent.ACTION_CANCEL:
-                myPendingPress = false;
-                myScreenIsTouched = false;
-                break;
-        }
-        return true;
-    }
-
-    private int myKeyUnderTracking = -1;
-    private long myTrackingStartTime;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        final ZLApplication application = ZLApplication.Instance();
-        final ZLKeyBindings bindings = application.keyBindings();
-
-        if (bindings.hasBinding(keyCode, true) ||
-                bindings.hasBinding(keyCode, false)) {
-            if (myKeyUnderTracking != -1) {
-                if (myKeyUnderTracking == keyCode) {
-                    return true;
-                } else {
-                    myKeyUnderTracking = -1;
-                }
-            }
-            if (bindings.hasBinding(keyCode, true)) {
-                myKeyUnderTracking = keyCode;
-                myTrackingStartTime = System.currentTimeMillis();
-                return true;
-            } else {
-                return application.runActionByKey(keyCode, false);
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (myKeyUnderTracking != -1) {
-            if (myKeyUnderTracking == keyCode) {
-                final boolean longPress = System.currentTimeMillis() >
-                        myTrackingStartTime + ViewConfiguration.getLongPressTimeout();
-                ZLApplication.Instance().runActionByKey(keyCode, longPress);
-            }
-            myKeyUnderTracking = -1;
-            return true;
-        } else {
-            final ZLKeyBindings bindings = ZLApplication.Instance().keyBindings();
-            return
-                    bindings.hasBinding(keyCode, false) ||
-                            bindings.hasBinding(keyCode, true);
-        }
-    }
-
-    @Override
-    protected int computeVerticalScrollExtent() {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        if (!view.isScrollbarShown()) {
-            return 0;
-        }
-        final AnimationProvider animator = getAnimationProvider();
-        if (animator.inProgress()) {
-            final int from = view.getScrollbarThumbLength(ZLView.PageIndex.current);
-            final int to = view.getScrollbarThumbLength(animator.getPageToScrollTo());
-            final int percent = animator.getScrolledPercent();
-            return (from * (100 - percent) + to * percent) / 100;
-        } else {
-            return view.getScrollbarThumbLength(ZLView.PageIndex.current);
-        }
-    }
-
-    @Override
-    protected int computeVerticalScrollOffset() {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        if (!view.isScrollbarShown()) {
-            return 0;
-        }
-        final AnimationProvider animator = getAnimationProvider();
-        if (animator.inProgress()) {
-            final int from = view.getScrollbarThumbPosition(ZLView.PageIndex.current);
-            final int to = view.getScrollbarThumbPosition(animator.getPageToScrollTo());
-            final int percent = animator.getScrolledPercent();
-            return (from * (100 - percent) + to * percent) / 100;
-        } else {
-            return view.getScrollbarThumbPosition(ZLView.PageIndex.current);
-        }
-    }
-
-    @Override
-    protected int computeVerticalScrollRange() {
-        final ZLView view = ZLApplication.Instance().getCurrentView();
-        if (!view.isScrollbarShown()) {
-            return 0;
-        }
-        return view.getScrollbarFullSize();
-    }
-
-    protected void updateColorLevel() {
-        ViewUtil.setColorLevel(myPaint, myColorLevel);
-    }
-
-    public final void setScreenBrightness(int percent) { // 禁止子类覆盖
-        if (percent < 1) {
-            percent = 1;
-        } else if (percent > 100) {
-            percent = 100;
-        }
-
-        final Context context = getContext();
-        if (!(context instanceof KooReaderMainActivity)) {
-            return;
-        }
-
-        final float level;
-        final Integer oldColorLevel = myColorLevel;
-        if (percent >= 25) {
-            // 100 => 1f; 25 => .01f
-            level = .01f + (percent - 25) * .99f / 75;
-            myColorLevel = null;
-        } else {
-            level = .01f;
-            myColorLevel = 0x60 + (0xFF - 0x60) * Math.max(percent, 0) / 25;
-        }
-
-        final KooReaderMainActivity activity = (KooReaderMainActivity) context;
-        activity.getZLibrary().ScreenBrightnessLevelOption.setValue(percent);
-        activity.setScreenBrightnessSystem(level);
-        if (oldColorLevel != myColorLevel) {
-            updateColorLevel();
-            postInvalidate();
-        }
-    }
-
-    public final int getScreenBrightness() {
-        if (myColorLevel != null) {
-            return (myColorLevel - 0x60) * 25 / (0xFF - 0x60);
-        }
-
-        final Context context = getContext();
-        if (!(context instanceof KooReaderMainActivity)) {
-            return 50;
-        }
-        final float level = ((KooReaderMainActivity) context).getScreenBrightnessSystem();
-        // level = .01f + (percent - 25) * .99f / 75;
-        return 25 + (int) ((level - .01f) * 75 / .99f);
-    }
 }

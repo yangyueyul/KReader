@@ -21,12 +21,10 @@ public final class BitmapManagerImpl implements BitmapManager {
     private int myWidth;
     private int myHeight;
 
-    private final ZLAndroidWidget myWidget;
     private final SystemInfo mySystemInfo;
 
 
     public BitmapManagerImpl(ZLAndroidWidget widget, Context context) {
-        myWidget = widget;
         mySystemInfo = Paths.systemInfo(context); // 缓存相关
     }
 
@@ -115,6 +113,7 @@ public final class BitmapManagerImpl implements BitmapManager {
         }
     }
 
+    @Override
     public void shift(boolean forward) {
         LogUtil.i13("getPrevious" + forward);
 

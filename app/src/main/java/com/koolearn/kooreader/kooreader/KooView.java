@@ -266,7 +266,7 @@ public final class KooView extends ZLTextView {
 
     @Override
     public ZLColor getTextColor(ZLTextHyperlink hyperlink) {
-        LogUtil.i("Hyperlink" + ":" + hyperlink.Type);
+//        LogUtil.i("Hyperlink" + ":" + hyperlink.Type);
 
         final ColorProfile profile = myViewOptions.getColorProfile();
         switch (hyperlink.Type) {

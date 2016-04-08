@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.koolearn.android.kooreader.api.KooReaderIntents;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
@@ -21,10 +23,13 @@ import com.koolearn.android.util.UIUtil;
 import com.koolearn.klibrary.core.application.ZLApplicationWindow;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.options.Config;
+import com.koolearn.klibrary.core.view.ZLViewEnums;
 import com.koolearn.klibrary.core.view.ZLViewWidget;
 import com.koolearn.klibrary.ui.android.R;
+import com.koolearn.klibrary.ui.android.curl.CurlView;
 import com.koolearn.klibrary.ui.android.error.ErrorKeys;
 import com.koolearn.klibrary.ui.android.view.AndroidFontUtil;
+import com.koolearn.klibrary.ui.android.view.ZLAndroidCurlWidget;
 import com.koolearn.klibrary.ui.android.view.ZLAndroidPaintContext;
 import com.koolearn.klibrary.ui.android.view.ZLAndroidWidget;
 import com.koolearn.kooreader.Paths;
@@ -54,7 +59,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     private volatile Book myBook;
     private RelativeLayout myRootView;
     private ZLAndroidWidget myMainView;
-//    private ZLAndroidCurlWidget myCurlView;
+    private ZLAndroidCurlWidget myCurlView;
     volatile boolean IsPaused = false;
     private volatile long myResumeTimestamp;
     private Intent myOpenBookIntent = null;
@@ -117,8 +122,15 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
 
         myRootView = (RelativeLayout) findViewById(R.id.root_view);
         myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
-//        myCurlView = (ZLAndroidCurlWidget) findViewById(R.id.curl_view);
-
+        myCurlView = (ZLAndroidCurlWidget) findViewById(R.id.curl_view);
+        myCurlView.setMargins(0,0,0,0);
+        myCurlView.setSizeChangedObserver(new CurlView.SizeChangedObserver() {
+            @Override
+            public void onSizeChanged(int width, int height) {
+                myCurlView.setMargins(0,0,0,0);
+                myCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
+            }
+        });
         myKooReaderApp = (KooReaderApp) KooReaderApp.Instance();
         if (myKooReaderApp == null) {
             myKooReaderApp = new KooReaderApp(Paths.systemInfo(this), new BookCollectionShadow());
@@ -169,6 +181,9 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     @Override
     protected void onResume() {
         super.onResume();
+        if(myCurlView!=null){   // && 显示
+            myCurlView.onResume();
+        }
         myStartTimer = true;
         Config.Instance().runOnConnect(new Runnable() {
             public void run() {
@@ -209,6 +224,10 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     @Override
     protected void onPause() {
         IsPaused = true;
+
+        if(myCurlView!=null && myCurlView.getVisibility() == View.VISIBLE){
+            myCurlView.onPause();
+        }
         try {
             unregisterReceiver(myBatteryInfoReceiver);
         } catch (IllegalArgumentException e) {
@@ -373,6 +392,21 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     public ZLViewWidget getViewWidget() {
         return myMainView;
 //        return myCurlView;
+    }
+
+    @Override
+    public void hideViewWidget(boolean flag){
+        if(myCurlView!=null && myMainView!=null){
+            if(flag){
+                myCurlView.setVisibility(View.VISIBLE);
+                myMainView.setVisibility(View.GONE);
+            }else{
+                myCurlView.setVisibility(View.GONE);
+                myMainView.setVisibility(View.VISIBLE);
+            }
+        }else{
+            Toast.makeText(this,"view 切换错误",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private final HashMap<MenuItem, String> myMenuItemMap = new HashMap<MenuItem, String>();

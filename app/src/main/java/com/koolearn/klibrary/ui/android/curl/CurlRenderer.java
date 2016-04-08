@@ -42,7 +42,7 @@ public class CurlRenderer implements GLSurfaceView.Renderer {
 	public static final int SHOW_ONE_PAGE = 1;
 	public static final int SHOW_TWO_PAGES = 2;
 	// Set to true for checking quickly how perspective projection looks.
-	private static final boolean USE_PERSPECTIVE_PROJECTION = true;
+	private static final boolean USE_PERSPECTIVE_PROJECTION = false;
 	// Background fill color.
 	private int mBackgroundColor;
 	// Curl meshes used for static and dynamic rendering.

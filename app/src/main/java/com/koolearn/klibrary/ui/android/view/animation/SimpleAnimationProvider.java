@@ -1,5 +1,6 @@
 package com.koolearn.klibrary.ui.android.view.animation;
 
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.view.ZLViewEnums;
 
 abstract class SimpleAnimationProvider extends AnimationProvider {

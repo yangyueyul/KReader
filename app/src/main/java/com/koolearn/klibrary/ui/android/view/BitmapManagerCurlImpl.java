@@ -18,8 +18,8 @@ public final class BitmapManagerCurlImpl implements BitmapManager {
     private final Bitmap[] myBitmaps = new Bitmap[SIZE];
     private final ZLView.PageIndex[] myIndexes = new ZLView.PageIndex[SIZE];
 
-    private int myWidth;
-    private int myHeight;
+    public static int myWidth =1;
+    public static int myHeight=1;
 
     private final ZLAndroidCurlWidget myWidget;
     private final SystemInfo mySystemInfo;

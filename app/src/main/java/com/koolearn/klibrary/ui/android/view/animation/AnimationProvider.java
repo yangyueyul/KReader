@@ -266,6 +266,16 @@ public abstract class AnimationProvider {
         return myBitmapManager.getBitmap(getPageToScrollTo());
     }
 
+    // added by leixun
+    public Bitmap getBitmapByPageIndex(ZLViewEnums.PageIndex index){
+        return myBitmapManager.getBitmap(index);
+    }
+
+    // true 左边翻到右边 ；false 右边翻到左边 added by leixun
+    protected void forwardShift(boolean params){
+        myBitmapManager.shift(params);
+    }
+
     protected void drawBitmapFrom(Canvas canvas, int x, int y, Paint paint) {
         myBitmapManager.drawBitmap(canvas, x, y, ZLViewEnums.PageIndex.current, paint);
     }
@@ -273,6 +283,5 @@ public abstract class AnimationProvider {
     protected void drawBitmapTo(Canvas canvas, int x, int y, Paint paint) {
         myBitmapManager.drawBitmap(canvas, x, y, getPageToScrollTo(), paint);
     }
-
 
 }

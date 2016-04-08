@@ -18,6 +18,7 @@ import com.koolearn.klibrary.core.view.ZLView;
 import com.koolearn.klibrary.core.view.ZLViewWidget;
 import com.koolearn.klibrary.ui.android.view.animation.AnimationProvider;
 import com.koolearn.klibrary.ui.android.view.animation.CurlAnimationProvider;
+import com.koolearn.klibrary.ui.android.view.animation.CurlPageProviderImpl;
 import com.koolearn.klibrary.ui.android.view.animation.NoneAnimationProvider;
 import com.koolearn.klibrary.ui.android.view.animation.ShiftAnimationProvider;
 import com.koolearn.klibrary.ui.android.view.animation.SlideAnimationProvider;
@@ -111,7 +112,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
                     myAnimationProvider = new NoneAnimationProvider(myBitmapManager);
                     break;
                 case curl:
-                    myAnimationProvider = new CurlAnimationProvider(myBitmapManager);
+                    myAnimationProvider = new CurlPageProviderImpl(myBitmapManager);
                     break;
                 case slide:
                     myAnimationProvider = new SlideAnimationProvider(myBitmapManager);
@@ -122,6 +123,14 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
             }
         }
         return myAnimationProvider;
+    }
+
+    public boolean isCurlAnimation(){
+        if(getAnimationProvider() instanceof CurlPageProviderImpl){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void onDrawInScrolling(Canvas canvas) {
@@ -287,6 +296,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
             case MotionEvent.ACTION_MOVE: {
                 final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
                 final boolean isAMove = Math.abs(myPressedX - x) > slop || Math.abs(myPressedY - y) > slop; // 判断是否在移动
+
                 if (myPendingPress) {
                     if (isAMove) {
                         view.onFingerPress(myPressedX, myPressedY); // 滑动过程 调用一次
@@ -294,6 +304,11 @@ public class ZLAndroidWidget extends View implements ZLViewWidget {
                     }
                 }
                 if (!myPendingPress) {
+                    // 开始切换 surfaceview
+                    if(isCurlAnimation()){
+                        ZLApplication.Instance().getMyWindow().hideViewWidget(true);
+                        return true;
+                    }
                     view.onFingerMove(x, y); // 滑动过程 一直调用
                 }
                 break;
