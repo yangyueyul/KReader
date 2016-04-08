@@ -792,6 +792,7 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 
     /**
      * 一直查询file_id对应的parent_id，一直到parent_id为null
+     *
      * @param fileId
      * @return
      */
@@ -1131,6 +1132,7 @@ final class SQLiteBooksDatabase extends BooksDatabase {
     }
 
     protected void storePosition(long bookId, ZLTextPosition position) {
+        LogUtil.i24("" + position.getParagraphIndex());
         final SQLiteStatement statement = get(
                 "INSERT OR REPLACE INTO BookState (book_id,paragraph,word,char,timestamp) VALUES (?,?,?,?,?)"
         );

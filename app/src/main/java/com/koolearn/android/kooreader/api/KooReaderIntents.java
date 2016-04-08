@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.koolearn.kooreader.book.AbstractBook;
 import com.koolearn.kooreader.book.AbstractSerializer;
 import com.koolearn.kooreader.book.Book;
+import com.koolearn.kooreader.book.Bookmark;
 import com.koolearn.kooreader.book.SerializerUtil;
 
 public abstract class KooReaderIntents {
@@ -26,6 +27,10 @@ public abstract class KooReaderIntents {
 		String PLUGIN_VIEW                      = "android.kooreader.action.plugin.VIEW";
 		String PLUGIN_KILL                      = "android.kooreader.action.plugin.KILL";
 		String PLUGIN_CONNECT_COVER_SERVICE     = "android.kooreader.action.plugin.CONNECT_COVER_SERVICE";
+
+
+		String BOOKMARKS                        = "android.kooreader.action.BOOKMARKS";
+		String EXTERNAL_BOOKMARKS               = "android.kooreader.action.EXTERNAL_BOOKMARKS";
 	}
 
 	public interface Event {
@@ -37,6 +42,7 @@ public abstract class KooReaderIntents {
 	}
 
 	public interface Key {
+		String BOOKMARK                         = "kooreader.bookmark";
 		String BOOK                             = "kooreader.book";
 		String TYPE                             = "kooreader.type";
 	}
@@ -71,5 +77,21 @@ public abstract class KooReaderIntents {
 
 	public static <B extends AbstractBook> B getBookExtra(Intent intent, AbstractSerializer.BookCreator<B> creator) {
 		return getBookExtra(intent, Key.BOOK, creator);
+	}
+
+	public static void putBookmarkExtra(Intent intent, String key, Bookmark bookmark) {
+		intent.putExtra(key, SerializerUtil.serialize(bookmark));
+	}
+
+	public static void putBookmarkExtra(Intent intent, Bookmark bookmark) {
+		putBookmarkExtra(intent, Key.BOOKMARK, bookmark);
+	}
+
+	public static Bookmark getBookmarkExtra(Intent intent, String key) {
+		return SerializerUtil.deserializeBookmark(intent.getStringExtra(key));
+	}
+
+	public static Bookmark getBookmarkExtra(Intent intent) {
+		return getBookmarkExtra(intent, Key.BOOKMARK);
 	}
 }

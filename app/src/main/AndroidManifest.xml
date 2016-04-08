@@ -13,22 +13,13 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:logo="@mipmap/ic_launcher">
-
-        <!--<activity-->
-        <!--android:name="com.koolearn.android.kooreader.MainActivity"-->
-        <!--android:screenOrientation="portrait"-->
-        <!--android:theme="@android:style/Theme.Holo.NoActionBar">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.MAIN" />-->
-        <!--<category android:name="android.intent.category.LAUNCHER" />-->
-        <!--</intent-filter>-->
-        <!--</activity>-->
+        android:logo="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.koolearn.android.kooreader.MainAppActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/DrawerLayoutTheme">
+            android:name="com.koolearn.android.kooreader.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -40,9 +31,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseAppThemeBlues">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.kooreader.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -61,6 +50,13 @@
                 <action android:name="android.kooreader.action.PLUGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.kooreader.action.CLOSE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -70,18 +66,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.koolearn.android.kooreader.book.BookDetailActivity"
-            android:theme="@style/DrawerLayoutTheme" />
+        <activity android:name="com.koolearn.android.kooreader.book.BookDetailActivity" />
         <activity
             android:name="com.koolearn.android.kooreader.TOCActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/AppTheme" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="com.koolearn.android.kooreader.preferences.PreferenceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":preferences"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:process=":preferences">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -97,23 +89,35 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="KooReader crash"
-            android:process=":crash"
-            android:theme="@style/KooReader.Activity.NoActionBar" />
+            android:process=":crash" />
         <activity
             android:name="com.koolearn.android.kooreader.library.LibraryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:process=":library"
-            android:theme="@style/DrawerLayoutTheme">
+            android:process=":library">
             <intent-filter>
                 <action android:name="android.kooreader.action.LIBRARY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.koolearn.android.kooreader.PhotoViewActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-
+            android:name="com.koolearn.android.kooreader.bookmark.EditBookmarkActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/KooReader.Dialog">
+            <intent-filter>
+                <action android:name="android.fbreader.action.EDIT_BOOKMARK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.koolearn.android.kooreader.bookmark.EditStyleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/KooReader.Dialog">
+            <intent-filter>
+                <action android:name="android.fbreader.action.EDIT_STYLES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name="com.koolearn.android.kooreader.libraryService.LibraryService"

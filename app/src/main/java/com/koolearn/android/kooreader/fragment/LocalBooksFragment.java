@@ -23,18 +23,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.koolearn.android.kooreader.KooReader;
-import com.koolearn.android.kooreader.MyBookAdapter;
-import com.koolearn.android.kooreader.animation.SlideInLeftAnimator;
+import com.koolearn.android.kooreader.RecyclerItemClickListener;
+import com.koolearn.android.kooreader.animation.FlipInLeftYAnimator;
 import com.koolearn.android.kooreader.library.LibraryActivity;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.android.util.OrientationUtil;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * ******************************************
@@ -46,13 +44,13 @@ import java.util.List;
  * ******************************************
  */
 public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout refreshLayout;
     private FloatingActionButton mFabSearch;
     private ProgressBar mProgressBar;
 
     private List<Book> bookshelf = new ArrayList<>();
-    private MyBookAdapter mBookAdapter;
+    private LocalBookAdapter mLocalBookAdapter;
     private final BookCollectionShadow myCollection = new BookCollectionShadow();
 
     Handler handler = new Handler() {
@@ -68,18 +66,23 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_local_books, null);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-        recyclerView.setHasFixedSize(true);
-
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        getBooks();
-
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setColorSchemeResources(R.color.progressBarBlue, R.color.progressBarBgWhiteOrange);
-        refreshLayout.setProgressBackgroundColor(R.color.progressBarBgGreen);
-        Toast.makeText(getActivity(), Environment.getExternalStorageDirectory()+"",Toast.LENGTH_LONG).show();
+        refreshLayout.setColorSchemeResources(R.color.progressBara, R.color.progressBarb);
+        refreshLayout.setProgressBackgroundColor(R.color.progressBarBg);
         setUpFAB(view);
+
+        mRecyclerView.setHasFixedSize(true);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), mRecyclerView, onItemClickListener));
+//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new FlipInLeftYAnimator());
+
+        mLocalBookAdapter = new LocalBookAdapter(getActivity());
+        mRecyclerView.setAdapter(mLocalBookAdapter);
         return view;
     }
 
@@ -93,57 +96,9 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
         myCollection.bindToService(getActivity(), new Runnable() {
             public void run() {
                 bookshelf.clear();
-                bookshelf = myCollection.recentlyOpenedBooks(9);
-//                while (bookshelf.size() < 2) {
-//                    try {
-//                        Thread.sleep(1000);
-//                        bookshelf = myCollection.recentlyOpenedBooks(9);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-                displayBook();
-            }
-        });
-    }
-
-    private void displayBook() {
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-        recyclerView.setItemAnimator(new SlideInLeftAnimator());
-        recyclerView.getItemAnimator().setAddDuration(1000);
-        recyclerView.getItemAnimator().setRemoveDuration(1000);
-        recyclerView.getItemAnimator().setMoveDuration(1000);
-        recyclerView.getItemAnimator().setChangeDuration(1000);
-
-        recyclerView.setAdapter(mBookAdapter);
-        mBookAdapter = new MyBookAdapter(getActivity(), bookshelf);
-        mBookAdapter.setOnItemClickListener(new MyBookAdapter.OnItemClickLitener() {
-            @Override
-            public void onItemClick(View view, Book data) {
-                KooReader.openBookActivity(getActivity(), data, null);
-                getActivity().overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
-            }
-
-            @Override
-            public void onItemLongClick(final View view, final Book data, final int position) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("删除书籍?").setNegativeButton("取消", null);
-                LogUtil.i8("position:" + position);
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //                notifyItemInserted(position)与notifyItemRemoved(position)
-                        myCollection.removeBook(data, true);
-                        int position = bookshelf.indexOf(data);
-                        bookshelf.remove(position);
-                        recyclerView.removeViewAt(position);
-                        mBookAdapter.notifyItemRemoved(position);
-//                        mBookAdapter.notifyItemRemoved(0);
-                        Snackbar.make(view, "删除成功", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-                builder.show();
+                bookshelf = myCollection.recentlyOpenedBooks(15);
+                mLocalBookAdapter.clearItems();
+                mLocalBookAdapter.updateItems(bookshelf, true);
             }
         });
     }
@@ -177,12 +132,36 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         myCollection.unbind();
+        super.onDestroy();
     }
 
     @Override
     public void onRefresh() {
         handler.sendEmptyMessageDelayed(1, 2000);
     }
+
+
+    private RecyclerItemClickListener.OnItemClickListener onItemClickListener = new RecyclerItemClickListener.OnItemClickListener() {
+        @Override
+        public void onItemClick(View view, int position) {
+            KooReader.openBookActivity(getActivity(), mLocalBookAdapter.getBook(position), null);
+            getActivity().overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
+        }
+
+        @Override
+        public void onItemLongClick(final View view, final int position) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setIcon(R.drawable.ic_error_outline_black).setTitle("删除书籍?").setNeutralButton("稍后", null).setNegativeButton("取消", null);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    myCollection.removeBook(mLocalBookAdapter.getBook(position), true);
+                    mLocalBookAdapter.removeItems(position);
+                    Snackbar.make(mFabSearch, "删除成功", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+            builder.show();
+        }
+    };
 }

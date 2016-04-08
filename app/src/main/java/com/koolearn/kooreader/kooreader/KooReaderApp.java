@@ -1,6 +1,5 @@
 package com.koolearn.kooreader.kooreader;
 
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.core.application.ZLKeyBindings;
 import com.koolearn.klibrary.core.drm.EncryptionMethod;
@@ -17,6 +16,7 @@ import com.koolearn.kooreader.book.BookEvent;
 import com.koolearn.kooreader.book.BookUtil;
 import com.koolearn.kooreader.book.Bookmark;
 import com.koolearn.kooreader.book.BookmarkQuery;
+import com.koolearn.kooreader.book.BookmarkUtil;
 import com.koolearn.kooreader.book.IBookCollection;
 import com.koolearn.kooreader.bookmodel.BookModel;
 import com.koolearn.kooreader.bookmodel.TOCTree;
@@ -24,9 +24,13 @@ import com.koolearn.kooreader.formats.BookReadingException;
 import com.koolearn.kooreader.formats.FormatPlugin;
 import com.koolearn.kooreader.formats.PluginCollection;
 import com.koolearn.kooreader.kooreader.options.ImageOptions;
+import com.koolearn.kooreader.kooreader.options.MiscOptions;
 import com.koolearn.kooreader.kooreader.options.PageTurningOptions;
 import com.koolearn.kooreader.kooreader.options.ViewOptions;
+import com.koolearn.kooreader.network.sync.SyncData;
 import com.koolearn.kooreader.util.AutoTextSnippet;
+import com.koolearn.kooreader.util.TextSnippet;
+import com.kooreader.util.ComparisonUtil;
 
 import java.util.Collections;
 import java.util.Date;
@@ -34,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class KooReaderApp extends ZLApplication {
+    public final MiscOptions MiscOptions = new MiscOptions();
     public final ImageOptions ImageOptions = new ImageOptions();
     public final ViewOptions ViewOptions = new ViewOptions();
     public final PageTurningOptions PageTurningOptions = new PageTurningOptions();
@@ -46,6 +51,7 @@ public final class KooReaderApp extends ZLApplication {
     private ZLTextPosition myJumpEndPosition;
     private Date myJumpTimeStamp;
     public final IBookCollection<Book> Collection;
+    private final SyncData mySyncData = new SyncData();
 
     public KooReaderApp(com.koolearn.klibrary.core.util.SystemInfo systemInfo, final IBookCollection<Book> collection) {
         super(systemInfo);
@@ -55,8 +61,23 @@ public final class KooReaderApp extends ZLApplication {
         collection.addListener(new IBookCollection.Listener<Book>() {
             public void onBookEvent(BookEvent event, Book book) {
                 switch (event) {
+                    case BookmarkStyleChanged:
+                    case BookmarksUpdated:
+                        if (Model != null && (book == null || collection.sameBook(book, Model.Book))) {
+                            if (BookTextView.getModel() != null) {
+                                setBookmarkHighlightings(BookTextView, null);
+                            }
+                            if (FootnoteView.getModel() != null && myFootnoteModelId != null) {
+                                setBookmarkHighlightings(FootnoteView, myFootnoteModelId);
+                            }
+                        }
+                        break;
                     case Updated:
                         onBookUpdated(book);
+                        break;
+                    case ProgressUpdated:
+//                        clearTextCaches(); // FixBug
+//						getViewWidget().repaint();
                         break;
                 }
             }
@@ -65,12 +86,17 @@ public final class KooReaderApp extends ZLApplication {
             }
         });
 
+        addAction(ActionCode.SELECTION_CLEAR, new SelectionClearAction(this));
+
         addAction(ActionCode.TURN_PAGE_FORWARD, new TurnPageAction(this, true)); //y 点击翻页
         addAction(ActionCode.TURN_PAGE_BACK, new TurnPageAction(this, false));
+
         addAction(ActionCode.EXIT, new ExitAction(this)); //y 关闭应用
+
         BookTextView = new KooView(this);
         FootnoteView = new KooView(this);
-        setView(BookTextView); // 这里将KooView设置到
+
+        setView(BookTextView);
     }
 
     public Book getCurrentBook() {
@@ -86,6 +112,7 @@ public final class KooReaderApp extends ZLApplication {
         }
 
         final Book bookToOpen = book;
+        bookToOpen.addNewLabel(Book.READ_LABEL);
         Collection.saveBook(bookToOpen);
 
         final SynchronousExecutor executor = createExecutor("loadingBook");
@@ -173,18 +200,61 @@ public final class KooReaderApp extends ZLApplication {
         FootnoteView.clearCaches();
     }
 
+    public Bookmark addSelectionBookmark() {
+        final KooView kooView = getTextView();
+        final TextSnippet snippet = kooView.getSelectedSnippet();
+        if (snippet == null) {
+            return null;
+        }
+
+        final Bookmark bookmark = new Bookmark(
+                Collection,
+                Model.Book,
+                kooView.getModel().getId(),
+                snippet,
+                true
+        );
+        Collection.saveBookmark(bookmark);
+        kooView.clearSelection();
+
+        return bookmark;
+    }
+
+    private void setBookmarkHighlightings(ZLTextView view, String modelId) {
+        view.removeHighlightings(BookmarkHighlighting.class);
+        for (BookmarkQuery query = new BookmarkQuery(Model.Book, 20); ; query = query.next()) {
+            final List<Bookmark> bookmarks = Collection.bookmarks(query);
+            if (bookmarks.isEmpty()) {
+                break;
+            }
+            for (Bookmark b : bookmarks) {
+                if (b.getEnd() == null) {
+                    BookmarkUtil.findEnd(b, view);
+                }
+                if (ComparisonUtil.equal(modelId, b.ModelId)) {
+                    view.addHighlighting(new BookmarkHighlighting(view, Collection, b));
+                }
+            }
+        }
+    }
+
     private void setFootnoteModel(String modelId) {
         final ZLTextModel model = Model.getFootnoteModel(modelId);
         FootnoteView.setModel(model);
         if (model != null) {
             myFootnoteModelId = modelId;
+            setBookmarkHighlightings(FootnoteView, modelId);
         }
     }
 
     private synchronized void openBookInternal(final Book book, Bookmark bookmark, boolean force) {
         if (!force && Model != null && Collection.sameBook(book, Model.Book)) {
+            if (bookmark != null) {
+                gotoBookmark(bookmark, false);
+            }
             return;
         }
+
         hideActivePopup();
         storePosition();
 
@@ -205,12 +275,20 @@ public final class KooReaderApp extends ZLApplication {
             processException(e);
             return;
         }
+
         try {
             Model = BookModel.createModel(book, plugin); // NativeFormatPlugin [ePub] 慢慢加载
-
-
             Collection.saveBook(book); // 保存书籍
+//            ZLTextHyphenator.Instance().load(book.getLanguage());
             BookTextView.setModel(Model.getTextModel()); // 给KooView传入TextModel 操作-UI在这里分界
+            setBookmarkHighlightings(BookTextView, null);
+            gotoStoredPosition();
+            if (bookmark == null) {
+                setView(BookTextView);
+            } else {
+                gotoBookmark(bookmark, false);
+            }
+
             Collection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
         } catch (BookReadingException e) {
             processException(e);
@@ -239,6 +317,69 @@ public final class KooReaderApp extends ZLApplication {
         );
         Collections.sort(bookmarks, new Bookmark.ByTimeComparator());
         return bookmarks;
+    }
+
+    /**
+     * 返回到最近阅读
+     * @return
+     */
+    public boolean jumpBack() {
+        try {
+            if (getTextView() != BookTextView) {
+                showBookTextView();
+                return true;
+            }
+
+            if (myJumpEndPosition == null || myJumpTimeStamp == null) {
+                return false;
+            }
+            // more than 2 minutes ago
+            if (myJumpTimeStamp.getTime() + 2 * 60 * 1000 < new Date().getTime()) {
+                return false;
+            }
+            if (!myJumpEndPosition.equals(BookTextView.getStartCursor())) {
+                return false;
+            }
+
+            final List<Bookmark> bookmarks = invisibleBookmarks();
+            if (bookmarks.isEmpty()) {
+                return false;
+            }
+            final Bookmark b = bookmarks.get(0);
+            Collection.deleteBookmark(b);
+            gotoBookmark(b, true);
+            return true;
+        } finally {
+            myJumpEndPosition = null;
+            myJumpTimeStamp = null;
+        }
+    }
+
+    private void gotoBookmark(Bookmark bookmark, boolean exactly) {
+        final String modelId = bookmark.ModelId;
+        if (modelId == null) {
+            addInvisibleBookmark();
+            if (exactly) {
+                BookTextView.gotoPosition(bookmark);
+            } else {
+                BookTextView.gotoHighlighting(
+                        new BookmarkHighlighting(BookTextView, Collection, bookmark)
+                );
+            }
+            setView(BookTextView);
+        } else {
+            setFootnoteModel(modelId);
+            if (exactly) {
+                FootnoteView.gotoPosition(bookmark);
+            } else {
+                FootnoteView.gotoHighlighting(
+                        new BookmarkHighlighting(FootnoteView, Collection, bookmark)
+                );
+            }
+            setView(FootnoteView);
+        }
+        getViewWidget().repaint();
+        storePosition();
     }
 
     public void showBookTextView() {
@@ -298,21 +439,18 @@ public final class KooReaderApp extends ZLApplication {
     private volatile ZLTextPosition myStoredPosition;
     private volatile Book myStoredPositionBook;
 
-    public void storePosition() { // 进度保存
-        final Book bk = Model != null ? Model.Book : null;
-        if (bk != null && bk == myStoredPositionBook && myStoredPosition != null && BookTextView != null) {
-            final ZLTextPosition position = new ZLTextFixedPosition(BookTextView.getStartCursor());
-            if (!myStoredPosition.equals(position)) {
-                myStoredPosition = position;
-                savePosition();
-            }
-        }
-    }
-
-
     private ZLTextFixedPosition getStoredPosition(Book book) {
-        final ZLTextFixedPosition.WithTimestamp local = Collection.getStoredPosition(book.getId());
-        return local;
+        final ZLTextFixedPosition.WithTimestamp fromServer =
+                mySyncData.getAndCleanPosition(Collection.getHash(book, true));
+        final ZLTextFixedPosition.WithTimestamp local =
+                Collection.getStoredPosition(book.getId());
+        if (local == null) {
+            return fromServer != null ? fromServer : new ZLTextFixedPosition(0, 0, 0);
+        } else if (fromServer == null) {
+            return local;
+        } else {
+            return fromServer.Timestamp >= local.Timestamp ? fromServer : local;
+        }
     }
 
     private void gotoStoredPosition() {
@@ -325,9 +463,20 @@ public final class KooReaderApp extends ZLApplication {
         savePosition();
     }
 
+    public void storePosition() { // 进度保存
+        final Book bk = Model != null ? Model.Book : null;
+
+        if (bk != null && bk == myStoredPositionBook && myStoredPosition != null && BookTextView != null) {
+            final ZLTextPosition position = new ZLTextFixedPosition(BookTextView.getStartCursor());
+            if (!myStoredPosition.equals(position)) {
+                myStoredPosition = position;
+                savePosition();
+            }
+        }
+    }
+
     private void savePosition() { // 保存进度
         final RationalNumber progress = BookTextView.getProgress();
-        LogUtil.i9("savePosition");
         synchronized (mySaverThread) {
             if (!mySaverThread.isAlive()) {
                 mySaverThread.start();

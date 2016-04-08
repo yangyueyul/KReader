@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:text="本地书籍"
             android:textSize="20sp"
-            android:textColor="#532d17"
+            android:textColor="@color/fontColor"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 

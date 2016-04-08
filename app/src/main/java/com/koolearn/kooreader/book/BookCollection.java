@@ -20,14 +20,14 @@
 package com.koolearn.kooreader.book;
 
 import com.koolearn.klibrary.core.filesystem.ZLArchiveEntryFile;
+import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.filesystem.ZLPhysicalFile;
 import com.koolearn.klibrary.core.util.MiscUtil;
 import com.koolearn.klibrary.core.util.SystemInfo;
 import com.koolearn.klibrary.text.view.ZLTextFixedPosition;
+import com.koolearn.klibrary.text.view.ZLTextPosition;
 import com.koolearn.kooreader.formats.BookReadingException;
 import com.koolearn.kooreader.formats.FormatPlugin;
-import com.koolearn.klibrary.core.filesystem.ZLFile;
-import com.koolearn.klibrary.text.view.ZLTextPosition;
 
 import java.io.File;
 import java.util.ArrayList;

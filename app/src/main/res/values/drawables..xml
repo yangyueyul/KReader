@@ -1,0 +1,6 @@
+<resources>
+    <item name="ic_local_book" type="drawable">@drawable/ic_local_book</item>
+    <item name="ic_net_book" type="drawable">@drawable/ic_net_book</item>
+    <item name="ic_booknote" type="drawable">@drawable/ic_booknote</item>
+    <item name="ic_bookmark" type="drawable">@drawable/ic_bookmark</item>
+</resources>

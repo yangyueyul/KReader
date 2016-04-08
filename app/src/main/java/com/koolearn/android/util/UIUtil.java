@@ -100,9 +100,6 @@ public abstract class UIUtil {
             private volatile ProgressDialog myProgress; // 图书加载中
 
             public void execute(final Runnable action, final Runnable uiPostAction) {
-                LogUtil.i18("execute" + myMessage);
-                LogUtil.i18("execute" + action);
-                LogUtil.i18("execute" + uiPostAction); // null
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
                         myProgress = ProgressDialog.show(activity, null, myMessage, true, false);

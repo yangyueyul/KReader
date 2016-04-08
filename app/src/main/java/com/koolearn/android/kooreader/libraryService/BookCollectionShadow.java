@@ -473,7 +473,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 
 	@Override
 	public List<Bookmark> bookmarks(final BookmarkQuery query) {
-		LogUtil.i18("BC");
 		return listCall(new ListCallable<Bookmark>() {
 			public List<Bookmark> call() throws RemoteException {
 				return SerializerUtil.deserializeBookmarkList(
@@ -484,6 +483,7 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized void saveBookmark(Bookmark bookmark) {
+
 		if (myInterface != null) {
 			try {
 				bookmark.update(SerializerUtil.deserializeBookmark(

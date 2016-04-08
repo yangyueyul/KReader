@@ -66,7 +66,6 @@ final class ZLTextPage {
     }
 
     void moveStartCursor(int paragraphIndex, int wordIndex, int charIndex) { // 章节
-        LogUtil.i13("ph:" + paragraphIndex + ":word:" + wordIndex + ":char:" + charIndex);
         if (StartCursor.isNull()) {
             StartCursor.setCursor(EndCursor);
         }
@@ -76,8 +75,20 @@ final class ZLTextPage {
         LineInfos.clear();
         PaintState = PaintStateEnum.START_IS_KNOWN;
     }
+//
+//    void moveStartCursor(float percent) { // 章节
+//        if (StartCursor.isNull()) {
+//            StartCursor.setCursor(EndCursor);
+//        }
+//        StartCursor.moveToParagraph(paragraphIndex);
+//        StartCursor.moveTo(wordIndex, charIndex);
+//        EndCursor.reset();
+//        LineInfos.clear();
+//        PaintState = PaintStateEnum.START_IS_KNOWN;
+//    }
 
     void moveEndCursor(int paragraphIndex, int wordIndex, int charIndex) {
+
         if (EndCursor.isNull()) {
             EndCursor.setCursor(StartCursor);
         }

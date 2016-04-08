@@ -1,13 +1,10 @@
 package com.koolearn.klibrary.core.view;
 
-import com.koolearn.android.util.LogUtil;
-
 public interface ZLViewEnums {
     public enum PageIndex {
         previous, current, next;
 
         public PageIndex getNext() {
-            LogUtil.i13("getPrevious" + this);
             switch (this) {
                 case previous:
                     return current;
@@ -19,7 +16,6 @@ public interface ZLViewEnums {
         }
 
         public PageIndex getPrevious() {
-            LogUtil.i13("getPrevious" + this);
             switch (this) {
                 case next:
                     return current;

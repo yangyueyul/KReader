@@ -19,7 +19,7 @@ public abstract class ZLAndroidImageData implements ZLImageData {
 	protected abstract Bitmap decodeWithOptions(BitmapFactory.Options options);
 
 	public Bitmap getFullSizeBitmap() {
-		return getBitmap(null, ZLPaintContext.ScalingType.OriginalSize);
+		return getBitmap(null, ZLPaintContext.ScalingType.FitMaximum);
 	}
 
 	public Bitmap getBitmap(int maxWidth, int maxHeight) {

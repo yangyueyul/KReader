@@ -24,7 +24,7 @@
         android:layout_height="116dp"
         android:gravity="center"
         android:text="摄影美图"
-        android:textColor="#532d17"
+        android:textColor="@color/fontColor"
         android:textSize="18sp" />
 </RelativeLayout>
 

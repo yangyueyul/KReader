@@ -31,9 +31,9 @@ public final class ZLTextRegion {
 			}
 			final Soul soul = (Soul)other;
 			return
-				ParagraphIndex == soul.ParagraphIndex &&
-				StartElementIndex == soul.StartElementIndex &&
-				EndElementIndex == soul.EndElementIndex;
+					ParagraphIndex == soul.ParagraphIndex &&
+							StartElementIndex == soul.StartElementIndex &&
+							EndElementIndex == soul.EndElementIndex;
 		}
 
 		public final int compareTo(Soul soul) {
@@ -94,11 +94,11 @@ public final class ZLTextRegion {
 		}
 	};
 
-//	public static Filter VideoFilter = new Filter() {
-//		public boolean accepts(ZLTextRegion region) {
-//			return region.getSoul() instanceof ZLTextVideoRegionSoul;
-//		}
-//	};
+	public static Filter VideoFilter = new Filter() {
+		public boolean accepts(ZLTextRegion region) {
+			return region.getSoul() instanceof ZLTextVideoRegionSoul;
+		}
+	};
 
 	public static Filter ExtensionFilter = new Filter() {
 		public boolean accepts(ZLTextRegion region) {
@@ -110,8 +110,8 @@ public final class ZLTextRegion {
 		public boolean accepts(ZLTextRegion region) {
 			final Soul soul = region.getSoul();
 			return
-				soul instanceof ZLTextImageRegionSoul ||
-				soul instanceof ZLTextHyperlinkRegionSoul;
+					soul instanceof ZLTextImageRegionSoul ||
+							soul instanceof ZLTextHyperlinkRegionSoul;
 		}
 	};
 
@@ -243,8 +243,8 @@ public final class ZLTextRegion {
 
 	boolean isAtRightOf(ZLTextRegion other) {
 		return
-			other == null ||
-			getFirstArea().XStart >= other.getLastArea().XEnd;
+				other == null ||
+						getFirstArea().XStart >= other.getLastArea().XEnd;
 	}
 
 	boolean isAtLeftOf(ZLTextRegion other) {
@@ -253,8 +253,8 @@ public final class ZLTextRegion {
 
 	boolean isUnder(ZLTextRegion other) {
 		return
-			other == null ||
-			getFirstArea().YStart >= other.getLastArea().YEnd;
+				other == null ||
+						getFirstArea().YStart >= other.getLastArea().YEnd;
 	}
 
 	boolean isOver(ZLTextRegion other) {

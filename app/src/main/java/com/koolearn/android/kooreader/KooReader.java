@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.koolearn.android.kooreader.api.KooReaderIntents;
+import com.koolearn.android.kooreader.httpd.DataService;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.util.UIMessageUtil;
 import com.koolearn.android.util.UIUtil;
@@ -25,6 +26,7 @@ import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.options.Config;
 import com.koolearn.klibrary.core.view.ZLViewEnums;
 import com.koolearn.klibrary.core.view.ZLViewWidget;
+import com.koolearn.klibrary.text.view.ZLTextView;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.klibrary.ui.android.curl.CurlView;
 import com.koolearn.klibrary.ui.android.error.ErrorKeys;
@@ -52,16 +54,22 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         intent.setAction(KooReaderIntents.Action.VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         KooReaderIntents.putBookExtra(intent, book);
+        KooReaderIntents.putBookmarkExtra(intent, bookmark);
         context.startActivity(intent);
     }
 
     private KooReaderApp myKooReaderApp;
     private volatile Book myBook;
+
     private RelativeLayout myRootView;
     private ZLAndroidWidget myMainView;
     private ZLAndroidCurlWidget myCurlView;
+
+    final DataService.Connection DataConnection = new DataService.Connection();
+
     volatile boolean IsPaused = false;
-    private volatile long myResumeTimestamp;
+//    private volatile long myResumeTimestamp; // 数据同步
+
     private Intent myOpenBookIntent = null;
 
     private synchronized void openBook(Intent intent, final Runnable action, boolean force) {
@@ -69,6 +77,8 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
             return;
         }
         myBook = KooReaderIntents.getBookExtra(intent, myKooReaderApp.Collection);
+        final Bookmark bookmark = KooReaderIntents.getBookmarkExtra(intent);
+
         if (myBook == null) {
             final Uri data = intent.getData();
             if (data != null) {
@@ -89,7 +99,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         }
         Config.Instance().runOnConnect(new Runnable() {
             public void run() {
-                myKooReaderApp.openBook(myBook, null, action); // UIUtil
+                myKooReaderApp.openBook(myBook, bookmark, action); // UIUtil
                 AndroidFontUtil.clearFontCache();
             }
         });
@@ -153,9 +163,21 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         if (myKooReaderApp.getPopupById(SettingPopup.ID) == null) {
             new SettingPopup(myKooReaderApp);
         }
+        if (myKooReaderApp.getPopupById(SelectionPopup.ID) == null) {
+            new SelectionPopup(myKooReaderApp);
+        }
 
         myKooReaderApp.addAction(ActionCode.SHOW_NAVIGATION, new ShowNavigationAction(this, myKooReaderApp)); //y 页面跳转
         myKooReaderApp.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, myKooReaderApp)); //y 打开超链接、图片等
+        myKooReaderApp.addAction(ActionCode.OPEN_VIDEO, new OpenVideoAction(this, myKooReaderApp));
+        myKooReaderApp.addAction(ActionCode.HIDE_TOAST, new HideToastAction(this, myKooReaderApp));
+
+        myKooReaderApp.addAction(ActionCode.SELECTION_BOOKMARK, new SelectionBookmarkAction(this, myKooReaderApp));
+        myKooReaderApp.addAction(ActionCode.SELECTION_SHOW_PANEL, new SelectionShowPanelAction(this, myKooReaderApp));
+        myKooReaderApp.addAction(ActionCode.SELECTION_HIDE_PANEL, new SelectionHidePanelAction(this, myKooReaderApp));
+        myKooReaderApp.addAction(ActionCode.SELECTION_COPY_TO_CLIPBOARD, new SelectionCopyAction(this, myKooReaderApp));
+        myKooReaderApp.addAction(ActionCode.SELECTION_SHARE, new SelectionShareAction(this, myKooReaderApp));
+
         new OpenPhotoAction(this, myKooReaderApp, myRootView);
 
         final Intent intent = getIntent();
@@ -165,11 +187,90 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     }
 
 
+//    @Override
+//    protected void onNewIntent(final Intent intent) {
+//        final String action = intent.getAction();
+//        final Uri data = intent.getData();
+//
+//        if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
+//            super.onNewIntent(intent);
+//        } else if (Intent.ACTION_VIEW.equals(action)
+//                && data != null && "kooreader-action".equals(data.getScheme())) {
+//            myKooReaderApp.runAction(data.getEncodedSchemeSpecificPart(), data.getFragment());
+//        } else if (Intent.ACTION_VIEW.equals(action) || KooReaderIntents.Action.VIEW.equals(action)) {
+//            myOpenBookIntent = intent;
+//            if (myKooReaderApp.Model == null && myKooReaderApp.ExternalBook != null) {
+//                final BookCollectionShadow collection = getCollection();
+//                final Book b = KooReaderIntents.getBookExtra(intent, collection);
+//                if (!collection.sameBook(b, myKooReaderApp.ExternalBook)) {
+//                    try {
+//                        final ExternalFormatPlugin plugin =
+//                                (ExternalFormatPlugin) BookUtil.getPlugin(
+//                                        PluginCollection.Instance(Paths.systemInfo(this)),
+//                                        myKooReaderApp.ExternalBook
+//                                );
+////                        startActivity(PluginUtil.createIntent(plugin, FBReaderIntents.Action.PLUGIN_KILL));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+////        }
+////        else if (KooReaderIntents.Action.PLUGIN.equals(action)) {
+////            new RunPluginAction(this, myKooReaderApp, data).run();
+////        } else if (Intent.ACTION_SEARCH.equals(action)) {
+////            final String pattern = intent.getStringExtra(SearchManager.QUERY);
+////            final Runnable runnable = new Runnable() {
+////                public void run() {
+////                    final TextSearchPopup popup = (TextSearchPopup) myKooReaderApp.getPopupById(TextSearchPopup.ID);
+////                    popup.initPosition();
+////                    myKooReaderApp.MiscOptions.TextSearchPattern.setValue(pattern);
+////                    if (myKooReaderApp.getTextView().search(pattern, true, false, false, false) != 0) {
+////                        runOnUiThread(new Runnable() {
+////                            public void run() {
+////                                myKooReaderApp.showPopup(popup.getId());
+////                            }
+////                        });
+////                    } else {
+////                        runOnUiThread(new Runnable() {
+////                            public void run() {
+////                                UIMessageUtil.showErrorMessage(KooReader.this, "textNotFound");
+////                                popup.StartPosition = null;
+////                            }
+////                        });
+////                    }
+////                }
+////            };
+////            UIUtil.wait("search", runnable, this);
+////        } else if (KooReaderIntents.Action.CLOSE.equals(intent.getAction())) {
+////            myCancelIntent = intent;
+////            myOpenBookIntent = null;
+////        }
+////        else if (KooReaderIntents.Action.PLUGIN_CRASH.equals(intent.getAction())) {
+////            final Book book = KooReaderIntents.getBookExtra(intent, myKooReaderApp.Collection);
+////            myKooReaderApp.ExternalBook = null;
+////            myOpenBookIntent = null;
+////            getCollection().bindToService(this, new Runnable() {
+////                public void run() {
+////                    final BookCollectionShadow collection = getCollection();
+////                    Book b = collection.getRecentBook(0);
+////                    if (collection.sameBook(b, book)) {
+////                        b = collection.getRecentBook(1);
+////                    }
+////                    myKooReaderApp.openBook(b, null, null);
+////                }
+////            });
+//        } else {
+//            super.onNewIntent(intent);
+//        }
+//    }
+
     @Override
     protected void onStart() {
         super.onStart();
         ((NavigationPopup) myKooReaderApp.getPopupById(NavigationPopup.ID)).setPanelInfo(this, myRootView);
         ((SettingPopup) myKooReaderApp.getPopupById(SettingPopup.ID)).setPanelInfo(this, myRootView);
+        ((PopupPanel) myKooReaderApp.getPopupById(SelectionPopup.ID)).setPanelInfo(this, myRootView);
     }
 
     @Override
@@ -208,7 +309,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         registerReceiver(myBatteryInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         IsPaused = false;
-        myResumeTimestamp = System.currentTimeMillis();
+//        myResumeTimestamp = System.currentTimeMillis();
 
         if (myOpenBookIntent != null) {
             final Intent intent = myOpenBookIntent;
@@ -256,6 +357,50 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         super.onLowMemory();
     }
 
+//    @Override
+//    public boolean onSearchRequested() {
+//        final KooReaderApp.PopupPanel popup = myKooReaderApp.getActivePopup();
+//        myKooReaderApp.hideActivePopup();
+//        if (DeviceType.Instance().hasStandardSearchDialog()) {
+//            final SearchManager manager = (SearchManager)getSystemService(SEARCH_SERVICE);
+//            manager.setOnCancelListener(new SearchManager.OnCancelListener() {
+//                public void onCancel() {
+//                    if (popup != null) {
+//                        myKooReaderApp.showPopup(popup.getId());
+//                    }
+//                    manager.setOnCancelListener(null);
+//                }
+//            });
+//            startSearch(myKooReaderApp.MiscOptions.TextSearchPattern.getValue(), true, null, false);
+//        } else {
+//            SearchDialogUtil.showDialog(
+//                    this, KooReader.class, myKooReaderApp.MiscOptions.TextSearchPattern.getValue(), new DialogInterface.OnCancelListener() {
+//                        @Override
+//                        public void onCancel(DialogInterface di) {
+//                            if (popup != null) {
+//                                myKooReaderApp.showPopup(popup.getId());
+//                            }
+//                        }
+//                    }
+//            );
+//        }
+//        return true;
+//    }
+
+    public void showSelectionPanel() {
+        final ZLTextView view = myKooReaderApp.getTextView();
+        ((SelectionPopup) myKooReaderApp.getPopupById(SelectionPopup.ID))
+                .move(view.getSelectionStartY(), view.getSelectionEndY());
+        myKooReaderApp.showPopup(SelectionPopup.ID);
+    }
+
+    public void hideSelectionPanel() {
+        final KooReaderApp.PopupPanel popup = myKooReaderApp.getActivePopup();
+        if (popup != null && popup.getId() == SelectionPopup.ID) {
+            myKooReaderApp.hideActivePopup();
+        }
+    }
+
     private void onPreferencesUpdate(Book book) {
         AndroidFontUtil.clearFontCache();
         myKooReaderApp.onBookUpdated(book);
@@ -280,6 +425,14 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
                 }
                 break;
         }
+    }
+
+    @Override
+    public void hideDictionarySelection() {
+        myKooReaderApp.getTextView().hideOutline();
+//y        myKooReaderApp.getTextView().removeHighlightings(DictionaryHighlighting.class);
+        myKooReaderApp.getViewWidget().reset();
+        myKooReaderApp.getViewWidget().repaint();
     }
 
     public void navigate() {

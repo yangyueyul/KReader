@@ -1,3 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="E:\lxWorkSpace\KooReader\app\libs\json-simple-1.1.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="5d6f9b6a9ddca2a28c0216cc44efb2e20d9c23b5">
+        <dex dex="E:\lxWorkSpace\KooReader\app\build\intermediates\pre-dexed\debug\json-simple-1.1.1_7ea57cfabff07b99c232d3a45ecdd0987d3ff6f0.jar" />
+    </item>
+    <item
+        jar="E:\lxWorkSpace\KooReader\app\build\intermediates\exploded-aar\com.github.johnpersano\supertoasts\1.3.4\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="2e58dce1ec89cd4706295d355aaf920aee3d91c5">
+        <dex dex="E:\lxWorkSpace\KooReader\app\build\intermediates\pre-dexed\debug\com.github.johnpersano-supertoasts-1.3.4_e24b2890c47ef1e358215f1950fe4fa922d03b26.jar" />
+    </item>
+    <item
+        jar="E:\lxWorkSpace\KooReader\app\libs\nanohttpd-2.0.5.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c3d42a4f9a2203a2f31cbe5a303620db1593b952">
+        <dex dex="E:\lxWorkSpace\KooReader\app\build\intermediates\pre-dexed\debug\nanohttpd-2.0.5_bad1dab2f52c357e97ea1d50a352e69ee1c49d32.jar" />
+    </item>
+    <item
+        jar="E:\lxWorkSpace\KooReader\app\build\intermediates\exploded-aar\com.github.yukuku\ambilwarna\2.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7ed87c7f833e46dacace668e63cb8c4b67cb3172">
+        <dex dex="E:\lxWorkSpace\KooReader\app\build\intermediates\pre-dexed\debug\com.github.yukuku-ambilwarna-2.0.1_42557276ac919a7dcc098d54831cdc8f7398b7df.jar" />
+    </item>
+
+</items>

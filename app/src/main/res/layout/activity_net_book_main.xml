@@ -15,14 +15,14 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/appbar"
+            android:id="@+id/app_bar_main"
             layout="@layout/include_toolbar" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
+            android:layout_below="@id/app_bar_main"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
@@ -32,7 +32,7 @@
                 android:id="@+id/recycler"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/appbar"
+                android:layout_below="@id/app_bar_main"
                 android:scrollbars="none" />
         </android.support.v4.widget.SwipeRefreshLayout>
 

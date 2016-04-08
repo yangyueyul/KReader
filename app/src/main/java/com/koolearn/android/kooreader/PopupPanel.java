@@ -16,8 +16,8 @@ abstract class PopupPanel extends ZLApplication.PopupPanel {
 	private volatile KooReader myActivity;
 	private volatile RelativeLayout myRoot;
 
-	PopupPanel(KooReaderApp kooReader) {
-		super(kooReader);
+	PopupPanel(KooReaderApp fbReader) {
+		super(fbReader);
 	}
 
 	protected final KooReaderApp getReader() {
@@ -69,6 +69,12 @@ abstract class PopupPanel extends ZLApplication.PopupPanel {
 		}
 	}
 
+	public final void initPosition() {
+		if (StartPosition == null) {
+			StartPosition = new ZLTextWordCursor(getReader().getTextView().getStartCursor());
+		}
+	}
+
 	public final void storePosition() {
 		if (StartPosition == null) {
 			return;
@@ -79,6 +85,11 @@ abstract class PopupPanel extends ZLApplication.PopupPanel {
 			reader.addInvisibleBookmark(StartPosition);
 			reader.storePosition();
 		}
+	}
+
+	public void setPanelInfo(KooReader activity, RelativeLayout root) {
+		myActivity = activity;
+		myRoot = root;
 	}
 
 	public abstract void createControlPanel(KooReader activity, RelativeLayout root);
