@@ -1,6 +1,5 @@
 package com.koolearn.klibrary.text.view;
 
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.library.ZLibrary;
@@ -17,6 +16,7 @@ import com.koolearn.klibrary.text.model.ZLTextMark;
 import com.koolearn.klibrary.text.model.ZLTextModel;
 import com.koolearn.klibrary.text.model.ZLTextParagraph;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public abstract class ZLTextView extends ZLTextViewBase {
-//    public static KooReaderApp myReader;
     public interface ScrollingMode {
         int NO_OVERLAPPING = 0;
         int KEEP_LINES = 1;
@@ -80,7 +79,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
          */
         if (myModel != null) {
             final int paragraphsNumber = myModel.getParagraphsNumber(); // 得到总的段落数 txt只有1段或几段,GDG2014 RHYDYBS1329
-            LogUtil.i16("paragraphsNumber:" + paragraphsNumber);
             if (paragraphsNumber > 0) {
                 /**
                  * 把Model的第一段的游标传给现在的Page,以后就可以自己找了
@@ -266,8 +264,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
                     myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
                     Application.getViewWidget().reset();
                 }
-//                myReader.clearTextCaches(); // FixBug
-//                myReader.getViewWidget().repaint();
+
+                Application.getViewWidget().reset(); // Fix Bugs
                 break;
             }
             case next: { // 动画结束时翻页   P C N
@@ -287,8 +285,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
                         myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
                         break;
                 }
-//                myReader.clearTextCaches(); // FixBug
-//                myReader.getViewWidget().repaint();
+
+                Application.getViewWidget().reset();
                 break;
             }
         }
@@ -540,10 +538,10 @@ public abstract class ZLTextView extends ZLTextViewBase {
         drawSelectionCursor(context, page, SelectionCursor.Which.Left);
         drawSelectionCursor(context, page, SelectionCursor.Which.Right);
 
-        PagePosition pagePosition = pagePosition();
         String time = buildTimeString();
-        String position = buildPositionString(pagePosition);
-        context.drawFooter(time, position);
+//        PagePosition pagePosition = pagePosition();
+//        String position = buildPositionString(pagePosition);
+        context.drawFooter(time, pagePositionPec());
     }
 
     protected String buildTimeString() {
@@ -557,6 +555,18 @@ public abstract class ZLTextView extends ZLTextViewBase {
         info.append(pagePosition.Current);
         info.append("/");
         info.append(pagePosition.Total);
+        return info.toString();
+    }
+
+    protected String buildPositionStringPer(PagePosition pagePosition) {
+        final StringBuilder info = new StringBuilder();
+//        info.append(pagePosition.Current);
+//        info.append("/");
+//        info.append(pagePosition.Total);
+        float size = (float) pagePosition.Current * 100 / pagePosition.Total;
+        DecimalFormat df = new DecimalFormat("0.00"); // 格式化小数，不足的补0
+        info.append(df.format(size));
+        info.append("%");
         return info.toString();
     }
 
@@ -745,7 +755,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
     public final synchronized PagePosition pagePosition() {
         int current = computeTextPageNumber(getCurrentCharNumber(ZLViewEnums.PageIndex.current, false));
         int total = computeTextPageNumber(sizeOfFullText());
-
         if (total > 3) {
             return new PagePosition(current, total);
         }
@@ -755,7 +764,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
         if (cursor == null || cursor.isNull()) {
             return new PagePosition(current, total);
         }
-
         if (cursor.isStartOfText()) {
             current = 1;
         } else {
@@ -784,8 +792,37 @@ public abstract class ZLTextView extends ZLTextViewBase {
                 total += nextCursor.isEndOfText() ? 1 : 2;
             }
         }
-
         return new PagePosition(current, total);
+    }
+
+    public final synchronized String pagePositionPec() {
+        int current = getCurrentCharNumber(PageIndex.current, false);
+        int total = sizeOfFullText();
+
+        if (getCurrentCharNumber(ZLViewEnums.PageIndex.current, true) == 0) {
+            return "0.00%";
+        }
+//        LogUtil.i24("size1:" + getCurrentCharNumber(PageIndex.current, false) + "/" + sizeOfFullText());
+//        LogUtil.i24("size2:" + myCurrentPage.EndCursor.getParagraphIndex() + "/" + myModel.getParagraphsNumber());
+        if (computeTextPageNumber(total) <= 3) {
+            current = myCurrentPage.EndCursor.getParagraphIndex();
+            total = myModel.getParagraphsNumber() - 1;
+        }
+
+        final StringBuilder info = new StringBuilder();
+        float size = (float) current * 100 / total;
+        DecimalFormat df = new DecimalFormat("0.00");
+        info.append(df.format(size));
+        info.append("%");
+        return info.toString();
+    }
+
+    public final synchronized int pagePosition1() {
+        return myCurrentPage == null ? 0 : myCurrentPage.EndCursor.getParagraphIndex();
+    }
+
+    public final synchronized int pagePosition2() {
+        return myModel == null ? 0 : myModel.getParagraphsNumber() - 1;
     }
 
     public final RationalNumber getProgress() {
@@ -830,6 +867,16 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
         gotoPositionByEnd(paragraphIndex, wordIndex, 0);
     }
+
+
+    public final synchronized void gotoPageByPec(int pec) {
+        if (myModel == null || myModel.getParagraphsNumber() == 0) {
+            return;
+        }
+
+        gotoPositionByEnd(pec, 0, 0);
+    }
+
 
     public void gotoHome() {
         final ZLTextWordCursor cursor = getStartCursor();
@@ -1593,6 +1640,11 @@ public abstract class ZLTextView extends ZLTextViewBase {
         public int Height;
         public int TopMargin;
         public int BottomMargin;
+    }
+
+    @Override
+    int getAreaLength(ZLTextParagraphCursor paragraph, ZLTextElementArea area, int toCharIndex) {
+        return super.getAreaLength(paragraph, area, toCharIndex);
     }
 
     private ParagraphSize paragraphSize(ZLTextPage page, ZLTextWordCursor cursor, boolean beforeCurrentPosition, int unit) {

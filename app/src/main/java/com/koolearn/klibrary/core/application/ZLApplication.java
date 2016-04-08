@@ -1,7 +1,6 @@
 package com.koolearn.klibrary.core.application;
 
 import com.koolearn.android.util.LogInfo;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.util.SystemInfo;
 import com.koolearn.klibrary.core.view.ZLView;
 import com.koolearn.klibrary.core.view.ZLViewWidget;
@@ -117,13 +116,10 @@ public abstract class ZLApplication {
     }
 
     public final void onRepaintFinished() {
-        LogUtil.i12("onRepaintFinished");
         if (myWindow != null) {
-            LogUtil.i12("onRepaintFinished");
             myWindow.refresh();
         }
         for (PopupPanel popup : popupPanels()) {
-            LogUtil.i12("onRepaintFinished");
             popup.update();
         }
     }

@@ -76,8 +76,8 @@ public final class KooReaderApp extends ZLApplication {
                         onBookUpdated(book);
                         break;
                     case ProgressUpdated:
-                        clearTextCaches(); // FixBug
-						getViewWidget().repaint();
+//                        clearTextCaches(); // FixBug
+//						getViewWidget().repaint();
                         break;
                 }
             }

@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.koolearn.android.kooreader.api.KooReaderIntents;
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.android.util.OrientationUtil;
 import com.koolearn.klibrary.core.application.ZLApplication;
 import com.koolearn.klibrary.text.view.ZLTextView;
@@ -184,8 +185,16 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
                 } else {
                     view.gotoPage(page);
                 }
-                myKooReader.getViewWidget().reset();
-                myKooReader.getViewWidget().repaint();
+            }
+
+            private void gotoPagePer(int page) {
+                LogUtil.i24("page:" + page);
+                final ZLTextView view = myKooReader.getTextView();
+//                if (page == 0) {
+//                    view.gotoHome();
+//                } else {
+                view.gotoPageByPec(page);
+//                }
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -193,6 +202,8 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
+                myKooReader.getViewWidget().reset();
+                myKooReader.getViewWidget().repaint();
                 myIsInProgress = false;
                 //y 松手直接进行跳转
 //                final ZLTextWordCursor position = myStartPosition; // 返回到起始位置
@@ -202,17 +213,19 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
                     myKooReader.storePosition();
                 }
                 myStartPosition = null;
-                myKooReader.clearTextCaches();
-                myKooReader.getViewWidget().reset();
-                myKooReader.getViewWidget().repaint();
+//                myKooReader.clearTextCaches();
+//                myKooReader.getViewWidget().reset();
+//                myKooReader.getViewWidget().repaint();
             }
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    final int page = progress + 1;
-                    final int pagesNumber = seekBar.getMax() + 1;
-                    gotoPage(page);
-                    text.setText(makeProgressText(page, pagesNumber));
+//                    final int page = progress + 1;
+//                    final int pagesNumber = seekBar.getMax() + 1;
+//                    gotoPage(page);
+                    gotoPagePer(progress);
+                    text.setText(makeProgressTextPer(myKooReader.getTextView().pagePositionPec()));
+//                    text.setText(makeProgressText(page, pagesNumber));
                 }
             }
         });
@@ -225,11 +238,17 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
         final ZLTextView textView = myKooReader.getTextView();
         pagePosition = textView.pagePosition();
 
-        if (slider.getMax() != pagePosition.Total - 1 || slider.getProgress() != pagePosition.Current - 1) {
-            slider.setMax(pagePosition.Total - 1);
-            slider.setProgress(pagePosition.Current - 1);
-            text.setText(makeProgressText(pagePosition.Current, pagePosition.Total));
-        }
+        String progress = textView.pagePositionPec();
+
+//        if (slider.getMax() != pagePosition.Total - 1 || slider.getProgress() != pagePosition.Current - 1) {
+//            slider.setMax(pagePosition.Total - 1);
+//            slider.setProgress(pagePosition.Current - 1);
+        slider.setMax(textView.pagePosition2());
+        slider.setProgress(textView.pagePosition1());
+        text.setText(makeProgressTextPer(progress));
+//            text.setText(makeProgressText(pagePosition.Current, pagePosition.Total));
+//    }
+
     }
 
     private String makeProgressText(int page, int pagesNumber) {
@@ -237,6 +256,24 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
         builder.append(page);
         builder.append("/");
         builder.append(pagesNumber);
+        final TOCTree tocElement = myKooReader.getCurrentTOCElement();
+        if (tocElement != null) {
+            builder.append("  ");
+            builder.append(tocElement.getText());
+        }
+
+        if (myKooReader.ViewOptions.ColorProfileName.getValue().equals(ColorProfile.DAY)) {
+            dark.setVisibility(View.VISIBLE);
+        } else {
+            light.setVisibility(View.VISIBLE);
+        }
+
+        return builder.toString();
+    }
+
+    private String makeProgressTextPer(String progress) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(progress);
         final TOCTree tocElement = myKooReader.getCurrentTOCElement();
         if (tocElement != null) {
             builder.append("  ");

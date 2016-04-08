@@ -173,7 +173,6 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
 
         myOpenBookIntent = intent;
         ZLAndroidPaintContext.myReader = myKooReaderApp;
-//        ZLTextView.myReader = myKooReaderApp;
     }
 
 

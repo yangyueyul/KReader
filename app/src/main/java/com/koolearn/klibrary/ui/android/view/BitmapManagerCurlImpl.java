@@ -85,6 +85,7 @@ public final class BitmapManagerCurlImpl implements BitmapManager {
          * 在ZLAndroidWidget绘制文字等信息
          */
         view.paint(context, index);
+
         /**
          * 将绘制好的Bitmap返回
          */

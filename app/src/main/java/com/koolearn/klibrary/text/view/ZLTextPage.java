@@ -66,7 +66,6 @@ final class ZLTextPage {
     }
 
     void moveStartCursor(int paragraphIndex, int wordIndex, int charIndex) { // 章节
-        LogUtil.i13("ph:" + paragraphIndex + ":word:" + wordIndex + ":char:" + charIndex);
         if (StartCursor.isNull()) {
             StartCursor.setCursor(EndCursor);
         }
