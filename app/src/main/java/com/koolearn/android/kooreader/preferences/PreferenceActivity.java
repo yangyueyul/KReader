@@ -78,10 +78,16 @@ public class PreferenceActivity extends ZLPreferenceActivity {
                 StringPreference.Constraint.LENGTH,
                 Resource, "spaceBefore"
         ));
-        addPreference(new StringPreference(
+        addPreference(new StringPreference( // 段后距
                 this, description.MarginBottomOption,
                 StringPreference.Constraint.LENGTH,
                 Resource, "spaceAfter"
         ));
+
+        final Screen cssScreen = createPreferenceScreen("css"); // 使用CSS样式
+        cssScreen.addOption(baseStyle.UseCSSFontFamilyOption, "fontFamily");
+        cssScreen.addOption(baseStyle.UseCSSFontSizeOption, "fontSize");
+        cssScreen.addOption(baseStyle.UseCSSTextAlignmentOption, "textAlignment");
+        cssScreen.addOption(baseStyle.UseCSSMarginsOption, "margins");
     }
 }

@@ -848,11 +848,9 @@
 
         <node name="css" value="CSS">
             <node name="summary" value="使用/忽略CSS中定义的值" />
-            <node name="fontFamily" toBeTranslated="true" value="Font family">
-                <node name="summaryOn" toBeTranslated="true"
-                    value="Use font family defined in CSS" />
-                <node name="summaryOff" toBeTranslated="true"
-                    value="Ignore font family defined in CSS" />
+            <node name="fontFamily" toBeTranslated="true" value="字体类型">
+                <node name="summaryOn" toBeTranslated="true" value="使用CSS中定义的字体类型" />
+                <node name="summaryOff" toBeTranslated="true" value="忽略CSS中定义的字体类型" />
             </node>
             <node name="fontSize" value="字体大小">
                 <node name="summaryOn" value="使用CSS中定义的字体大小" />
@@ -862,10 +860,9 @@
                 <node name="summaryOn" value="使用CSS中定义的文字排列" />
                 <node name="summaryOff" value="忽略CSS中定义的文字排列" />
             </node>
-            <node name="margins" toBeTranslated="true" value="Margins">
-                <node name="summaryOn" toBeTranslated="true" value="Apply margins defined in CSS" />
-                <node name="summaryOff" toBeTranslated="true"
-                    value="Ignore margins defined in CSS" />
+            <node name="margins" toBeTranslated="true" value="行距">
+                <node name="summaryOn" toBeTranslated="true" value="使用CSS中定义的行距" />
+                <node name="summaryOff" toBeTranslated="true" value="忽略CSS中定义的行距" />
             </node>
         </node>
 

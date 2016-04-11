@@ -37,11 +37,11 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 	private static final String OPTIONS = "Options";
 
 	public final ZLBooleanOption UseCSSTextAlignmentOption =
-		new ZLBooleanOption("Style", "css:textAlignment", false); // css
+		new ZLBooleanOption("Style", "css:textAlignment", true); // css 文字排列
 	public final ZLBooleanOption UseCSSMarginsOption =
-		new ZLBooleanOption("Style", "css:margins", false);
+		new ZLBooleanOption("Style", "css:margins", false); // 书边
 	public final ZLBooleanOption UseCSSFontSizeOption =
-		new ZLBooleanOption("Style", "css:fontSize", false);
+		new ZLBooleanOption("Style", "css:fontSize", false); // 字体大小
 	public final ZLBooleanOption UseCSSFontFamilyOption =
 		new ZLBooleanOption("Style", "css:fontFamily", false); // 使用CSS定义的字体
 

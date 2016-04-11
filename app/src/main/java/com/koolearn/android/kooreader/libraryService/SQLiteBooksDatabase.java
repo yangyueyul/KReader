@@ -1654,9 +1654,9 @@ final class SQLiteBooksDatabase extends BooksDatabase {
     }
 
     private void updateTables24() {
-        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (1, '', 136*256*256 + 138*256 + 133)"); // #888a85
-        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (2, '', 245*256*256 + 121*256 + 0)"); // #f57900
-        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (3, '', 114*256*256 + 159*256 + 207)"); // #729fcf
+        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (1, '', 237*256*256 + 106*256 + 0)"); // #888a85
+        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (2, '', 116*256*256 + 180*256 + 8)"); // #f57900
+        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (3, '', 150*256*256 + 64*256 + 189)"); // #729fcf
     }
 
     private void updateTables25() {
@@ -1801,11 +1801,11 @@ final class SQLiteBooksDatabase extends BooksDatabase {
     private int styleBg(int styleId) {
         switch (styleId) {
             case 1:
-                return 0x888a85;
+                return 0xed6a00;
             case 2:
-                return 0xf57900;
+                return 0x74b408;
             case 3:
-                return 0x729fcf;
+                return 0x9640bd;
             default:
                 return 0;
         }

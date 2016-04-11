@@ -1,0 +1,34 @@
+default.properties
+build.properties
+local.properties
+bin/
+gen/
+scripts/resources/*.diff
+obj/
+epubs/
+mappings/
+READY/
+.classpath
+.settings
+*.so
+*~
+
+# Android Studio
+.idea/
+*.apk
+*.txt
+
+# Gradle files
+*.bin
+*.iml
+*.iws
+*.ipr
+.gradle/
+*/build/
+
+# FBReader help books
+intro/
+
+# Windows VIM
+*.swp
+/app/build.gradle
