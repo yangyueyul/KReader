@@ -91,6 +91,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
         if (getAnimationProvider().inProgress()) {
             onDrawInScrolling(canvas); // 翻页过程中调用
         } else {
+
             onDrawStatic(canvas); // 首次/页面跳转时调用,防止黑屏
             ZLApplication.Instance().onRepaintFinished();
         }
@@ -108,7 +109,8 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
                     myAnimationProvider = new NoneAnimationProvider(myBitmapManager);
                     break;
                 case curl:
-                    myAnimationProvider = new CurlPageProviderImpl(myBitmapManager);
+                    myAnimationProvider = new CurlAnimationProvider(myBitmapManager);
+//                    myAnimationProvider = new CurlPageProviderImpl(myBitmapManager);
                     break;
                 case slide:
                     myAnimationProvider = new SlideAnimationProvider(myBitmapManager);

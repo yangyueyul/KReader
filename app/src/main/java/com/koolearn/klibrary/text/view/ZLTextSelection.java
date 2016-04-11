@@ -1,5 +1,6 @@
 package com.koolearn.klibrary.text.view;
 
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.util.ZLColor;
 import com.koolearn.klibrary.core.view.SelectionCursor;
 
@@ -266,6 +267,7 @@ class ZLTextSelection extends ZLTextHighlighting {
 
 	@Override
 	public ZLColor getBackgroundColor() {
+		LogUtil.i24("");
 		return myView.getSelectionBackgroundColor();
 	}
 

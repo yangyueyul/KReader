@@ -295,8 +295,11 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
         }
 
         public final synchronized void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
             final HighlightingStyle style = getItem(position);
+            int mSelectColor = style.getBackgroundColor().intValue();
+            Intent data = new Intent();
+            data.putExtra("selectColor", mSelectColor);
+            setResult(7, data);
             myCollection.bindToService(EditBookmarkActivity.this, new Runnable() {
                 public void run() {
                     myBookmark.setStyleId(style.Id);

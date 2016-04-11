@@ -1,7 +1,6 @@
 package com.koolearn.kooreader.kooreader;
 
 import com.koolearn.android.kooreader.OpenPhotoAction;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.filesystem.ZLResourceFile;
 import com.koolearn.klibrary.core.library.ZLibrary;
@@ -82,7 +81,7 @@ public final class KooView extends ZLTextView {
     @Override
     public void onFingerSingleTap(int x, int y) {
         Application.hideActivePopup(); // 隐藏popup
-        Application.runAction(ActionCode.SELECTION_CLEAR);
+//        Application.runAction(ActionCode.SELECTION_CLEAR);
 
         final ZLTextRegion hyperlinkRegion = findRegion(x, y, maxSelectionDistance(), ZLTextRegion.HyperlinkFilter);
         if (hyperlinkRegion != null) { //y 超链接点击
@@ -153,7 +152,7 @@ public final class KooView extends ZLTextView {
     @Override
     public void onFingerPress(int x, int y) {
         Application.hideActivePopup(); //隐藏进度选择
-        Application.runAction(ActionCode.SELECTION_CLEAR);
+//        Application.runAction(ActionCode.SELECTION_CLEAR);
         myReader.runAction(ActionCode.HIDE_TOAST);
 
         final float maxDist = ZLibrary.Instance().getDisplayDPI() / 4;
@@ -417,6 +416,7 @@ public final class KooView extends ZLTextView {
 
     @Override
     public ZLColor getSelectionBackgroundColor() {
+
         return myViewOptions.getColorProfile().SelectionBackgroundOption.getValue();
     }
 

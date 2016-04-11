@@ -65,7 +65,7 @@ public class SelectionBookmarkAction extends KooAndroidAction {
                         new Intent(BaseActivity.getApplicationContext(), EditBookmarkActivity.class);
                 intent.putExtra("bgColor", Reader.ViewOptions.getColorProfile().WallpaperOption.getValue());
                 KooReaderIntents.putBookmarkExtra(intent, bookmark);
-                OrientationUtil.startActivity(BaseActivity, intent);
+                OrientationUtil.startActivityForResult(BaseActivity, intent, 6);
             }
         }));
         BaseActivity.showToast(toast);

@@ -58,7 +58,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
     /**
      * 电池参数
      */
-    private float mBatteryHeight = 12 * dp_1; // 电池的高度
+    private float mBatteryHeight = 10 * dp_1; // 电池的高度
     private float mBatteryWidth = 23 * dp_1; // 电池的宽度
     private float mCapHeight = 7 * dp_1; // 电池头高度
     private float mCapWidth = 2 * dp_1; // 电池头高度
@@ -81,6 +81,8 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
     private RectF mPowerRect;
     private final int leftMargin;
     private final int rightMargin;
+    private String mBookTitle;
+    private String mBookToc;
 
     public static final class Geometry {
         final Size ScreenSize;
@@ -162,14 +164,14 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
         mPowerPaint.setStrokeWidth(mBatteryStroke);
 
 //        ColorProfile colorProfile = myReader.ViewOptions.getColorProfile();
-        myFooterPaint.setTextSize(13 * sp_1);
+        myFooterPaint.setTextSize(12 * sp_1);
         myFooterPaint.setLinearText(false);
         myFooterPaint.setAntiAlias(true);
         myFooterPaint.setDither(true);
         myFooterPaint.setSubpixelText(true);
         myFooterPaint.setAlpha(199);
 
-        myTopPaint.setTextSize(12 * sp_1);
+        myTopPaint.setTextSize(11 * sp_1);
         myTopPaint.setLinearText(false);
         myTopPaint.setAntiAlias(true);
         myTopPaint.setDither(true);
@@ -557,7 +559,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
                 mBatteryStroke / 2 + mPowerPadding + mPowerHeight);
 
         myCanvas.save();
-        myCanvas.translate(leftMargin, getHeight() - 16 * dp_1); //y 平移
+        myCanvas.translate(leftMargin, getHeight() - 13 * dp_1); //y 平移
         myCanvas.drawRoundRect(mBatteryRect, 2f, 2f, mBatteryPaint); // 画电池轮廓需要考虑 画笔的宽度 画圆角矩形
         myCanvas.drawRoundRect(mCapRect, 2f, 2f, mBatteryPaint);// 画电池盖
         myCanvas.drawRect(mPowerRect, mPowerPaint);// 画电量
@@ -566,20 +568,27 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
         String value = myReader.ViewOptions.ColorProfileName.getValue();
         if (value.equals("defaultDark")) {
             myFooterPaint.setARGB(255, 192, 192, 192);
-            myTopPaint.setARGB(255, 192, 192, 192);
+            myTopPaint.setARGB(235, 192, 192, 192);
         } else {
             myFooterPaint.setARGB(255, 0, 0, 0);
-            myTopPaint.setARGB(255, 0, 0, 0);
+            myTopPaint.setARGB(235, 0, 0, 0);
         }
 
-        String title = myReader.getCurrentBook().getTitle();
-        String toc = getCurrentTOC();
+        mBookTitle = myReader.getCurrentBook().getTitle();
+        mBookToc = getCurrentTOC();
 
-        myCanvas.drawText(title, leftMargin, 13 * dp_1, myTopPaint);
-        myCanvas.drawText(toc, getWidth() - myTopPaint.measureText(toc) - rightMargin, 13 * dp_1, myTopPaint);
+        if (mBookTitle.length() > 13) {
+            mBookTitle = mBookTitle.substring(0, 12) + "...";
+        }
+        if (mBookToc.length() > 12) {
+            mBookTitle = mBookToc.substring(0, 11) + "...";
+        }
 
-        myCanvas.drawText(time, 45 * dp_1, getHeight() - 5 * dp_1, myFooterPaint);
-        myCanvas.drawText(page, getWidth() - myFooterPaint.measureText(page) - rightMargin, getHeight() - 5 * dp_1, myFooterPaint);
+        myCanvas.drawText(mBookTitle, leftMargin, 13 * dp_1, myTopPaint);
+        myCanvas.drawText(mBookToc, getWidth() - myTopPaint.measureText(mBookToc) - rightMargin, 13 * dp_1, myTopPaint);
+
+        myCanvas.drawText(time, 45 * dp_1, getHeight() - 4 * dp_1, myFooterPaint);
+        myCanvas.drawText(page, getWidth() - myFooterPaint.measureText(page) - rightMargin, getHeight() - 4 * dp_1, myFooterPaint);
     }
 
     @Override

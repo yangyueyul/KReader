@@ -17,6 +17,8 @@ public abstract class KooReaderMainActivity extends Activity {
 	public static final int REQUEST_PREFERENCES = 1;
 	public static final int REQUEST_CANCEL_MENU = 2;
 	public static final int REQUEST_DICTIONARY = 3;
+	public static final int REQUEST_EDITBOOKMARK = 6;
+	public static final int RESULT_SELECTCOLOR = 7;
 
 	private volatile SuperActivityToast myToast;
 

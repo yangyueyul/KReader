@@ -8,14 +8,17 @@
 
     <ImageView
         android:id="@+id/bookmark_item_icon"
-        android:layout_width="37dp"
-        android:layout_height="fill_parent"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="8dp"
         android:singleLine="true" />
 
     <RelativeLayout
         android:id="@+id/bookmark_item_color_container"
         android:layout_width="37dp"
-        android:layout_height="fill_parent">
+        android:layout_height="match_parent">
 
         <yuku.ambilwarna.widget.AmbilWarnaPrefWidgetView
             android:id="@+id/bookmark_item_color"

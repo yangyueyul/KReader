@@ -59,17 +59,18 @@
                     android:host=""
                     android:scheme="file" />
                 <data android:pathPattern=".*\\.epub" />
-                <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.fb2" />
-                <data android:pathPattern=".*\\.fb2\\.zip" />
-                <data android:pathPattern=".*\\.mobi" />
-                <data android:pathPattern=".*\\.prc" />
-                <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.rtf" />
-                <data android:pathPattern=".*\\.pdf" />
-                <data android:pathPattern=".*\\.djvu" />
-                <data android:pathPattern=".*\\.cbr" />
-                <data android:pathPattern=".*\\.cbz" />
+                <!--<data android:pathPattern=".*\\.doc" />-->
+                <!--<data android:pathPattern=".*\\.oeb" />-->
+                <!--<data android:pathPattern=".*\\.fb2" />-->
+                <!--<data android:pathPattern=".*\\.fb2\\.zip" />-->
+                <!--<data android:pathPattern=".*\\.mobi" />-->
+                <!--<data android:pathPattern=".*\\.prc" />-->
+                <!--<data android:pathPattern=".*\\.txt" />-->
+                <!--<data android:pathPattern=".*\\.rtf" />-->
+                <!--<data android:pathPattern=".*\\.pdf" />-->
+                <!--<data android:pathPattern=".*\\.djvu" />-->
+                <!--<data android:pathPattern=".*\\.cbr" />-->
+                <!--<data android:pathPattern=".*\\.cbz" />-->
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -80,16 +81,17 @@
                     android:mimeType="text/plain"
                     android:scheme="file" />
                 <data android:pathPattern=".*\\.epub" />
-                <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.fb2" />
-                <data android:pathPattern=".*\\.mobi" />
-                <data android:pathPattern=".*\\.prc" />
-                <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.rtf" />
-                <data android:pathPattern=".*\\.pdf" />
-                <data android:pathPattern=".*\\.djvu" />
-                <data android:pathPattern=".*\\.cbr" />
-                <data android:pathPattern=".*\\.cbz" />
+                <!--<data android:pathPattern=".*\\.doc" />-->
+                <!--<data android:pathPattern=".*\\.oeb" />-->
+                <!--<data android:pathPattern=".*\\.fb2" />-->
+                <!--<data android:pathPattern=".*\\.mobi" />-->
+                <!--<data android:pathPattern=".*\\.prc" />-->
+                <!--<data android:pathPattern=".*\\.txt" />-->
+                <!--<data android:pathPattern=".*\\.rtf" />-->
+                <!--<data android:pathPattern=".*\\.pdf" />-->
+                <!--<data android:pathPattern=".*\\.djvu" />-->
+                <!--<data android:pathPattern=".*\\.cbr" />-->
+                <!--<data android:pathPattern=".*\\.cbz" />-->
             </intent-filter>
             <!--intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -107,19 +109,20 @@
                     android:host=""
                     android:scheme="file" />
                 <data android:mimeType="application/epub+zip" />
-                <data android:mimeType="application/x-pilot-prc" />
-                <data android:mimeType="application/x-mobipocket-ebook" />
-                <data android:mimeType="application/x-fictionbook+xml" />
-                <data android:mimeType="application/x-fictionbook" />
-                <data android:mimeType="application/pdf" />
-                <data android:mimeType="application/x-pdf" />
-                <data android:mimeType="application/djvu" />
-                <data android:mimeType="application/x-djvu" />
-                <data android:mimeType="application/x-cbr" />
-                <data android:mimeType="application/x-cbz" />
-                <data android:mimeType="image/vnd.djvu" />
-                <data android:mimeType="image/x-djvu" />
-                <data android:mimeType="text/plain" />
+                <!--<data android:mimeType="application/msword" />-->
+                <!--<data android:mimeType="application/x-pilot-prc" />-->
+                <!--<data android:mimeType="application/x-mobipocket-ebook" />-->
+                <!--<data android:mimeType="application/x-fictionbook+xml" />-->
+                <!--<data android:mimeType="application/x-fictionbook" />-->
+                <!--<data android:mimeType="application/pdf" />-->
+                <!--<data android:mimeType="application/x-pdf" />-->
+                <!--<data android:mimeType="application/djvu" />-->
+                <!--<data android:mimeType="application/x-djvu" />-->
+                <!--<data android:mimeType="application/x-cbr" />-->
+                <!--<data android:mimeType="application/x-cbz" />-->
+                <!--<data android:mimeType="image/vnd.djvu" />-->
+                <!--<data android:mimeType="image/x-djvu" />-->
+                <!--<data android:mimeType="text/plain" />-->
             </intent-filter>
 
             <intent-filter>

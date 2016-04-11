@@ -14,12 +14,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.koolearn.android.kooreader.events.MessageEvent;
 import com.koolearn.android.kooreader.fragment.BookMarksFragment;
 import com.koolearn.android.kooreader.fragment.BookNoteFragment;
 import com.koolearn.android.kooreader.fragment.LocalBooksFragment;
 import com.koolearn.android.kooreader.fragment.NetWorkBooksFragment;
+import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.Paths;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isExit = false;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
+
+    private final BookCollectionShadow myCollection = new BookCollectionShadow();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -274,8 +282,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.navigation_bookmark) {
             switchToBookMark();
         }
-
         mDrawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onMessageEvent(final MessageEvent event) {
+        LogUtil.i24("" + event.message);
+        myCollection.bindToService(this, new Runnable() {
+            public void run() {
+                com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(event.message);
+                myCollection.saveBook(book); // 保存书籍
+                myCollection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
+//                Snackbar.make(mRecyclerView, "已放入书架", Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "放入成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        myCollection.unbind();
+        super.onDestroy();
     }
 }

@@ -846,8 +846,8 @@
         </node>
 
 
-        <node name="css" value="CSS">
-            <node name="summary" value="使用/忽略CSS中定义的值" />
+        <node name="css" value="CSS样式">
+            <node name="summary" value="使用/忽略CSS样式" />
             <node name="fontFamily" toBeTranslated="true" value="字体类型">
                 <node name="summaryOn" toBeTranslated="true" value="使用CSS中定义的字体类型" />
                 <node name="summaryOff" toBeTranslated="true" value="忽略CSS中定义的字体类型" />

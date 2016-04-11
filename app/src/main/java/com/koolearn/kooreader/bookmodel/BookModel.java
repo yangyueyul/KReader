@@ -19,7 +19,6 @@
 
 package com.koolearn.kooreader.bookmodel;
 
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.fonts.FileInfo;
 import com.koolearn.klibrary.core.fonts.FontEntry;
 import com.koolearn.klibrary.core.fonts.FontManager;
@@ -96,19 +95,14 @@ public final class BookModel {
     }
 
     public void registerFontFamilyList(String[] families) {
-        LogUtil.i("registerFontEntry" + families.toString());
-
         FontManager.index(Arrays.asList(families));
     }
 
     public void registerFontEntry(String family, FontEntry entry) {
-        LogUtil.i("registerFontEntry" + family + entry.toString());
         FontManager.Entries.put(family, entry);
     }
 
     public void registerFontEntry(String family, FileInfo normal, FileInfo bold, FileInfo italic, FileInfo boldItalic) {
-        LogUtil.i("registerFontEntry" + family);
-
         registerFontEntry(family, new FontEntry(family, normal, bold, italic, boldItalic));
     }
 

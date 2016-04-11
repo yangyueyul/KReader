@@ -24,7 +24,7 @@ import com.koolearn.android.util.UIUtil;
 import com.koolearn.klibrary.core.application.ZLApplicationWindow;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.options.Config;
-import com.koolearn.klibrary.core.view.ZLViewEnums;
+import com.koolearn.klibrary.core.util.ZLColor;
 import com.koolearn.klibrary.core.view.ZLViewWidget;
 import com.koolearn.klibrary.text.view.ZLTextView;
 import com.koolearn.klibrary.ui.android.R;
@@ -133,11 +133,11 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         myRootView = (RelativeLayout) findViewById(R.id.root_view);
         myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
         myCurlView = (ZLAndroidCurlWidget) findViewById(R.id.curl_view);
-        myCurlView.setMargins(0,0,0,0);
+        myCurlView.setMargins(0, 0, 0, 0);
         myCurlView.setSizeChangedObserver(new CurlView.SizeChangedObserver() {
             @Override
             public void onSizeChanged(int width, int height) {
-                myCurlView.setMargins(0,0,0,0);
+                myCurlView.setMargins(0, 0, 0, 0);
                 myCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
             }
         });
@@ -282,7 +282,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     @Override
     protected void onResume() {
         super.onResume();
-        if(myCurlView!=null){   // && 显示
+        if (myCurlView != null) {   // && 显示
             myCurlView.onResume();
         }
         myStartTimer = true;
@@ -326,7 +326,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     protected void onPause() {
         IsPaused = true;
 
-        if(myCurlView!=null && myCurlView.getVisibility() == View.VISIBLE){
+        if (myCurlView != null && myCurlView.getVisibility() == View.VISIBLE) {
             myCurlView.onPause();
         }
         try {
@@ -338,6 +338,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         myKooReaderApp.onWindowClosing();
         super.onPause();
     }
+
 
     @Override
     protected void onStop() {
@@ -422,6 +423,12 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
                             }
                         });
                     }
+                }
+                break;
+            case REQUEST_EDITBOOKMARK:
+                if (resultCode == RESULT_SELECTCOLOR) {
+                    int selectColor = data.getIntExtra("selectColor", 9846973);
+                    myKooReaderApp.ViewOptions.getColorProfile().SelectionBackgroundOption.setValue(new ZLColor(selectColor));
                 }
                 break;
         }
@@ -548,17 +555,17 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
     }
 
     @Override
-    public void hideViewWidget(boolean flag){
-        if(myCurlView!=null && myMainView!=null){
-            if(flag){
+    public void hideViewWidget(boolean flag) {
+        if (myCurlView != null && myMainView != null) {
+            if (flag) {
                 myCurlView.setVisibility(View.VISIBLE);
                 myMainView.setVisibility(View.GONE);
-            }else{
+            } else {
                 myCurlView.setVisibility(View.GONE);
                 myMainView.setVisibility(View.VISIBLE);
             }
-        }else{
-            Toast.makeText(this,"view 切换错误",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "view 切换错误", Toast.LENGTH_SHORT).show();
         }
     }
 

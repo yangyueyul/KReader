@@ -18,11 +18,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.koolearn.android.kooreader.KooReader;
+import com.koolearn.android.kooreader.events.MessageEvent;
 import com.koolearn.android.kooreader.fragment.DetailFragment;
 import com.koolearn.android.kooreader.fragment.TOCDetailFragment;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.kooreader.view.DownloadProcessButton;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.ui.android.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
@@ -30,6 +30,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.apache.http.Header;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -86,7 +87,6 @@ public class BookDetailActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         filePath = getExternalCacheDirPath() + "/" + mBook.getTitle() + ".epub";
-        LogUtil.i8("filePath:"+filePath);
         File fileDir = new File(filePath);
         if (fileDir.exists()) {
             mBtnDownload.setProgress(100);
@@ -150,7 +150,6 @@ public class BookDetailActivity extends AppCompatActivity {
 //        }
 
         // http://45.78.20.53:8080/read.epub
-
         client.get("http://file.bmob.cn/" + mBook.getUrl(), null, new FileAsyncHttpResponseHandler(fileDir) {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
@@ -179,6 +178,7 @@ public class BookDetailActivity extends AppCompatActivity {
      * @param bookPath
      */
     private void addBookShelf(final String bookPath) {
+        EventBus.getDefault().post(new MessageEvent(bookPath));
         myCollection.bindToService(this, new Runnable() {
             public void run() {
                 com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
@@ -218,11 +218,5 @@ public class BookDetailActivity extends AppCompatActivity {
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onDestroy() {
-        myCollection.unbind();
-        super.onDestroy();
     }
 }

@@ -1,10 +1,10 @@
 package com.koolearn.klibrary.core.filetypes;
 
-import com.koolearn.android.util.LogInfo;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.util.MimeType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.TreeMap;
 
 public class FileTypeCollection {
 	public static final FileTypeCollection Instance = new FileTypeCollection();
@@ -13,11 +13,10 @@ public class FileTypeCollection {
 
 	private FileTypeCollection() {
 		//y 能看到哪些类型的文件
-		LogInfo.i("filetypes");
 //		addType(new FileTypeFB2());
 		addType(new FileTypeEpub());
 //		addType(new FileTypeMobipocket());
-//		addType(new FileTypeHtml());
+		addType(new FileTypeHtml());
 		addType(new SimpleFileType("txt", "txt", MimeType.TYPES_TXT));
 //		addType(new SimpleFileType("RTF", "rtf", MimeType.TYPES_RTF));
 //		addType(new SimpleFileType("PDF", "pdf", MimeType.TYPES_PDF));
@@ -28,26 +27,18 @@ public class FileTypeCollection {
 	}
 
 	private void addType(FileType type) {
-		LogInfo.i("filetypes"+type.toString());
-
 		myTypes.put(type.Id.toLowerCase(), type);
 	}
 
 	public Collection<FileType> types() {
-		LogInfo.i("filetypes"+myTypes.values());
-
 		return myTypes.values();
 	}
 
 	public FileType typeById(String id) {
-		LogInfo.i("filetypes");
-
 		return myTypes.get(id.toLowerCase());
 	}
 
 	public FileType typeForFile(ZLFile file) {
-		LogInfo.i("filetypes"+file.toString());
-
 		for (FileType type : types()) {
 			if (type.acceptsFile(file)) {
 				return type;

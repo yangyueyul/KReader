@@ -75,7 +75,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 
     private void migrate() {
         final int version = myDatabase.getVersion(); // 第一次安装为0
-        LogUtil.i18("version:" + version);
         final int currentVersion = 40;
         if (version >= currentVersion) {
             return;
@@ -1654,9 +1653,9 @@ final class SQLiteBooksDatabase extends BooksDatabase {
     }
 
     private void updateTables24() {
-        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (1, '', 237*256*256 + 106*256 + 0)"); // #888a85
-        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (2, '', 116*256*256 + 180*256 + 8)"); // #f57900
-        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (3, '', 150*256*256 + 64*256 + 189)"); // #729fcf
+        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (1, '', 150*256*256 + 64*256 + 189)"); // #888a85
+        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (2, '', 237*256*256 + 106*256 + 0)"); // #f57900
+        myDatabase.execSQL("INSERT OR REPLACE INTO HighlightingStyle (style_id, name, bg_color) VALUES (3, '', 116*256*256 + 180*256 + 8)"); // #729fcf
     }
 
     private void updateTables25() {
@@ -1799,13 +1798,14 @@ final class SQLiteBooksDatabase extends BooksDatabase {
     }
 
     private int styleBg(int styleId) {
+        LogUtil.i24(""+styleId);
         switch (styleId) {
             case 1:
-                return 0xed6a00;
-            case 2:
-                return 0x74b408;
-            case 3:
                 return 0x9640bd;
+            case 2:
+                return 0xed6a00;
+            case 3:
+                return 0x74b408;
             default:
                 return 0;
         }

@@ -10,7 +10,6 @@ package com.koolearn.android.util;
  * ******************************************
  */
 public class LogUtil {
-    static boolean flag = true;
     static boolean flag1 = false;
     static boolean flag2 = false;
     static boolean flag3 = false;

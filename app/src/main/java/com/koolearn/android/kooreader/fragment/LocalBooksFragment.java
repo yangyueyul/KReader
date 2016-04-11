@@ -3,7 +3,6 @@ package com.koolearn.android.kooreader.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.koolearn.android.kooreader.KooReader;
 import com.koolearn.android.kooreader.RecyclerItemClickListener;
@@ -131,16 +129,9 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     @Override
-    public void onDestroy() {
-        myCollection.unbind();
-        super.onDestroy();
-    }
-
-    @Override
     public void onRefresh() {
         handler.sendEmptyMessageDelayed(1, 2000);
     }
-
 
     private RecyclerItemClickListener.OnItemClickListener onItemClickListener = new RecyclerItemClickListener.OnItemClickListener() {
         @Override
