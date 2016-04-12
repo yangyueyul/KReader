@@ -49,12 +49,13 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
 
     private List<Book> bookshelf = new ArrayList<>();
     private LocalBookAdapter mLocalBookAdapter;
-    private final BookCollectionShadow myCollection = new BookCollectionShadow();
+    private final BookCollectionShadow bookCollectionShadow = new BookCollectionShadow();
 
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            getBooks();
             refreshLayout.setRefreshing(false);
         }
     };
@@ -91,10 +92,10 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void getBooks() {
-        myCollection.bindToService(getActivity(), new Runnable() {
+        bookCollectionShadow.bindToService(getActivity(), new Runnable() {
             public void run() {
                 bookshelf.clear();
-                bookshelf = myCollection.recentlyOpenedBooks(15);
+                bookshelf = bookCollectionShadow.recentlyOpenedBooks(15);
                 mLocalBookAdapter.clearItems();
                 mLocalBookAdapter.updateItems(bookshelf, true);
             }
@@ -146,7 +147,7 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
             builder.setIcon(R.drawable.ic_error_outline_black).setTitle("删除书籍?").setNeutralButton("稍后", null).setNegativeButton("取消", null);
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    myCollection.removeBook(mLocalBookAdapter.getBook(position), true);
+                    bookCollectionShadow.removeBook(mLocalBookAdapter.getBook(position), true);
                     mLocalBookAdapter.removeItems(position);
                     Snackbar.make(mFabSearch, "删除成功", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -155,4 +156,10 @@ public class LocalBooksFragment extends Fragment implements SwipeRefreshLayout.O
             builder.show();
         }
     };
+
+    @Override
+    public void onDestroy() {
+        bookCollectionShadow.unbind();
+        super.onDestroy();
+    }
 }

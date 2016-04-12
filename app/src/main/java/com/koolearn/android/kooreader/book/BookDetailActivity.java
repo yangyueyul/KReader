@@ -2,10 +2,7 @@ package com.koolearn.android.kooreader.book;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,11 +14,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.koolearn.android.kooreader.KooReader;
-import com.koolearn.android.kooreader.events.MessageEvent;
+import com.koolearn.android.kooreader.events.AddBookEvent;
+import com.koolearn.android.kooreader.events.OpenBookEvent;
 import com.koolearn.android.kooreader.fragment.DetailFragment;
 import com.koolearn.android.kooreader.fragment.TOCDetailFragment;
-import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
 import com.koolearn.android.kooreader.view.DownloadProcessButton;
 import com.koolearn.klibrary.ui.android.R;
 import com.loopj.android.http.AsyncHttpClient;
@@ -42,16 +38,14 @@ public class BookDetailActivity extends AppCompatActivity {
     private DownloadProcessButton mBtnDownload;
     private Toolbar mToolbar;
 
-    private final BookCollectionShadow myCollection = new BookCollectionShadow();
     private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
-    private String filePath;
-    private CoordinatorLayout mCooLayout;
+//    private CoordinatorLayout mCooLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appbar_detail);
-        mCooLayout = (CoordinatorLayout) findViewById(R.id.cl);
+//        mCooLayout = (CoordinatorLayout) findViewById(R.id.cl);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mBtnDownload = (DownloadProcessButton) findViewById(R.id.btn_download);
         setSupportActionBar(mToolbar);
@@ -64,7 +58,6 @@ public class BookDetailActivity extends AppCompatActivity {
         });
 
         mBook = (Book) getIntent().getSerializableExtra("book");
-        filePath = Environment.getExternalStorageDirectory()+"/"+mBook.getId()+".epub";
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(mBook.getTitle());
 
@@ -86,7 +79,7 @@ public class BookDetailActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("目录"));
         tabLayout.setupWithViewPager(mViewPager);
 
-        filePath = getExternalCacheDirPath() + "/" + mBook.getTitle() + ".epub";
+        final String filePath = getExternalCacheDirPath() + "/" + mBook.getTitle() + ".epub";
         File fileDir = new File(filePath);
         if (fileDir.exists()) {
             mBtnDownload.setProgress(100);
@@ -100,7 +93,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 } else {
                     mBtnDownload.setProgress(1);
                     mBtnDownload.setEnabled(false);
-                    downloadBook();
+                    downloadBook(mBook);
                 }
             }
         });
@@ -143,12 +136,10 @@ public class BookDetailActivity extends AppCompatActivity {
             return mFragmentTitles.get(position);
         }
     }
-    private void downloadBook() {
-        File fileDir = new File(filePath);
-//        if (!fileDir.getParentFile().exists()) {
-//            fileDir.getParentFile().mkdirs();
-//        }
 
+    private void downloadBook(Book book) {
+        String filePath = getExternalCacheDirPath() + "/" + book.getTitle() + ".epub";
+        File fileDir = new File(filePath);
         // http://45.78.20.53:8080/read.epub
         client.get("http://file.bmob.cn/" + mBook.getUrl(), null, new FileAsyncHttpResponseHandler(fileDir) {
             @Override
@@ -160,14 +151,13 @@ public class BookDetailActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, File file) {
                 mBtnDownload.setProgress(100);
                 mBtnDownload.setEnabled(true);
-//                startOpenBookByPath(file.getPath());
                 addBookShelf(file.getPath());
+//                startOpenBookByPath(file.getPath());
             }
 
             @Override
             public void onProgress(long bytesWritten, long totalSize) {
                 mBtnDownload.setProgress((int) ((bytesWritten * 1.0 / totalSize) * 100));
-//                super.onProgress(bytesWritten, totalSize);
             }
         });
     }
@@ -177,17 +167,8 @@ public class BookDetailActivity extends AppCompatActivity {
      *
      * @param bookPath
      */
-    private void addBookShelf(final String bookPath) {
-        EventBus.getDefault().post(new MessageEvent(bookPath));
-        myCollection.bindToService(this, new Runnable() {
-            public void run() {
-                com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
-                myCollection.saveBook(book); // 保存书籍
-                myCollection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
-                Snackbar.make(mCooLayout, "已放入书架", Snackbar.LENGTH_SHORT).show();
-//                Toast.makeText(BookDetailActivity.this, "放入成功", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void addBookShelf(String bookPath) {
+        EventBus.getDefault().post(new AddBookEvent(bookPath));
     }
 
     /**
@@ -195,18 +176,8 @@ public class BookDetailActivity extends AppCompatActivity {
      *
      * @param bookPath
      */
-    private void startOpenBookByPath(final String bookPath) {
-        myCollection.bindToService(this, new Runnable() {
-            public void run() {
-                com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(bookPath);
-                openBook(book);
-            }
-        });
-    }
-
-    private void openBook(com.koolearn.kooreader.book.Book data) {
-        KooReader.openBookActivity(this, data, null);
-        overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
+    private void startOpenBookByPath(String bookPath) {
+        EventBus.getDefault().post(new OpenBookEvent(bookPath));
     }
 
     private String getExternalCacheDirPath() {
@@ -219,4 +190,10 @@ public class BookDetailActivity extends AppCompatActivity {
         }
         return null;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 }

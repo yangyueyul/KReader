@@ -14,13 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.koolearn.android.kooreader.events.MessageEvent;
+import com.koolearn.android.kooreader.events.AddBookEvent;
+import com.koolearn.android.kooreader.events.OpenBookEvent;
 import com.koolearn.android.kooreader.fragment.BookMarksFragment;
 import com.koolearn.android.kooreader.fragment.BookNoteFragment;
 import com.koolearn.android.kooreader.fragment.LocalBooksFragment;
 import com.koolearn.android.kooreader.fragment.NetWorkBooksFragment;
 import com.koolearn.android.kooreader.libraryService.BookCollectionShadow;
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.ui.android.R;
 import com.koolearn.kooreader.Paths;
 
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        EventBus.getDefault().register(this);
     }
 
     private void init() {
@@ -286,34 +287,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     @Subscribe
-    public void onMessageEvent(final MessageEvent event) {
-        LogUtil.i24("" + event.message);
+    public void onOpenBookEvent(final OpenBookEvent event) {
         myCollection.bindToService(this, new Runnable() {
             public void run() {
-                com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(event.message);
-                myCollection.saveBook(book); // 保存书籍
-                myCollection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
-//                Snackbar.make(mRecyclerView, "已放入书架", Snackbar.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, "放入成功", Toast.LENGTH_SHORT).show();
+                com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(event.bookPath);
+                if (book != null) {
+                    openBook(book);
+                } else {
+                    Toast.makeText(MainActivity.this, "打开失败,请重试", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
+    private void openBook(com.koolearn.kooreader.book.Book data) {
+        KooReader.openBookActivity(this, data, null);
+        overridePendingTransition(R.anim.tran_fade_in, R.anim.tran_fade_out);
+    }
+
+    @Subscribe
+    public void onAddBookEvent(final AddBookEvent event) {
+        myCollection.bindToService(this, new Runnable() {
+                    public void run() {
+                        com.koolearn.kooreader.book.Book book = myCollection.getBookByFile(event.bookPath);
+                        if (book != null) {
+                            myCollection.saveBook(book); // 保存书籍
+                            myCollection.addToRecentlyOpened(book); // 保存书籍至最近阅读的数据库
+                            Toast.makeText(MainActivity.this, "已放入书架", Toast.LENGTH_SHORT).show();
+//                            SuperActivityToast toast = new SuperActivityToast(MainActivity.this, SuperToast.Type.BUTTON);
+//                            toast.setDuration(SuperToast.Duration.MEDIUM);
+//                            toast.setTextSize(SuperToast.TextSize.SMALL);
+//                            toast.setText("已放入书架");
+//                            toast.setBackground(R.color.button_compelete);
+//                            toast.show();
+                        } else {
+                            EventBus.getDefault().post(new AddBookEvent(event.bookPath));
+                        }
+                    }
+                }
+
+        );
+    }
+
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         myCollection.unbind();
         super.onDestroy();
     }

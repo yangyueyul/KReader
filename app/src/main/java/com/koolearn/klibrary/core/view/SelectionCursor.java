@@ -12,13 +12,13 @@ public abstract class SelectionCursor {
 	public static void draw(ZLPaintContext context, Which which, int x, int y, ZLColor color) {
 		context.setFillColor(color);
 		final int dpi = ZLibrary.Instance().getDisplayDPI();
-		final int unit = dpi / 120;
+		final int unit = dpi / 160;
 		final int xCenter = which == Which.Left ? x - unit - 1 : x + unit + 1;
-		context.fillRectangle(xCenter - unit, y + dpi / 8, xCenter + unit, y - dpi / 8);
+		context.fillRectangle(xCenter - unit, y + dpi / 10, xCenter + unit, y - dpi / 10);
 		if (which == Which.Left) {
-			context.fillCircle(xCenter, y - dpi / 8, unit * 6);
+			context.fillCircle(xCenter, y - dpi / 10, unit * 4);
 		} else {
-			context.fillCircle(xCenter, y + dpi / 8, unit * 6);
+			context.fillCircle(xCenter, y + dpi / 10, unit * 4);
 		}
 	}
 }

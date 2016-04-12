@@ -15,7 +15,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 
-import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.filesystem.ZLFile;
 import com.koolearn.klibrary.core.fonts.FontEntry;
 import com.koolearn.klibrary.core.image.ZLImageData;
@@ -59,9 +58,9 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
      * 电池参数
      */
     private float mBatteryHeight = 10 * dp_1; // 电池的高度
-    private float mBatteryWidth = 23 * dp_1; // 电池的宽度
-    private float mCapHeight = 7 * dp_1; // 电池头高度
-    private float mCapWidth = 2 * dp_1; // 电池头高度
+    private float mBatteryWidth = 21 * dp_1; // 电池的宽度
+    private float mCapHeight = 6 * dp_1; // 电池头高度
+    private float mCapWidth = 2 * dp_1; // 电池头宽度
     /**
      * 电池电量
      */
@@ -228,7 +227,6 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
             }
         }
         if (ourWallpaper != null) {
-            LogUtil.i9("clear:" + mode);
             myBackgroundColor = ZLAndroidColorUtil.getAverageColor(ourWallpaper);
             final int w = ourWallpaper.getWidth();
             final int h = ourWallpaper.getHeight();
@@ -325,7 +323,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
         myCanvas.drawPath(path, myFillPaint);
     }
 
-    public void drawPolygonalLine(int[] xs, int[] ys) {
+    public void drawPolygonalLine(int[] xs, int[] ys) { // 多边形
         final Path path = new Path();
         final int last = xs.length - 1;
         path.moveTo(xs[last], ys[last]);
@@ -336,6 +334,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
     }
 
     public void drawOutline(int[] xs, int[] ys) {
+//        LogUtil.i25("共有 " + xs.length + " 个点");
         final int last = xs.length - 1;
         int xStart = (xs[0] + xs[last]) / 2;
         int yStart = (ys[0] + ys[last]) / 2;
@@ -343,19 +342,19 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
         int yEnd = yStart;
         if (xs[0] != xs[last]) {
             if (xs[0] > xs[last]) {
-                xStart -= 5;
-                xEnd += 5;
+                xStart -= 2;
+                xEnd += 2;
             } else {
-                xStart += 5;
-                xEnd -= 5;
+                xStart += 2;
+                xEnd -= 2;
             }
         } else {
             if (ys[0] > ys[last]) {
-                yStart -= 5;
-                yEnd += 5;
+                yStart -= 2;
+                yEnd += 2;
             } else {
-                yStart += 5;
-                yEnd -= 5;
+                yStart += 2;
+                yEnd -= 2;
             }
         }
 
@@ -365,6 +364,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
             path.lineTo(xs[i], ys[i]);
         }
         path.lineTo(xEnd, yEnd);
+//        myCanvas.drawLine(myLinePaint);
         myCanvas.drawPath(path, myOutlinePaint);
     }
 

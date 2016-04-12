@@ -209,8 +209,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized Book getBookById(long id) {
-		LogInfo.I("");
-
 		if (myInterface == null) {
 			return null;
 		}
@@ -222,8 +220,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	public synchronized Book getBookByUid(UID uid) {
-		LogInfo.I("");
-
 		if (myInterface == null) {
 			return null;
 		}

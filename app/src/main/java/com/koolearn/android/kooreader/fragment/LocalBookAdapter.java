@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koolearn.android.kooreader.util.AndroidImageSynchronizer;
+import com.koolearn.android.util.LogUtil;
 import com.koolearn.klibrary.core.image.ZLImage;
 import com.koolearn.klibrary.core.image.ZLImageProxy;
 import com.koolearn.klibrary.ui.android.R;
@@ -138,6 +139,7 @@ public class LocalBookAdapter extends RecyclerView.Adapter<LocalBookAdapter.View
             @Override
             public void onLoadingFailed(String s, View view, FailReason failReason) {
                 setCoverCache(book);
+                LogUtil.i24("");
 
             }
 

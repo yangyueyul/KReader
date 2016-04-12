@@ -13,18 +13,21 @@
 
     <TextView
         android:id="@+id/navigation_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
+        android:drawablePadding="6dp"
+        android:paddingRight="10dp"
         android:ellipsize="end"
-        android:gravity="center_horizontal"
         android:paddingBottom="3dp"
         android:paddingTop="3dp"
         android:singleLine="true"
+        android:text="32% dsfdsfcbcisdycs"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#ddd"
         android:textSize="16dp" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"

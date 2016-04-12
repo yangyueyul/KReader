@@ -26,15 +26,15 @@ public class LogUtil {
     static boolean flag18 = false;
     static boolean flag20 = false;
     static boolean flag21 = false;
-    static boolean flag24 = true;
+    static boolean flag24 = false;
 
     public static void i(String info) {
-            final StackTraceElement[] stack = new Throwable().getStackTrace();
-            final int i = 1;
+        final StackTraceElement[] stack = new Throwable().getStackTrace();
+        final int i = 1;
 //            for (int id = 0; id < stack.length; id++) {
-            final StackTraceElement ste = stack[i];
-            android.util.Log.i("yul2_log_", String.format("[%s][%s]%s[%s]",
-                    ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), info));
+        final StackTraceElement ste = stack[i];
+        android.util.Log.i("yul2_log_", String.format("[%s][%s]%s[%s]",
+                ste.getFileName(), ste.getMethodName(), ste.getLineNumber(), info));
 //            }
     }
 

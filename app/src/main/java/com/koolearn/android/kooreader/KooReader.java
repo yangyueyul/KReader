@@ -145,7 +145,7 @@ public final class KooReader extends KooReaderMainActivity implements ZLApplicat
         if (myKooReaderApp == null) {
             myKooReaderApp = new KooReaderApp(Paths.systemInfo(this), new BookCollectionShadow());
         }
-        getCollection().bindToService(this, null); //y 绑定libraryService
+        getCollection().bindToService(this, null); // 绑定libraryService
 
         myBook = null;
 

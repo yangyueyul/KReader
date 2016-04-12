@@ -16,6 +16,12 @@
   <color name="button_press">#5677fc</color>
   <color name="button_error">#ff80a8</color>
 
+  <!--button-->
+  <color name="bookmark_1">#9640bd</color> <!-- 400 -->
+  <color name="bookmark_2">#ed6a00</color> <!-- 400 -->
+  <color name="bookmark_3">#74b408</color> <!-- 400 -->
+
+
   <!--绿色-->
   <color name="primarys1">#009688</color>
   <color name="primarys_dark1">#00897b</color>
