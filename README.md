@@ -1,8 +1,8 @@
 # 掌读
 * 移动创新小组 - 阅读器项目
 * 项目修改自FBreaderJ：https://github.com/geometer/FBReaderJ
-* 最新版暂未开源
 * 新版下载地址：http://www.wandoujia.com/apps/com.koolearn.klibrary.ui.android
+* 最新版暂未开源
 * QQ交流群：206375859
 * 相关分析文章见微信公众号：按空格
 
