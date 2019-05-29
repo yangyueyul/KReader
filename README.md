@@ -1,10 +1,9 @@
 # 掌读
-* 移动创新小组 - 阅读器项目
+* Android阅读器
 * 项目修改自FBreaderJ：https://github.com/geometer/FBReaderJ
+* 当前版本为旧版本，*新版开源计划筹备中*
 * 新版下载地址：http://www.wandoujia.com/apps/com.koolearn.klibrary.ui.android
-* 最新版暂未开源
-* QQ交流群：206375859
-* 相关分析文章见微信公众号：按空格
+
 
 # 项目展示
 ![k 1](https://github.com/ydcx/KooReader/blob/master/k1.png)<br/>
@@ -58,4 +57,4 @@
 ![f 1](https://github.com/ydcx/KooReader/blob/master/f1.jpg?raw=true)<br/>
 
 # More
-* 更多解析可以关注我们的微信公众号 按空格
+* 更多解析见[Epub书籍快速分章加载](https://www.jianshu.com/p/fd03a43fbf63)
