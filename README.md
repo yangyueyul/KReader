@@ -2,7 +2,7 @@
 * Android阅读器
 * 项目修改自FBreaderJ：https://github.com/geometer/FBReaderJ
 * 当前版本为旧版本，*新版开源计划筹备中*
-* 新版下载地址：http://www.wandoujia.com/apps/com.koolearn.klibrary.ui.android
+* 新版[下载地址](https://www.pgyer.com/Airv)
 
 
 # 项目展示
